@@ -1,3 +1,4 @@
+import Card from '@/components/Card'
 import Navbar from '@/components/Navbar'
 import Head from 'next/head'
 
@@ -12,8 +13,16 @@ export default function Home() {
         <link rel="icon" href="favicon.ico" />
       </Head>
 
-      <main className='w-100'>
+      <main className='w-100 flex flex-col box-border'>
         <Navbar />
+        <div className='w-full px-2 md:px-4 pb-10 mt-24 md:mt-20 gap-5 grid grid-cols-2 md:grid-cols-3'>
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+
+        </div>
       </main>
     </>
   )

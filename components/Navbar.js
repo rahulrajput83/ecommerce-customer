@@ -13,7 +13,7 @@ export default function Navbar() {
         router.push('/login')
     }
     return (
-        <div className="w-100 flex flex-row justify-center items-center bg-red-500 p-3 box-border">
+        <div className="flex flex-row fixed z-10 w-full justify-center items-center bg-red-500 p-3 box-border">
             <Link href='/' className="text-white font-semibold mr-auto text-base"><span className="font-bold text-lg">EASY</span> ORDER</Link>
             <form className="flex mr-10 flex-row relative w-1/3 justify-center items-center">
                 <input className="w-full py-2 rounded-full bg-white outline-none text-sm px-3" type='text' placeholder="Search" />
