@@ -10,10 +10,10 @@ export default function Home() {
 
   const getProducts = () => {
     fetch('https://dummyjson.com/products')
-    .then(res => res.json())
-    .then((res) => {
-      setProducts(res.products)
-    })
+      .then(res => res.json())
+      .then((res) => {
+        setProducts(res.products)
+      })
   }
 
   useEffect(() => {
@@ -31,19 +31,19 @@ export default function Home() {
       <main className='w-100 flex flex-col box-border'>
         <Navbar />
         <div className='w-full px-2 md:px-4 pb-10 mt-24 md:mt-20 gap-5 gap-y-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-          {/* <CardLoading />
-          <CardLoading />
-          <CardLoading />
-          <CardLoading />
-          <CardLoading /> */}
-          {products ?
+          {products && products.length > 0 ?
             products.map((data, i) => {
               return (
                 <Card data={data} key={i} />
               )
             })
             :
-            <CardLoading />
+            <>
+              <CardLoading />
+              <CardLoading />
+              <CardLoading />
+              <CardLoading />
+            </>
           }
         </div>
       </main>
