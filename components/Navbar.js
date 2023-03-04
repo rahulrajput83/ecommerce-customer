@@ -35,9 +35,8 @@ export default function Navbar() {
                     </>
                     :
                     <>
-                        <BiUser className="block text-xl sm:hidden" />
-                        <BiLogIn className="text-xl hidden sm:block" />
-                        <span className="text-sm hidden sm:block">Login</span>
+                        <BiUser className="text-xl" />
+                        <span className="text-sm hidden sm:block">Account</span>
                     </>}
             </button>
         </div>
