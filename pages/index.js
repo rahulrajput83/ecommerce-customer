@@ -7,18 +7,36 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [products, setProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('')
+  const [loading, setLoading] = useState(true);
 
-  const getProducts = () => {
+  const getProducts = (title) => {
+    setLoading(true)
     fetch('https://dummyjson.com/products')
       .then(res => res.json())
       .then((res) => {
+        setLoading(false)
+        if (title) {
+          const filter = res.products.filter((e) => { return (e.category.toLowerCase().includes(title.toLowerCase())) })
+          setProducts(filter)
+          return;
+        }
         setProducts(res.products)
+
+      })
+      .catch(() => {
+        console.log('err')
       })
   }
 
   useEffect(() => {
     getProducts();
   }, [])
+
+  useEffect(() => {
+    setProducts([])
+    getProducts(searchQuery);
+  }, [searchQuery])
   return (
     <>
       <Head>
@@ -29,7 +47,7 @@ export default function Home() {
       </Head>
 
       <main className='w-100 flex flex-col box-border'>
-        <Navbar />
+        <Navbar setSearchQuery={setSearchQuery} />
         <div className='w-full px-2 md:px-4 pb-10 mt-24 md:mt-20 gap-5 gap-y-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
           {products && products.length > 0 ?
             products.map((data, i) => {
@@ -38,12 +56,16 @@ export default function Home() {
               )
             })
             :
+            loading
+            ? 
             <>
               <CardLoading />
               <CardLoading />
               <CardLoading />
               <CardLoading />
             </>
+            :
+            <span>No Item Found</span>
           }
         </div>
       </main>
