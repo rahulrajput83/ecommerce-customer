@@ -29,7 +29,7 @@ export default function Cart() {
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full flex flex-col'>
                         <span className='text-xl uppercase font-semibold mb-4 text-red-500 mx-auto'>Cart</span>
-                        {cart.length > 0 &&
+                        {cart && cart.length > 0 &&
                             <div className='w-full grid gap-6 justify-start items-start grid-cols-1 md:grid-cols-3'>
                                 <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 border bottom-2 border-red-500'>
                                     {cart.map(({ title, thumbnail, price, description }, i) => {

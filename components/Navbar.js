@@ -32,7 +32,7 @@ export default function Navbar({ setSearchQuery, cart }) {
             <Link href='/cart' className='p-2 sm:py-1 sm:px-3 flex flex-row justify-center items-center gap-1 rounded-full border-2 border-white hover:bg-red-500  hover:text-white uppercase font-semibold bg-white'>
                 <BiCart className="text-xl " />
                 <span className="text-sm hidden sm:block">Cart</span>
-                <span className="text-sm">{cart.length}</span>
+                <span className="text-sm">{cart && cart.length}</span>
             </Link>
 
             <button onClick={handlebtn} className='p-2 sm:py-1 sm:px-3 flex flex-row justify-center items-center gap-1 rounded-full border-2 border-white hover:bg-red-500  hover:text-white uppercase font-semibold bg-white'>
