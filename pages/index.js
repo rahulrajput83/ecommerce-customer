@@ -3,13 +3,19 @@ import Card from '@/components/Card'
 import Navbar from '@/components/Navbar'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import { localSave } from '@/Functions/LocalStorage'
 
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(localCart)
+  }, [])
 
   const getProducts = (title) => {
     setLoading(true)
@@ -45,8 +51,13 @@ export default function Home() {
       setCart(element => [item, ...element]);
     }
     return;
-
   }
+
+  useEffect(() => {
+    if(cart.length > 0){
+      localSave(cart)
+    }
+  }, [cart])
 
   return (
     <>
@@ -76,7 +87,7 @@ export default function Home() {
                 <CardLoading />
               </>
               :
-              <span>No Item Found</span>
+              <span className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-medium'>No Item Found</span>
           }
         </div>
       </main>
