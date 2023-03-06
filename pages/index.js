@@ -4,13 +4,22 @@ import Navbar from '@/components/Navbar'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { localSave } from '@/Functions/LocalStorage'
+import Category from '@/components/Category'
 
+const categories = ['Electronics', 'Footwear', 'Home, Kitchen, Pets', 'Beauty, Health, Grocery', 'Books', "Men's Fashion", "Women's Fashion", "Kid's Fashion"]
+const price = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹10,000', 'Over ₹10,000']
+const productOrder = ['Low to High', 'High to Low']
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
+  const [filter, setFilter] = useState({
+    Category: '',
+    Price: '',
+    productOrder: ''
+  })
 
   useEffect(() => {
     const localCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -54,11 +63,15 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if(cart.length > 0){
+    if (cart.length > 0) {
       localSave(cart)
     }
   }, [cart])
 
+  useEffect(() => {
+    console.log(filter)
+  }, [filter])
+  
   return (
     <>
       <Head>
@@ -70,25 +83,41 @@ export default function Home() {
 
       <main className='w-100 flex flex-col box-border'>
         <Navbar cart={cart} setSearchQuery={setSearchQuery} />
-        <div className='w-full px-2 md:px-4 pb-10 mt-24 md:mt-20 gap-5 gap-y-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-          {products && products.length > 0 ?
-            products.map((data, i) => {
-              return (
-                <Card data={data} handleAddToCart={handleAddToCart} key={i} />
-              )
-            })
-            :
-            loading
-              ?
-              <>
-                <CardLoading />
-                <CardLoading />
-                <CardLoading />
-                <CardLoading />
-              </>
+        <div className='w-full grid px-2 md:px-4 gap-4 pb-10 mt-24 md:mt-20 grid-cols-1 md:grid-cols-5'>
+          <div className='md:col-span-1 font-medium flex flex-col'>
+            <div className='text-lg'>Filters</div>
+            <div className='w-full flex flex-col'>
+              <Category data={categories} title='Category' filter={filter} setFilter={setFilter} />
+              <Category data={price} title='Price' filter={filter} setFilter={setFilter} />
+              <div className='flex w-full gap-2 mt-4'>
+                {productOrder.map((e, i) => {
+                  return(
+                    <span onClick={() => setFilter({...filter, productOrder: e})} className={`py-1 px-2 border-2 border-red-500  rounded-full text-sm text-red-500 cursor-pointer ${filter.productOrder === e ? 'bg-red-500 text-white' : ''}`} key={`productOrder${i}`}>{e}</span>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+          <div className='w-full md:col-span-4  gap-5 gap-y-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+            {products && products.length > 0 ?
+              products.map((data, i) => {
+                return (
+                  <Card data={data} handleAddToCart={handleAddToCart} key={i} />
+                )
+              })
               :
-              <span className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-medium'>No Item Found</span>
-          }
+              loading
+                ?
+                <>
+                  <CardLoading />
+                  <CardLoading />
+                  <CardLoading />
+                  <CardLoading />
+                </>
+                :
+                <span className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-medium'>No Item Found</span>
+            }
+          </div>
         </div>
       </main>
     </>
