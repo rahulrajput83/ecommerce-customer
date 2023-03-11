@@ -120,7 +120,7 @@ export default function Cart() {
                             :
                             <div className='flex justify-center gap-2 text-lg items-center font-medium'>
                                 <span>Your Cart is empty !!</span>
-                                <Link href='/' className='border-[0.14rem] hover:bg-red-500 rounded-full hover:text-white border-red-500 px-4 py-1'>Home</Link>
+                                <Link href='/' className='border-[0.14rem] hover:bg-red-500 rounded-full hover:text-white border-red-500 px-4 py-[0.14rem]'>Home</Link>
                             </div>
                         }
                     </div>

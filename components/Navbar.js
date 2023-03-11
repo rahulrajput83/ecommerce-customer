@@ -29,7 +29,7 @@ export default function Navbar({ setSearchQuery, cart }) {
                 </button>
             </form>}
 
-            <Link href='/cart' className='p-2 sm:py-1 sm:px-3 flex flex-row justify-center items-center gap-1 rounded-full border-2 border-white hover:bg-red-500  hover:text-white uppercase font-semibold bg-white'>
+            <Link href='/cart' className='p-2 sm:py-1 sm:px-3 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-white hover:bg-red-500  hover:text-white uppercase font-semibold bg-white'>
                 {router.pathname.includes('cart') ?
                     <>
                         <BiHomeAlt2 className="text-xl" />
@@ -44,7 +44,7 @@ export default function Navbar({ setSearchQuery, cart }) {
 
             </Link>
 
-            <button onClick={handlebtn} className='p-2 sm:py-1 sm:px-3 flex flex-row justify-center items-center gap-1 rounded-full border-2 border-white hover:bg-red-500  hover:text-white uppercase font-semibold bg-white'>
+            <button onClick={handlebtn} className='p-2 sm:py-1 sm:px-3 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-white hover:bg-red-500  hover:text-white uppercase font-semibold bg-white'>
                 {router.pathname.includes('login') ?
                     <>
                         <BiHomeAlt2 className="text-xl" />
