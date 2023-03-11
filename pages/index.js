@@ -60,7 +60,7 @@ export default function Home() {
   const handleAddToCart = (item) => {
     const find = cart.findIndex((e) => e.title === item.title);
     if (find === -1) {
-      setCart(element => [{quantity: 1, ...item}, ...element]);
+      setCart(element => [{ quantity: 1, ...item }, ...element]);
     }
     return;
   }
@@ -86,12 +86,12 @@ export default function Home() {
           <div className='md:col-span-1 gap-2 font-medium flex flex-col'>
             <span onClick={() => {
               size.width <= 768 ?
-              setShowFilter(!showFilter) :
-              console.log(size.width)
+                setShowFilter(!showFilter) :
+                console.log(size.width)
             }} className='md:text-lg text-sm  bg-red-500 text-white px-4 py-2 md:p-0 md:text-black md:bg-transparent md:rounded-none rounded-full ml-auto md:ml-0'>Filters</span>
             <Category showFilter={showFilter} data={categories} title='Category' filter={filter} setFilter={setFilter} />
             <Category showFilter={showFilter} data={price} title='Price' filter={filter} setFilter={setFilter} />
-            <div className={` w-full gap-2 ${showFilter ? 'flex': 'hidden'} md:flex mt-4`}>
+            <div className={` w-full gap-2 ${showFilter ? 'flex' : 'hidden'} md:flex mt-4`}>
               {productOrder.map((e, i) => {
                 return (
                   <span onClick={() => setFilter({ ...filter, productOrder: e })} className={`py-1 px-2 border-2 border-red-500  rounded-full text-sm text-red-500 cursor-pointer ${filter.productOrder === e ? 'bg-red-500 text-white' : ''}`} key={`productOrder${i}`}>{e}</span>

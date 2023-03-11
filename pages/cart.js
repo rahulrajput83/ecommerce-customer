@@ -78,6 +78,27 @@ export default function Cart() {
         }
     }
 
+    const handlePayment = () => {
+        fetch('/api/payment', {
+            method: 'POST',
+            body: JSON.stringify({
+                amount: 100,
+                purpose: 'Product Purchase',
+                redirect: 'https://rahulrajput83-to-do.vercel.app/todo/',
+                email: 'abc@gmail.com',
+                number: 9000000000,
+                name: 'Rahul Rajput'
+            })
+        })
+            .then(res => res.json())
+            .then((res) => {
+                console.log(res)
+            })
+            .catch(() => {
+                console.log('err')
+            })
+    }
+
     return (
         <>
             <Head>
@@ -100,8 +121,13 @@ export default function Cart() {
                                         return (
                                             <div key={`cart${i}`} className='w-full relative flex gap-4 flex-row'>
                                                 <img alt={item.title} src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
-                                                <div className='flex flex-col mr-auto'>
-                                                    <span className='font-medium '>{item.title}</span>
+                                                <div className='flex flex-col w-full'>
+                                                    <div className='font-medium flex justify-between items-start w-full'>
+                                                        <span>{item.title}</span>
+                                                        <button onClick={() => RemoveCart(item)} className='font-semibold px-2 py-1 text-red-500 z-10 text-2xl bg-white'>
+                                                            <MdDeleteOutline />
+                                                        </button>
+                                                    </div>
                                                     <span className='font-medium text-xs'>
                                                         <ResponsiveEllipsis
                                                             text={item.description}
@@ -121,9 +147,7 @@ export default function Cart() {
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <button onClick={() => RemoveCart(item)} className='font-semibold absolute right-0 px-2 py-1 text-red-500 z-10 text-lg bg-white'>
-                                                    <MdDeleteOutline />
-                                                </button>
+
                                                 <span className='font-semibold absolute left-0 px-2 py-1 bg-red-500 text-white z-10 text-sm'>&#x20b9; {item.price}</span>
                                             </div>
                                         )
@@ -147,7 +171,7 @@ export default function Cart() {
                                         <span className='font-medium'>Final Price</span>
                                         <span className='font-semibold'>&#x20b9; {finalPrice}</span>
                                     </div>
-                                    <button className='w-full font-medium bg-red-500 py-3 mt-6 mb-1 text-white text-sm rounded'>Continue to Payment</button>
+                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-3 mt-6 mb-1 text-white text-sm rounded'>Continue to Payment</button>
                                 </div>
                             </div>
                             :
