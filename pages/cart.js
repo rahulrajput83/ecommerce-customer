@@ -123,7 +123,7 @@ export default function Cart() {
                                                 <img alt={item.title} src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col w-full'>
                                                     <div className='font-medium flex justify-between items-start w-full'>
-                                                        <span className='w-full'>
+                                                        <Link href={`/product/${item.id}`} className='w-full text-red-500'>
                                                             <ResponsiveEllipsis
                                                                 text={item.title}
                                                                 maxLine='1'
@@ -131,7 +131,7 @@ export default function Cart() {
                                                                 trimRight
                                                                 basedOn='letters'
                                                             />
-                                                        </span>
+                                                        </Link>
                                                         <button onClick={() => RemoveCart(item)} className='font-semibold text-red-500 z-10 text-2xl bg-white'>
                                                             <MdDeleteOutline />
                                                         </button>
