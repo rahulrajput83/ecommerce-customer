@@ -71,11 +71,6 @@ export default function Home() {
     }
   }, [cart])
 
-  useEffect(() => {
-
-    console.log(filter)
-  }, [filter])
-
   return (
     <>
       <Head>
@@ -93,7 +88,7 @@ export default function Home() {
               size.width <= 768 ?
               setShowFilter(!showFilter) :
               console.log(size.width)
-            }} className='text-lg bg-red-500 text-white px-3 py-1 md:p-0 md:text-black md:bg-transparent md:rounded-none rounded-full ml-auto md:ml-0'>Filters</span>
+            }} className='md:text-lg text-sm  bg-red-500 text-white px-4 py-2 md:p-0 md:text-black md:bg-transparent md:rounded-none rounded-full ml-auto md:ml-0'>Filters</span>
             <Category showFilter={showFilter} data={categories} title='Category' filter={filter} setFilter={setFilter} />
             <Category showFilter={showFilter} data={price} title='Price' filter={filter} setFilter={setFilter} />
             <div className={` w-full gap-2 ${showFilter ? 'flex': 'hidden'} md:flex mt-4`}>

@@ -11,9 +11,16 @@ const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
 
 export default function Cart() {
-    const [cart, setCart] = useState([])
+    const [cart, setCart] = useState([]);
+    const [productPrice, setProductPrice] = useState(0);
+    const [shippingPrice, setShippingPrice] = useState(0);
+    const [finalPrice, setFinalPrice] = useState(0);
+    const [taxPrice, setTaxPrice] = useState(0)
 
     const getLocalStorage = () => {
+        setProductPrice(0);
+        setShippingPrice(0)
+        setFinalPrice(0)
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
     }
@@ -47,6 +54,28 @@ export default function Cart() {
         increaseItem.splice(findIndex, 1)
         localStorage.setItem('cart', JSON.stringify(increaseItem));
         getLocalStorage();
+    }
+
+    useEffect(() => {
+        calculatePrice();
+    }, [cart])
+
+    /* Calculate Prices */
+    const calculatePrice = () => {
+        if (cart.length > 0) {
+            const price = cart.reduce((total, item, index, arr) => {
+                const quantity = arr[index].quantity * item.price;
+                return total + quantity;
+            }, 0);
+            const shipping = 100;
+            setProductPrice(price);
+            setShippingPrice(shipping);
+            /* Tax Percentage */
+            const taxPercentage = 5;
+            const tax = price * taxPercentage / 100;
+            setTaxPrice(tax)
+            setFinalPrice(price + shipping + tax);
+        }
     }
 
     return (
@@ -104,17 +133,21 @@ export default function Cart() {
                                     <span className='mb-2 text-lg font-semibold'>Summary</span>
                                     <div className='w-full font-medium flex flex-row justify-between items-center'>
                                         <span className='font-medium'>Product Price</span>
-                                        <span className='font-semibold'>&#x20b9; 1542</span>
+                                        <span className='font-semibold'>&#x20b9; {productPrice}</span>
                                     </div>
                                     <div className='w-full font-medium flex flex-row justify-between items-center'>
                                         <span className='font-medium'>Shipping Charges</span>
-                                        <span className='font-semibold'>&#x20b9; 1542</span>
+                                        <span className='font-semibold'>&#x20b9; {shippingPrice}</span>
+                                    </div>
+                                    <div className='w-full font-medium flex flex-row justify-between items-center'>
+                                        <span className='font-medium'>Tax</span>
+                                        <span className='font-semibold'>&#x20b9; {taxPrice}</span>
                                     </div>
                                     <div className='w-full font-medium flex flex-row justify-between items-center'>
                                         <span className='font-medium'>Final Price</span>
-                                        <span className='font-semibold'>&#x20b9; 1542</span>
+                                        <span className='font-semibold'>&#x20b9; {finalPrice}</span>
                                     </div>
-                                    <button className='w-full font-medium bg-red-500 py-2 mt-6 mb-1 text-white text-sm rounded'>Continue to Payment</button>
+                                    <button className='w-full font-medium bg-red-500 py-3 mt-6 mb-1 text-white text-sm rounded'>Continue to Payment</button>
                                 </div>
                             </div>
                             :

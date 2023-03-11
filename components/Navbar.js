@@ -20,7 +20,7 @@ export default function Navbar({ setSearchQuery, cart }) {
         setSearchQuery(input)
     }
     return (
-        <div className={`flex flex-row fixed z-10 gap-2 sm:gap-5 w-full items-center bg-red-500 ${router.pathname.includes('cart') ? 'justify-end' : 'justify-center'} p-3 box-border`}>
+        <div className={`flex flex-row fixed z-20 gap-2 sm:gap-5 w-full items-center bg-red-500 ${router.pathname.includes('cart') ? 'justify-end' : 'justify-center'} p-3 box-border`}>
             <Link href='/' className={`text-white ${!router.pathname.includes('cart') ? 'hidden' : ''} sm:block font-medium mr-auto text-base`}><span className="font-semibold text-lg">EASY</span> ORDER</Link>
             {(router.pathname.includes('cart') || router.pathname.includes('login')) ? null :
                 <form onSubmit={handleSubmit} className="flex flex-row relative w-full sm:w-2/3 md:w-1/3 justify-center items-center">
