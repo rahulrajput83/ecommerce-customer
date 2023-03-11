@@ -123,8 +123,16 @@ export default function Cart() {
                                                 <img alt={item.title} src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col w-full'>
                                                     <div className='font-medium flex justify-between items-start w-full'>
-                                                        <span>{item.title}</span>
-                                                        <button onClick={() => RemoveCart(item)} className='font-semibold px-2 py-1 text-red-500 z-10 text-2xl bg-white'>
+                                                        <span className='w-full'>
+                                                            <ResponsiveEllipsis
+                                                                text={item.title}
+                                                                maxLine='1'
+                                                                ellipsis='...'
+                                                                trimRight
+                                                                basedOn='letters'
+                                                            />
+                                                        </span>
+                                                        <button onClick={() => RemoveCart(item)} className='font-semibold text-red-500 z-10 text-2xl bg-white'>
                                                             <MdDeleteOutline />
                                                         </button>
                                                     </div>
@@ -171,11 +179,11 @@ export default function Cart() {
                                         <span className='font-medium'>Final Price</span>
                                         <span className='font-semibold'>&#x20b9; {finalPrice}</span>
                                     </div>
-                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-3 mt-6 mb-1 text-white text-sm rounded'>Continue to Payment</button>
+                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-3 mt-6 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Continue to Payment</button>
                                 </div>
                             </div>
                             :
-                            <div className='flex justify-center gap-2 text-lg items-center font-medium'>
+                            <div className='flex justify-center gap-2  text-lg items-center font-medium'>
                                 <span>Your Cart is empty !!</span>
                                 <Link href='/' className='border-[0.14rem] hover:bg-red-500 rounded-full hover:text-white border-red-500 px-4 py-[0.14rem]'>Home</Link>
                             </div>
