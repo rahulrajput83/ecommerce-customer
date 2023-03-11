@@ -121,7 +121,7 @@ export default function Home() {
                   <CardLoading />
                 </>
                 :
-                <span className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-medium'>No Item Found</span>
+                <div className='font-medium w-full flex col-span-4 justify-center text-lg'>No Product Found</div>
             }
           </div>
         </div>
