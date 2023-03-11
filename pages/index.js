@@ -87,7 +87,7 @@ export default function Home() {
 
       <main className='w-100 flex flex-col box-border'>
         <Navbar cart={cart} setSearchQuery={setSearchQuery} />
-        <div className='w-full grid px-2 md:px-4 gap-4 pb-10 mt-24 md:mt-20 grid-cols-1 md:grid-cols-5'>
+        <div className='w-full grid px-2 md:px-4 gap-4 pb-10 mt-20 md:mt-20 grid-cols-1 md:grid-cols-5'>
           <div className='md:col-span-1 gap-2 font-medium flex flex-col'>
             <span onClick={() => {
               size.width <= 768 ?
