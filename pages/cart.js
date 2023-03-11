@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import LinesEllipsis from 'react-lines-ellipsis'
 import responsiveHOC from 'react-lines-ellipsis/lib/responsiveHOC'
 import { BiMinus, BiPlus } from 'react-icons/bi'
+import { MdDeleteOutline } from 'react-icons/md'
+import Link from 'next/link'
 
 const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
@@ -17,9 +19,10 @@ export default function Cart() {
     }
 
     useEffect(() => {
-        getLocalStorage()    
+        getLocalStorage()
     }, [])
 
+    /* Increase Quantity of Product */
     const AddQuantity = (item) => {
         const increaseItem = [...cart]
         const findIndex = increaseItem.findIndex((e) => e.id === item.id);
@@ -28,10 +31,20 @@ export default function Cart() {
         getLocalStorage();
     }
 
+    /* Decrease Quantity of Product */
     const MinusQuantity = (item) => {
         const increaseItem = [...cart]
         const findIndex = increaseItem.findIndex((e) => e.id === item.id);
         increaseItem[findIndex].quantity > 1 ? increaseItem[findIndex].quantity-- : 1;
+        localStorage.setItem('cart', JSON.stringify(increaseItem));
+        getLocalStorage();
+    }
+
+    /* Remove PRoduct from Cart */
+    const RemoveCart = (item) => {
+        const increaseItem = [...cart]
+        const findIndex = increaseItem.findIndex((e) => e.id === item.id);
+        increaseItem.splice(findIndex, 1)
         localStorage.setItem('cart', JSON.stringify(increaseItem));
         getLocalStorage();
     }
@@ -50,9 +63,10 @@ export default function Cart() {
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full flex flex-col'>
                         <span className='text-xl uppercase font-semibold mb-4 text-red-500 mx-auto'>Cart</span>
-                        {cart && cart.length > 0 &&
+                        {cart && cart.length > 0 ?
                             <div className='w-full grid gap-6 justify-start items-start grid-cols-1 md:grid-cols-3'>
                                 <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 border bottom-2 border-red-500'>
+                                    <span>Total Item : {cart.length}</span>
                                     {cart.map((item, i) => {
                                         return (
                                             <div key={`cart${i}`} className='w-full relative flex gap-4 flex-row'>
@@ -78,6 +92,9 @@ export default function Cart() {
                                                         </button>
                                                     </div>
                                                 </div>
+                                                <button onClick={() => RemoveCart(item)} className='font-semibold absolute right-0 px-2 py-1 text-red-500 z-10 text-lg bg-white'>
+                                                    <MdDeleteOutline />
+                                                </button>
                                                 <span className='font-semibold absolute left-0 px-2 py-1 bg-red-500 text-white z-10 text-sm'>&#x20b9; {item.price}</span>
                                             </div>
                                         )
@@ -99,6 +116,11 @@ export default function Cart() {
                                     </div>
                                     <button className='w-full font-medium bg-red-500 py-2 mt-6 mb-1 text-white text-sm rounded'>Continue to Payment</button>
                                 </div>
+                            </div>
+                            :
+                            <div className='flex justify-center gap-2 text-lg items-center font-medium'>
+                                <span>Your Cart is empty !!</span>
+                                <Link href='/' className='border-[0.14rem] hover:bg-red-500 rounded-full hover:text-white border-red-500 px-4 py-1'>Home</Link>
                             </div>
                         }
                     </div>
