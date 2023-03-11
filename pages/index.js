@@ -60,7 +60,7 @@ export default function Home() {
   const handleAddToCart = (item) => {
     const find = cart.findIndex((e) => e.title === item.title);
     if (find === -1) {
-      setCart(element => [item, ...element]);
+      setCart(element => [{quantity: 1, ...item}, ...element]);
     }
     return;
   }

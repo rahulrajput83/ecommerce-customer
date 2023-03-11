@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import LinesEllipsis from 'react-lines-ellipsis'
 import responsiveHOC from 'react-lines-ellipsis/lib/responsiveHOC'
+import { BiMinus, BiPlus } from 'react-icons/bi'
 
 const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
@@ -10,10 +11,30 @@ const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 export default function Cart() {
     const [cart, setCart] = useState([])
 
-    useEffect(() => {
+    const getLocalStorage = () => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
+    }
+
+    useEffect(() => {
+        getLocalStorage()    
     }, [])
+
+    const AddQuantity = (item) => {
+        const increaseItem = [...cart]
+        const findIndex = increaseItem.findIndex((e) => e.id === item.id);
+        increaseItem[findIndex].quantity++;
+        localStorage.setItem('cart', JSON.stringify(increaseItem));
+        getLocalStorage();
+    }
+
+    const MinusQuantity = (item) => {
+        const increaseItem = [...cart]
+        const findIndex = increaseItem.findIndex((e) => e.id === item.id);
+        increaseItem[findIndex].quantity > 1 ? increaseItem[findIndex].quantity-- : 1;
+        localStorage.setItem('cart', JSON.stringify(increaseItem));
+        getLocalStorage();
+    }
 
     return (
         <>
@@ -32,23 +53,32 @@ export default function Cart() {
                         {cart && cart.length > 0 &&
                             <div className='w-full grid gap-6 justify-start items-start grid-cols-1 md:grid-cols-3'>
                                 <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 border bottom-2 border-red-500'>
-                                    {cart.map(({ title, thumbnail, price, description }, i) => {
+                                    {cart.map((item, i) => {
                                         return (
                                             <div key={`cart${i}`} className='w-full relative flex gap-4 flex-row'>
-                                                <img alt={title} src={thumbnail} className='w-24 md:w-44 h-auto bg-cover' />
+                                                <img alt={item.title} src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col mr-auto'>
-                                                    <span className='font-medium '>{title}</span>
+                                                    <span className='font-medium '>{item.title}</span>
                                                     <span className='font-medium text-xs'>
                                                         <ResponsiveEllipsis
-                                                            text='long rtcyvghubjnkml rctvhbjnkm tuyijnkm dtfyubjnkm rtcyvghubjnkml rctvhbjnkm tuyijnkm dtfyubjnkm rtcyvghubjnkml rctvhbjnkm tuyijnkm dtfyubjnkm rtcyvghubjnkml rctvhbjnkm tuyijnkm dtfyubjnkm  long textxdfcghjbklnlknjhuyf rtcyvghubjnkml rctvhbjnkm tuyijnkm dtfyubjnkm ftybujnkml rtcyvghubjnkml rctvhbjnkm tuyijnkm dtfyubjnkm rtcyvghubjnkml rctvhbjnkm tuyijnkm dtfyubjnkm '
-                                                            maxLine='5'
+                                                            text={item.description}
+                                                            maxLine='3'
                                                             ellipsis='...'
                                                             trimRight
                                                             basedOn='letters'
                                                         />
                                                     </span>
+                                                    <div className='flex gap-4 mt-4 items-center'>
+                                                        <button onClick={() => MinusQuantity(item)} className='p-2 bg-red-500 text-white'>
+                                                            <BiMinus />
+                                                        </button>
+                                                        <span>{item.quantity}</span>
+                                                        <button onClick={() => AddQuantity(item)} className='p-2 bg-red-500 text-white'>
+                                                            <BiPlus />
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <span className='font-semibold absolute right-0 z-10'>&#x20b9; {price}</span>
+                                                <span className='font-semibold absolute left-0 px-2 py-1 bg-red-500 text-white z-10 text-sm'>&#x20b9; {item.price}</span>
                                             </div>
                                         )
                                     })}
