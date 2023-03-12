@@ -113,11 +113,11 @@ export default function product() {
                         </div>
                         <div className='w-full flex flex-col gap-2'>
                             <span className='font-semibold mb-4 text-2xl'>Product Description</span>
-                            <div className='flex flex-col gap-4 w-full justify-center md:px-28'>
+                            <div className='flex flex-col gap-12 w-full justify-center md:px-28'>
                                 {data.images.map((e, i) => {
                                     return (
-                                        <div key={`imagedesc-${i}`} className='w-full gap-4 grid grid-cols-1 md:grid-cols-5'>
-                                            <img className={`bg-cover w-fit order-1 ${i % 2 === 0 ? '' : 'md:order-2'}`} src={e} alt={data.title} />
+                                        <div key={`imagedesc-${i}`} className='w-full gap-4 grid grid-cols-1 md:grid-cols-6'>
+                                            <img className={`bg-cover md:col-span-2 w-fit order-1 ${i % 2 === 0 ? '' : 'md:order-2'}`} src={e} alt={data.title} />
                                             <span className={`order-2 md:col-span-4 ${i % 2 === 0 ? '' : 'md:order-1'}`}>Essential Oil, Makeup Primer, Foundation, Loose Powder, Blender, 2 Lipsticks, Eyelashes, Makeup Fixer, Compact Face powder, Concealer Waterproof foundation,face primer,makeup fixer After testing, we found there are still around 3-5% of powder-based cosmetic such as eye shadow will be damaged during the long way of international shipment, no matter how carefully we packed them.</span>
                                         </div>
                                     )
