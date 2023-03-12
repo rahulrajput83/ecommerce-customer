@@ -1,6 +1,6 @@
 export default function CardLoading() {
     return (
-        <div className="cursor-pointer flex flex-col max-w-sm  w-full mx-auto">
+        <div className=" flex flex-col max-w-sm  w-full mx-auto">
             <div className="animate-pulse flex flex-col gap-5">
                 <div className=" bg-slate-200 w-full h-28 md:h-56"></div>
                 <div className="flex-1 space-y-6 py-1">
