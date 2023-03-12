@@ -111,11 +111,14 @@ export default function product() {
                             </div>
                         </div>
                         <div className='w-full flex flex-col gap-2'>
-                            <span className='font-semibold text-2xl'>Product Description</span>
-                            <div className='flex flex-row md:flex-col gap-4 order-2 md:order-1 overflow-scroll md:overflow-hidden w-full md:col-span-1'>
+                            <span className='font-semibold mb-4 text-2xl'>Product Description</span>
+                            <div className='flex flex-col gap-4 w-full justify-center md:px-28'>
                                 {data.images.map((e, i) => {
                                     return (
-                                        <img key={`thumbnail-${i}`} onClick={() => setImage(e)} className='md:w-full w-20 cursor-pointer' src={e} alt={data.title} />
+                                        <div key={`imagedesc-${i}`} className='w-full gap-4 grid grid-cols-1 md:grid-cols-5'>
+                                            <img  className={`bg-cover w-fit order-1 ${i % 2 === 0 ? '': 'md:order-2'}`} src={e} alt={data.title} />
+                                            <span className={`order-2 md:col-span-4 ${i % 2 === 0 ? '': 'md:order-1'}`}>!Lorem</span>
+                                        </div>
                                     )
                                 })}
                             </div>
