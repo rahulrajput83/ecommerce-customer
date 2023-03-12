@@ -115,15 +115,15 @@ export default function Cart() {
                         <span className='text-xl uppercase font-semibold mb-4 text-red-500 mx-auto'>Cart</span>
                         {cart && cart.length > 0 ?
                             <div className='w-full grid gap-6 justify-start items-start grid-cols-1 md:grid-cols-3'>
-                                <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 border bottom-2 border-red-500'>
+                                <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 md:p-4 shadow-lg'>
                                     <span>Total Item : {cart.length}</span>
                                     {cart.map((item, i) => {
                                         return (
-                                            <div key={`cart${i}`} className='w-full relative flex gap-4 flex-row'>
+                                            <div key={`cart${i}`} className='w-full relative flex gap-4 flex-row justify-start items-start'>
                                                 <img alt={item.title} src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col w-full'>
-                                                    <div className='font-medium flex justify-between items-start w-full'>
-                                                        <Link href={`/product/${item.id}`} className='w-full text-red-500'>
+                                                    <div className='font-medium flex justify-between items-center w-full'>
+                                                        <Link href={`/product/${item.id}`} className='w-full text-red-500 p-0 m-0'>
                                                             <ResponsiveEllipsis
                                                                 text={item.title}
                                                                 maxLine='1'
@@ -132,7 +132,7 @@ export default function Cart() {
                                                                 basedOn='letters'
                                                             />
                                                         </Link>
-                                                        <button onClick={() => RemoveCart(item)} className='font-semibold text-red-500 z-10 text-2xl bg-white'>
+                                                        <button onClick={() => RemoveCart(item)} className='font-semibold text-red-500 z-10 text-xl bg-white'>
                                                             <MdDeleteOutline />
                                                         </button>
                                                     </div>
@@ -161,7 +161,7 @@ export default function Cart() {
                                         )
                                     })}
                                 </div>
-                                <div className='md:col-span-1 justify-start h-auto items-start flex flex-col p-2 border bottom-2 border-red-500'>
+                                <div className='md:col-span-1 justify-start h-auto items-start flex flex-col p-2 md:p-4 shadow-lg'>
                                     <span className='mb-2 text-lg font-semibold'>Summary</span>
                                     <div className='w-full font-medium flex flex-row justify-between items-center'>
                                         <span className='font-medium'>Product Price</span>
