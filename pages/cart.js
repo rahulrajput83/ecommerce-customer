@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import LinesEllipsis from 'react-lines-ellipsis'
 import responsiveHOC from 'react-lines-ellipsis/lib/responsiveHOC'
-import { BiMinus, BiPlus } from 'react-icons/bi'
+import { BiMap, BiMinus, BiPlus } from 'react-icons/bi'
 import { MdDeleteOutline } from 'react-icons/md'
 import Link from 'next/link'
 
@@ -71,7 +71,7 @@ export default function Cart() {
             setProductPrice(price);
             setShippingPrice(shipping);
             /* Tax Percentage */
-            const taxPercentage = 5;
+            const taxPercentage = 3;
             const tax = price * taxPercentage / 100;
             setTaxPrice(tax)
             setFinalPrice(price + shipping + tax);
@@ -179,7 +179,15 @@ export default function Cart() {
                                         <span className='font-medium'>Final Price</span>
                                         <span className='font-semibold'>&#x20b9; {finalPrice}</span>
                                     </div>
-                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-3 mt-6 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Continue to Payment</button>
+                                    <div className='w-full mt-6 flex flex-col items-center justify-center'>
+                                        <div className='w-full flex items-center gap-2'>
+                                            <BiMap className='text-lg' />
+                                            <span className='font-medium mr-auto'>Address</span>
+                                            <Link href='/account' className='py-1 px-3 bg-red-500 text-white text-sm font-medium rounded-full border-[0.14rem] border-red-500 hover:bg-white hover:text-red-500'>Edit</Link>
+                                        </div>
+                                        <span className='w-full text-sm'>extrcyvubinm ertyvbjnm ftyubn</span>
+                                    </div>
+                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-3 mt-8 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Continue to Payment</button>
                                 </div>
                             </div>
                             :
