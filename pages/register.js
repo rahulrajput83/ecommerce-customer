@@ -3,17 +3,29 @@ import Head from 'next/head'
 import Input from '@/components/Input'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Label from '@/components/Label'
 
 
 export default function Register() {
+    const [error, setError] = useState('')
     const [data, setData] = useState({
         email: '',
-        password: ''
+        password: '',
+        type: ''
     })
 
-    useEffect(() => {
-        console.log(data)
-    }, [data])
+    const handleForm = () => {
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+    }
+
+
     return (
         <>
             <Head>
@@ -25,15 +37,23 @@ export default function Register() {
 
             <main className='w-100 flex flex-col'>
                 <Navbar />
-                <div className='w-full gap-4 pb-10 mt-20 flex flex-col'>
-                    <div className='w-full flex py-4 px-2 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
+                <div className='w-full p-4 gap-4 pb-10 mt-20 flex flex-col'>
+                    <div className='w-full flex py-4 px-4 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
                         <span className='text-center font-semibold text-xl'>Register</span>
                         <Input type='email' data={data} setData={setData} placeholder='Email Address' name='email' value={data.email} />
                         <Input type='password' data={data} setData={setData} placeholder='Password' name='password' value={data.password} />
-                        <div className='w-full flex gap-10'>
+                        <div className='grid grid-cols-2 sm:grid-cols-3 w-full items-center gap-5'>
+                            <Label data={data} setData={setData} text='Customer' />
+                            <Label data={data} setData={setData} text='Seller' />
+                            <Label data={data} setData={setData} text='Partner' />
+                        </div>
+                        <div onClick={handleForm} className='w-full flex gap-10'>
                             <button className='rounded-full w-full border-[0.14rem] text-medium hover:bg-white hover:text-red-500 bg-red-500 text-white border-red-500 p-2'>Register</button>
                             <Link className='rounded-full w-full border-[0.14rem] text-medium hover:bg-red-500 hover:text-white text-center bg-white text-red-500 border-red-500 p-2' href='/login'>Login</Link>
                         </div>
+                        {error && <div className='w-full p-3 font-normal rounded text-white bg-red-500'>
+                            {error}
+                        </div>}
                     </div>
                 </div>
             </main>
