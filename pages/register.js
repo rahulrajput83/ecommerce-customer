@@ -4,17 +4,22 @@ import Input from '@/components/Input'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Label from '@/components/Label'
+import Loading from '@/components/Loading'
 
 
 export default function Register() {
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false)
     const [data, setData] = useState({
         email: '',
         password: '',
         type: ''
     })
 
-    const handleForm = () => {
+    const handleForm = (e) => {
+        e.preventDefault()
+        if(data.email && data.password && data.type) {
+            setLoading(true)
         fetch('/api/register', {
             method: 'POST',
             headers: {
@@ -23,7 +28,24 @@ export default function Register() {
             },
             body: JSON.stringify(data)
         })
+            .then(res => res.json())
+            .then((res) => {
+                setError(res.message)
+                setLoading(false)
+            })
+            .catch(() => {
+                setError('Error, please try again...')
+                setLoading(false)
+            })
+        }
+        else {
+            setError('Please fill all details...')
+        }
     }
+
+    useEffect(() => {
+        setError('')
+    }, [data])
 
 
     return (
@@ -38,7 +60,7 @@ export default function Register() {
             <main className='w-100 flex flex-col'>
                 <Navbar />
                 <div className='w-full p-4 gap-4 pb-10 mt-20 flex flex-col'>
-                    <div className='w-full flex py-4 px-4 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
+                    <form onSubmit={handleForm} className='w-full flex py-4 px-4 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
                         <span className='text-center font-semibold text-xl'>Register</span>
                         <Input type='email' data={data} setData={setData} placeholder='Email Address' name='email' value={data.email} />
                         <Input type='password' data={data} setData={setData} placeholder='Password' name='password' value={data.password} />
@@ -47,15 +69,16 @@ export default function Register() {
                             <Label data={data} setData={setData} text='Seller' />
                             <Label data={data} setData={setData} text='Partner' />
                         </div>
-                        <div onClick={handleForm} className='w-full flex gap-10'>
-                            <button className='rounded-full w-full border-[0.14rem] text-medium hover:bg-white hover:text-red-500 bg-red-500 text-white border-red-500 p-2'>Register</button>
+                        <div className='w-full font-medium flex gap-10'>
+                            <button type='submit' disabled={error ? true : false} className='rounded-full w-full border-[0.14rem] text-medium hover:bg-white hover:text-red-500 bg-red-500 text-white border-red-500 p-2'>Register</button>
                             <Link className='rounded-full w-full border-[0.14rem] text-medium hover:bg-red-500 hover:text-white text-center bg-white text-red-500 border-red-500 p-2' href='/login'>Login</Link>
                         </div>
-                        {error && <div className='w-full p-3 font-normal rounded text-white bg-red-500'>
+                        {error && <div className='w-full p-3 font-medium rounded text-white bg-red-500'>
                             {error}
                         </div>}
-                    </div>
+                    </form>
                 </div>
+                {loading && <Loading />}
             </main>
         </>
     )
