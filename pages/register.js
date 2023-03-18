@@ -69,11 +69,11 @@ export default function Register() {
                             <Label data={data} setData={setData} text='Seller' />
                             <Label data={data} setData={setData} text='Partner' />
                         </div>
-                        <div className='w-full font-medium flex gap-10'>
+                        <div className='w-full text-sm font-medium flex gap-10'>
                             <button type='submit' disabled={error ? true : false} className='rounded-full w-full border-[0.14rem] text-medium hover:bg-white hover:text-red-500 bg-red-500 text-white border-red-500 p-2'>Register</button>
                             <Link className='rounded-full w-full border-[0.14rem] text-medium hover:bg-red-500 hover:text-white text-center bg-white text-red-500 border-red-500 p-2' href='/login'>Login</Link>
                         </div>
-                        {error && <div className='w-full p-3 font-medium rounded text-white bg-red-500'>
+                        {error && <div className='w-full p-3 text-sm font-medium rounded text-white bg-red-500'>
                             {error}
                         </div>}
                     </form>
