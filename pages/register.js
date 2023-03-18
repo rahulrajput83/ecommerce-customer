@@ -59,7 +59,7 @@ export default function Register() {
 
             <main className='w-100 flex flex-col'>
                 <Navbar />
-                <div className='w-full p-4 gap-4 pb-10 mt-20 flex flex-col'>
+                <div className='w-full gap-4 pb-10 mt-20 flex flex-col'>
                     <form onSubmit={handleForm} className='w-full flex py-4 px-4 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
                         <span className='text-center font-semibold text-xl'>Register</span>
                         <Input type='email' data={data} setData={setData} placeholder='Email Address' name='email' value={data.email} />
