@@ -18,25 +18,30 @@ export default function Register() {
 
     const handleForm = (e) => {
         e.preventDefault()
-        if(data.email && data.password && data.type) {
-            setLoading(true)
-        fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(res => res.json())
-            .then((res) => {
-                setError(res.message)
-                setLoading(false)
-            })
-            .catch(() => {
-                setError('Error, please try again...')
-                setLoading(false)
-            })
+        if (data.email && data.password && data.type) {
+            if (data.password.length >= 6) {
+                setLoading(true)
+                fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => res.json())
+                    .then((res) => {
+                        setError(res.message)
+                        setLoading(false)
+                    })
+                    .catch(() => {
+                        setError('Error, please try again...')
+                        setLoading(false)
+                    })
+            }
+            else {
+                setError('Password must be at least 6 characters.')
+            }
         }
         else {
             setError('Please fill all details...')
