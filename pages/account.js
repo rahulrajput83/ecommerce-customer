@@ -1,3 +1,4 @@
+import AccountDetail from '@/components/AccountDetail';
 import Navbar from '@/components/Navbar';
 import { getToken } from '@/Functions/getToken';
 import { Logout } from '@/Functions/Logout';
@@ -54,8 +55,15 @@ function account() {
                             })}
                         </div>
                     </div>
-                    <div className='w-full h-20 md:w-3/4 justify-start items-center flex flex-col'>
+                    <div className='w-full h-20 gap-3 md:w-3/4 justify-start items-center flex flex-col'>
                         <span className='text-xl font-medium'>{selectedItem}</span>
+                        <div className='w-full px-1 md:w-2/3 flex flex-col'>
+                            <AccountDetail title='Name' value='Rahul Rajput' className='border-2 rounded-tl-lg rounded-tr-lg' />
+                            <AccountDetail title='E-mail' value='Rahul Rajput' className='border-2 border-t-0' />
+                            <AccountDetail title='Mobile Number' value='Rahul Rajput' className='border-2 border-t-0' />
+                            <AccountDetail title='Password' value='Rahul Rajput' className='border-2 border-t-0' />
+                            <AccountDetail title='Delivery Adrress' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg' value="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
+                        </div>
                     </div>
 
                 </div>
