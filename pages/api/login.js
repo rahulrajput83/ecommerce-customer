@@ -1,6 +1,7 @@
 import MongoDBConnect from "@/Utils/MongoDB"
 import RegisterModel from "@/Model/User"
 import CryptoJS from 'crypto-js'
+import jwt from 'jsonwebtoken'
 
 
 const handler = async (req, res) => {
@@ -20,17 +21,21 @@ const handler = async (req, res) => {
       return { email: decryptEmail, password: decryptPassword, type: decryptType };
     });
     let findEmail = await newData.find((e) => e.email === req.body.email);
-    
-    console.log(newData)
     if (findEmail !== -1) {
-      res.json({ message: 'Email already registered...' })
+      if (findEmail.password === req.body.password) {
+        const token = await jwt.sign({ email: findEmail.email, type: findEmail.type }, process.env.JWT);
+        res.json({ message: 'Successfully Login...', token: token })
+      }
+      else {
+        res.json({ message: 'Invalid Email/Password...' })
+      }
+
     }
     else {
       res.json({ message: 'No Account Found...' })
     }
 
   } catch (error) {
-    console.log(error)
     res.json({ message: 'Error, please try again...' })
   }
 }
