@@ -4,9 +4,11 @@ import Input from '@/components/Input'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Loading from '@/components/Loading'
+import { useRouter } from 'next/router'
 
 
 export default function Login() {
+    const router = useRouter();
     const [error, setError] = useState('')
     const [data, setData] = useState({
         email: '',
@@ -29,8 +31,16 @@ export default function Login() {
                 })
                     .then(res => res.json())
                     .then((res) => {
-                        setError(res.message)
-                        setLoading(false)
+                        if (res.message === 'Successfully Login...') {
+                            localStorage.setItem('token', res.token);
+                            setLoading(false)
+                            router.push('/')
+                        }
+                        else {
+                            setLoading(false)
+                            setError(res.message)
+                        }
+
                     })
                     .catch(() => {
                         setError('Error, please try again...')
