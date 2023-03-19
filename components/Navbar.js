@@ -1,3 +1,4 @@
+import { getToken } from "@/Functions/getToken";
 import Link from "next/link";
 import { useRouter } from "next/router"
 import { useState } from "react";
@@ -12,7 +13,12 @@ export default function Navbar({ setSearchQuery, cart, searchQuery }) {
             router.push('/')
             return;
         }
-        router.push('/login')
+        if(getToken()) {
+            router.push('/account')
+        }
+        else{
+            router.push('/login')
+        }
     }
 
     const handleSubmit = (e) => {
