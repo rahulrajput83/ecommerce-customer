@@ -22,13 +22,13 @@ const handler = async (req, res) => {
         let bytesAddress = responseData.DeliveryAddress ? CryptoJS.AES.decrypt(responseData.DeliveryAddress, process.env.JWT) : '';
         let decryptAddress = bytesAddress ? bytesAddress.toString(CryptoJS.enc.Utf8) : 'Empty';
         /* Construct Account Data */
-        const data = [{
+        const data = {
             name: decryptFullName,
             email: decryptEmail,
             type: decryptType,
             number: decryptNumber,
             address: decryptAddress
-        }]
+        }
         let ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.JWT).toString();
         res.json({ message: 'Success', value: ciphertext})
 

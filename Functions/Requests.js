@@ -12,15 +12,11 @@ export const getRequest = async (path) => {
     try {
         const response = await axios.get(path);
         if (response.data.message === 'Success') {
-            console.log(response)
-            let data = response.data.value
-            let bytes = CryptoJS.AES.decrypt(data, process.env.JWT);
-            console.log('hello', bytes)
+            let bytes = CryptoJS.AES.decrypt(response.data.value, process.env.JWT);
             return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         }
         return response.data;
     } catch (error) {
-        console.log(error)
-        return { message: error }
+        return { message: 'Error, please try again' }
     }
 }

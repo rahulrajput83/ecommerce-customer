@@ -1,4 +1,5 @@
 import AccountDetail from '@/components/AccountDetail';
+import AccountLoading from '@/components/AccountLoading';
 import Navbar from '@/components/Navbar';
 import { getToken } from '@/Functions/getToken';
 import { Logout } from '@/Functions/Logout';
@@ -14,14 +15,15 @@ function account() {
     const router = useRouter();
     const [cart, setCart] = useState([]);
     const [selectedItem, setSelectedItem] = useState('My Account');
+    const [accountData, setAccountData] = useState()
 
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
-        const getAccount = async() => {
+        const getAccount = async () => {
             try {
                 const data = await getRequest('/api/account')
-                console.log(data)
+                setAccountData(data)
             } catch (error) {
                 console.log(error)
             }
@@ -55,7 +57,7 @@ function account() {
 
             <main className='w-100 flex flex-col box-border'>
                 <Navbar cart={cart} />
-                <div className='w-full px-2 md:px-4 gap-4 pb-10 mt-20 md:mt-20 flex flex-col md:flex-row'>
+                <div className='w-full px-2 md:px-4 gap-4 pb-10 mt-20 flex flex-col md:flex-row'>
                     <div className='w-full md:w-1/4'>
                         <div className='w-full flex gap-4 flex-row md:flex-col'>
                             {accountItem.map((e, i) => {
@@ -65,15 +67,18 @@ function account() {
                             })}
                         </div>
                     </div>
-                    <div className='w-full h-20 gap-3 md:w-3/4 justify-start items-center flex flex-col'>
+                    <div className='w-full gap-3 md:w-3/4 justify-start items-center relative flex flex-col'>
                         <span className='text-xl font-medium'>{selectedItem}</span>
-                        <div className='w-full px-1 md:w-2/3 flex flex-col'>
-                            <AccountDetail title='Name' value='Rahul Rajput' className='border-2 rounded-tl-lg rounded-tr-lg' />
-                            <AccountDetail title='E-mail' value='Rahul Rajput' className='border-2 border-t-0' />
-                            <AccountDetail title='Mobile Number' value='Rahul Rajput' className='border-2 border-t-0' />
-                            <AccountDetail title='Password' value='Rahul Rajput' className='border-2 border-t-0' />
-                            <AccountDetail title='Delivery Adrress' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg' value="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
-                        </div>
+                        {accountData  ?
+                            <div className='w-full px-1 md:w-2/3 flex flex-col relative'>
+                                <AccountDetail title='Name' value={accountData.name} className='border-2 rounded-tl-lg rounded-tr-lg' />
+                                <AccountDetail title='E-mail' value={accountData.email} className='border-2 border-t-0' />
+                                <AccountDetail title='Mobile Number' value={accountData.number} className='border-2 border-t-0' />
+                                <AccountDetail title='Password' value='Rahul Rajput' className='border-2 border-t-0' />
+                                <AccountDetail title='Delivery Adrress' value={accountData.address} className='border-2 rounded-bl-lg border-t-0 rounded-br-lg'  />
+                            </div>
+                            : <AccountLoading />
+                        }
                     </div>
 
                 </div>
