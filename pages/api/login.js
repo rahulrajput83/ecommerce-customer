@@ -18,12 +18,12 @@ const handler = async (req, res) => {
       let decryptPassword = bytesPassword.toString(CryptoJS.enc.Utf8);
       let bytesType = CryptoJS.AES.decrypt(element.type, process.env.JWT);
       let decryptType = bytesType.toString(CryptoJS.enc.Utf8);
-      return { email: decryptEmail, password: decryptPassword, type: decryptType };
+      return { _id: element._id, email: decryptEmail, password: decryptPassword, type: decryptType };
     });
     let findEmail = await newData.find((e) => e.email === req.body.email);
     if (findEmail !== -1) {
       if (findEmail.password === req.body.password) {
-        const token = await jwt.sign({ email: findEmail.email, type: findEmail.type }, process.env.JWT);
+        const token = await jwt.sign({ id: findEmail._id, email: findEmail.email, type: findEmail.type }, process.env.JWT);
         res.json({ message: 'Successfully Login...', token: token })
       }
       else {

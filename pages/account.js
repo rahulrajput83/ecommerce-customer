@@ -2,6 +2,7 @@ import AccountDetail from '@/components/AccountDetail';
 import Navbar from '@/components/Navbar';
 import { getToken } from '@/Functions/getToken';
 import { Logout } from '@/Functions/Logout';
+import { getRequest } from '@/Functions/Requests';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
@@ -12,11 +13,20 @@ const accountItem = ['My Account', 'Your Orders', 'Logout']
 function account() {
     const router = useRouter();
     const [cart, setCart] = useState([]);
-    const [selectedItem, setSelectedItem] = useState('My Account')
+    const [selectedItem, setSelectedItem] = useState('My Account');
 
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
+        const getAccount = async() => {
+            try {
+                const data = await getRequest('/api/account')
+                console.log(data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getAccount();
     }, [])
 
     useEffect(() => {
