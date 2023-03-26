@@ -1,4 +1,5 @@
 import AccountDetail from '@/components/AccountDetail';
+import AccountEdit from '@/components/AccountEdit';
 import AccountLoading from '@/components/AccountLoading';
 import Navbar from '@/components/Navbar';
 import { getToken } from '@/Functions/getToken';
@@ -9,13 +10,18 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 
 
-const accountItem = ['My Account', 'Your Orders', 'Logout']
+const accountItem = ['My Account', 'My Orders', 'Logout']
 
 function account() {
     const router = useRouter();
     const [cart, setCart] = useState([]);
     const [selectedItem, setSelectedItem] = useState('My Account');
-    const [accountData, setAccountData] = useState()
+    const [accountData, setAccountData] = useState();
+    const [edit, setEdit] = useState({
+        field: '',
+        path: '',
+        valueField: ''
+    });
 
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -67,15 +73,15 @@ function account() {
                             })}
                         </div>
                     </div>
-                    <div className='w-full gap-3 md:w-3/4 justify-start items-center relative flex flex-col'>
+                    <div className='w-full gap-3 md:w-3/4 justify-start items-center flex flex-col'>
                         <span className='text-xl font-medium'>{selectedItem}</span>
                         {accountData  ?
-                            <div className='w-full px-1 md:w-2/3 flex flex-col relative'>
-                                <AccountDetail title='Name' value={accountData.name} className='border-2 rounded-tl-lg rounded-tr-lg' />
-                                <AccountDetail title='E-mail' value={accountData.email} className='border-2 border-t-0' />
-                                <AccountDetail title='Mobile Number' value={accountData.number} className='border-2 border-t-0' />
-                                <AccountDetail title='Password' value='Rahul Rajput' className='border-2 border-t-0' />
-                                <AccountDetail title='Delivery Adrress' value={accountData.address} className='border-2 rounded-bl-lg border-t-0 rounded-br-lg'  />
+                            <div className='w-full px-1 md:w-2/3 flex flex-col'>
+                                <AccountDetail setEdit={setEdit} title='Name' value={accountData.name} valueField='name' className='border-2 rounded-tl-lg rounded-tr-lg' />
+                                <AccountDetail setEdit={setEdit} title='E-mail' value={accountData.email} valueField='email' className='border-2 border-t-0' />
+                                <AccountDetail setEdit={setEdit} title='Mobile Number' value={accountData.number} valueField='number' className='border-2 border-t-0' />
+                                <AccountDetail setEdit={setEdit} title='Delivery Address' value={accountData.address} valueField='address' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg'  />
+                                {edit.field && <AccountEdit setEdit={setEdit} edit={edit} accountData={accountData} />}
                             </div>
                             : <AccountLoading />
                         }
