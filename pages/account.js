@@ -22,17 +22,19 @@ function account() {
         valueField: ''
     });
 
+    const getAccount = async () => {
+        try {
+            const data = await getRequest('/api/account')
+            setAccountData(data)
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
-        const getAccount = async () => {
-            try {
-                const data = await getRequest('/api/account')
-                setAccountData(data)
-            } catch (error) {
-                console.log(error)
-            }
-        }
         getAccount();
     }, [])
 
@@ -80,7 +82,7 @@ function account() {
                                 <AccountDetail setEdit={setEdit} title='E-mail' value={accountData.email} valueField='email' className='border-2 border-t-0' />
                                 <AccountDetail setEdit={setEdit} title='Mobile Number' value={accountData.number} valueField='number' className='border-2 border-t-0' />
                                 <AccountDetail setEdit={setEdit} title='Delivery Address' value={accountData.address} valueField='address' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg'  />
-                                {edit.field && <AccountEdit setEdit={setEdit} edit={edit} accountData={accountData} />}
+                                {edit.field && <AccountEdit getAccount={getAccount} setEdit={setEdit} edit={edit} accountData={accountData} />}
                             </div>
                             : <AccountLoading />
                         }

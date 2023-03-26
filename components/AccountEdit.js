@@ -2,7 +2,7 @@ import { putRequest } from "@/Functions/Requests";
 import { useEffect, useState } from "react"
 import { MdClose } from "react-icons/md"
 
-function AccountEdit({ edit, accountData, setEdit }) {
+function AccountEdit({ edit, accountData, setEdit, getAccount }) {
     const [inputValue, setInputValue] = useState('');
     const [invalid, setInvalid] = useState(false)
     useEffect(() => {
@@ -14,7 +14,7 @@ function AccountEdit({ edit, accountData, setEdit }) {
         }
     }, [])
 
-    const handleChanges = (e) => {
+    const handleChanges = async(e) => {
         e.preventDefault();
         if (edit.valueField === 'number' && inputValue && inputValue.length === 10) {
             setInvalid(false)
@@ -26,7 +26,10 @@ function AccountEdit({ edit, accountData, setEdit }) {
         else {
             setInvalid(false)
         }
-        putRequest('/api/account-update', edit.valueField, inputValue)
+        const data = await putRequest('/api/account-update', edit.valueField, inputValue);
+        if(data.message === 'Success') {
+            getAccount();
+        }
         empty();
     }
 
