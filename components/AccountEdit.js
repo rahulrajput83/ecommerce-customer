@@ -1,7 +1,10 @@
+import { putRequest } from "@/Functions/Requests";
 import { useEffect, useState } from "react"
+import { MdClose } from "react-icons/md"
 
 function AccountEdit({ edit, accountData, setEdit }) {
-    const [inputValue, setInputValue] = useState('')
+    const [inputValue, setInputValue] = useState('');
+    const [invalid, setInvalid] = useState(false)
     useEffect(() => {
         if (accountData[edit.valueField] === 'Empty') {
             setInputValue('')
@@ -11,19 +14,41 @@ function AccountEdit({ edit, accountData, setEdit }) {
         }
     }, [])
 
-    const handleChanges = () => {
+    const handleChanges = (e) => {
+        e.preventDefault();
+        if (edit.valueField === 'number' && inputValue && inputValue.length === 10) {
+            setInvalid(false)
+        }
+        else if (edit.valueField === 'number' && inputValue) {
+            setInvalid(true)
+            return;
+        }
+        else {
+            setInvalid(false)
+        }
+        putRequest('/api/account-update', edit.valueField, inputValue)
+        empty();
+    }
+
+    const empty = () => {
         setEdit({
             field: '',
-            path: '',
             valueField: ''
         })
     }
     return (
         <div className="w-full absolute top-0 bottom-0 right-0 justify-center items-center z-20 left-0 flex">
             <div className="flex flex-col w-full h-fit md:w-5/12 bg-white shadow-2xl gap-4 p-3">
-                <span className="text-lg font-semibold">{edit.field}:</span>
-                <input onChange={(e) => setInputValue(e.target.value)} value={inputValue} className="outline-none focus:shadow-lg focus:shadow-red-200 p-2 border-[0.14rem] border-red-500" />
-                <button onClick={handleChanges} className="ml-auto text-sm font-medium bg-red-500 rounded p-2 text-white hover:bg-red-400">Save changes</button>
+                <div className="w-full flex flex-row items-center justify-between">
+                    <span className="text-lg font-semibold">{edit.field}:</span>
+                    <MdClose onClick={empty} className="cursor-pointer" />
+                </div>
+                <form onSubmit={handleChanges} className="flex w-full flex-col gap-4">
+                    <input type={edit.valueField === 'name' ? 'text' : edit.valueField === 'email' ? 'email' : edit.valueField === 'number' ? 'number' : 'text'} onChange={(e) => setInputValue(e.target.value)} value={inputValue} className="outline-none focus:shadow-lg focus:shadow-red-200 p-2 border-[0.14rem] border-red-500" />
+                    {invalid && <span className="text-sm font-medium">Mobile Number should be of 10 digits.</span>}
+                    <button type="submit" className="ml-auto text-sm font-medium bg-red-500 rounded p-2 text-white hover:bg-red-400">Save changes</button>
+
+                </form>
             </div>
         </div>
     )

@@ -2,7 +2,7 @@ import React from 'react'
 
 function AccountDetail({title, value, className, valueField, setEdit}) {
     const handleEdit = () => {
-        setEdit({field: title, path: `/${title}`, valueField: valueField})
+        setEdit({field: title, valueField: valueField})
     }
     return (
         <div className={`w-full flex gap-4 px-3 py-4 justify-start items-start ${className}`}>

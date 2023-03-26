@@ -5,7 +5,7 @@ const Register = new mongoose.Schema({
     email: String,
     password: String,
     type: String,
-    mobileNumber: Number,
+    mobileNumber: String,
     DeliveryAddress: String,
     
 });

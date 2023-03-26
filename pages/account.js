@@ -19,7 +19,6 @@ function account() {
     const [accountData, setAccountData] = useState();
     const [edit, setEdit] = useState({
         field: '',
-        path: '',
         valueField: ''
     });
 
