@@ -110,7 +110,7 @@ export default function Cart() {
             body: JSON.stringify({
                 amount: finalPrice,
                 purpose: 'Product Purchase',
-                redirect: `${process.env.FRONTEND}/api/paymentStatus`,
+                redirect: `https://rahulrajput83-ecommerce.vercel.app/paymentStatus`,
                 email: accountData.email,
                 number: accountData.number,
                 name: accountData.name,

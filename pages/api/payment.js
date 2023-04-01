@@ -23,7 +23,7 @@ const payment = async (req, res) => {
         data.send_sms = false;
         data.send_email = true;
         data.allow_repeated_payments = false;
-        data.webhook = redirect;
+        data.webhook = 'https://rahulrajput83-ecommerce.vercel.app/api/paymentStatus';
         data.redirect_url = redirect;
         Insta.createPayment(data, async(err, instaResponse) => {
             if (err) {
