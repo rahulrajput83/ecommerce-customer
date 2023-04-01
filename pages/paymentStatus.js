@@ -1,3 +1,4 @@
+import Loading from '@/components/Loading';
 import Navbar from '@/components/Navbar';
 import moment from 'moment';
 import Head from 'next/head';
@@ -7,6 +8,7 @@ import React, { useEffect, useState } from 'react'
 function paymentStatus() {
     const router = useRouter()
     const [cart, setCart] = useState([])
+    const [data, setData] = useState({})
 
     useEffect(() => {
         if (router.isReady) {
@@ -23,9 +25,16 @@ function paymentStatus() {
                 })
                     .then(res => res.json())
                     .then((res) => {
-                        console.log(res)
-                       /*  let stillUtc = moment.utc(res.payment).toDate();
-                        let vad = moment(stillUtc).local().format('llll') */
+                        if (res.message === 'Success') {
+                            const response = res;
+                            let stillUtc = moment.utc(res.payment).toDate();
+                            let responseTime = moment(stillUtc).local().format('llll')
+                            response.payment = responseTime;
+                            setData(response)
+                            if(res.status === 'Paid') {
+                                localStorage.removeItem('cart');
+                            }
+                        }
                     })
                     .catch(() => {
                         console.log('err')
@@ -51,8 +60,27 @@ function paymentStatus() {
             <main className='w-full'>
                 <Navbar cart={cart} />
                 <main className='w-full flex flex-col md:flex-row box-border'>
-                    <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full flex flex-col'>
-                        <span>Checking Payment Status</span>
+                    <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full justify-center items-center flex flex-col'>
+
+                        {data ?
+                            <div className='w-full flex flex-col md:mt-6 relative md:w-1/2'>
+                                <div className='w-full flex flex-col'>
+                                    <span className='font-medium text-lg text-red-500'>{data.status === 'Paid' && 'Order Confirmed !!'}</span>
+                                    <span className='text-sm font-medium'>{data.status === 'Paid' && 'Thank you for your order.'}</span>
+                                    <span className='text-sm font-medium'>{data.status === 'Failed' && 'Payment Failed, please try again after some time.'}</span>
+                                </div>
+                                <div className='absolute p-10 border-2 border-red-500 rounded-full right-0 uppercase'>
+                                    <span className='absolute font-medium -rotate-[30deg] text-sm text-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                                        {data.status}
+                                    </span>
+                                </div>
+                            </div>
+                            :
+                            <div className='absolute left-1/2 flex flex-col top-20 -translate-x-1/2'>
+                                <Loading />
+                                <span className='font-medium text-sm mt-32'>Verifying your payment</span>
+                            </div>
+                        }
                     </div>
                 </main>
             </main>

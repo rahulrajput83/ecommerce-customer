@@ -22,7 +22,7 @@ const handler = async (req, res) => {
           res.json({ message: 'Success', status: 'Paid', payment: response.payment_request.modified_at })
         }
         else {
-          res.json({ message: 'Success', status: 'Failed'})
+          res.json({ message: 'Failed', status: 'Failed'})
         }
       }
     });
