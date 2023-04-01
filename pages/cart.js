@@ -37,7 +37,6 @@ export default function Cart() {
         try {
             const data = await getRequest('/api/account')
             setAccountData(data)
-            console.log(data)
         } catch (error) {
             console.log(error)
         }
@@ -110,11 +109,14 @@ export default function Cart() {
             method: 'POST',
             body: JSON.stringify({
                 amount: finalPrice,
-                purpose: JSON.stringify({cart: cart}),
+                purpose: 'Product Purchase',
                 redirect: 'https://rahulrajput83-to-do.vercel.app/todo/',
                 email: accountData.email,
                 number: accountData.number,
-                name: accountData.name
+                name: accountData.name,
+                id: accountData.id,
+                product: cart,
+                address: accountData.address
             })
         })
             .then(res => res.json())
