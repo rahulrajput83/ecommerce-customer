@@ -110,7 +110,7 @@ export default function Cart() {
             body: JSON.stringify({
                 amount: finalPrice,
                 purpose: 'Product Purchase',
-                redirect: 'https://rahulrajput83-to-do.vercel.app/todo/',
+                redirect: `${process.env.FRONTEND}/api/paymentStatus`,
                 email: accountData.email,
                 number: accountData.number,
                 name: accountData.name,
@@ -121,7 +121,12 @@ export default function Cart() {
         })
             .then(res => res.json())
             .then((res) => {
-                console.log(res)
+                if(res.message === 'Success') {
+                    window.location.replace(res.data)
+                }
+                else{
+                    console.log('Error')
+                }
             })
             .catch(() => {
                 console.log('err')

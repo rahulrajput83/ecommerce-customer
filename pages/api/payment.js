@@ -30,20 +30,26 @@ const payment = async (req, res) => {
                 res.json({ message: 'Error, please try again...' })
             }
             else {
-                let paymentResponse = JSON.parse(instaResponse)
-                const newPayment = new PaymentRequestModel({
-                    paymentStatus: false,
-                    userId: id,
-                    fullName: name,
-                    email: email,
-                    mobileNumber: number,
-                    DeliveryAddress: address,
-                    products: product,
-                    paymentURL: paymentResponse.payment_request.longurl,
-                    paymentID: paymentResponse.payment_request.id,
-                })
-                await newPayment.save();
-                res.json({ message: 'Success', data: JSON.parse(instaResponse) })
+                let paymentResponse = await JSON.parse(instaResponse)
+                if(paymentResponse.success){
+                    const newPayment = new PaymentRequestModel({
+                        paymentStatus: false,
+                        userId: id,
+                        fullName: name,
+                        email: email,
+                        mobileNumber: number,
+                        DeliveryAddress: address,
+                        products: product,
+                        paymentURL: paymentResponse.payment_request.longurl,
+                        paymentID: paymentResponse.payment_request.id,
+                    })
+                    await newPayment.save();
+                    res.json({ message: 'Success', data: paymentResponse.payment_request.longurl })
+                }
+                else{
+                    res.json({ message: 'Error, please try again...' })
+                }
+                
             }
         });
 
