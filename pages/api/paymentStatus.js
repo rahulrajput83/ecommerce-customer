@@ -27,7 +27,6 @@ const handler = async (req, res) => {
         else {
           res.json({ message: 'Success', status: 'Failed' })
         }
-        res.json({ message: response })
       }
     });
 
