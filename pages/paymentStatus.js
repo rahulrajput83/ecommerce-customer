@@ -12,7 +12,7 @@ function paymentStatus() {
         if (router.isReady) {
             const { payment_id, payment_request_id } = router.query;
             if (payment_id && payment_request_id) {
-                let time = moment().add(5, 'days').format('dddd, Do MMMM.');
+                let time = moment().add(5, 'days').format('llll');
                 fetch('/api/paymentStatus', {
                     method: 'POST',
                     body: JSON.stringify({
