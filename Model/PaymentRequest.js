@@ -10,8 +10,9 @@ const PaymentRequest = new mongoose.Schema({
     products: Array,
     paymentURL: String,
     paymentID: String,
+    deliveryDate: String,
 });
 
-const PaymentRequestModel = mongoose.models.PaymentRequest || mongoose.model('PaymentRequest', PaymentRequest);
+const PaymentRequestModel = mongoose.models.Order || mongoose.model('Order', PaymentRequest);
 
 export default PaymentRequestModel;

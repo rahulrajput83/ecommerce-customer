@@ -5,13 +5,13 @@ import React, { useEffect, useState } from 'react'
 
 function paymentStatus() {
     const router = useRouter()
-    const [paymentData, setPaymentData] = useState({})
     const [cart, setCart] = useState([])
 
     useEffect(() => {
         if (router.isReady) {
             const { payment_id, payment_request_id } = router.query;
             if(payment_id && payment_request_id) {
+                console.log(payment_id, payment_request_id)
                 fetch('/api/paymentStatus', {
                     method: 'POST',
                     body: JSON.stringify({
