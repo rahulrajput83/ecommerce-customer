@@ -12,6 +12,7 @@ const handler = async (req, res) => {
     const params = req.query;
     await MongoDBConnect();
     console.log(params)
+    res.json({mess: req.body})
 
   } catch (error) {
     res.json({ message: 'Error, please try again...' })
