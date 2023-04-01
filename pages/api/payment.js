@@ -55,6 +55,7 @@ const payment = async (req, res) => {
 
 
     } catch (error) {
+        console.log(error)
         res.json({ message: 'Error, please try again...' })
     }
 }
