@@ -1,9 +1,6 @@
 import PaymentRequestModel from '@/Model/PaymentRequest';
+import Insta from '@/Utils/InstamojoConfig';
 import MongoDBConnect from '@/Utils/MongoDB';
-
-const Insta = require('instamojo-nodejs');
-Insta.setKeys(process.env.INSTA_API_KEY, process.env.INSTA_SECRET_KEY)
-Insta.isSandboxMode(true);
 
 
 const payment = async (req, res) => {
@@ -23,7 +20,6 @@ const payment = async (req, res) => {
         data.send_sms = false;
         data.send_email = true;
         data.allow_repeated_payments = false;
-        data.webhook = 'https://rahulrajput83-ecommerce.vercel.app/api/paymentStatus';
         data.redirect_url = redirect;
         Insta.createPayment(data, async(err, instaResponse) => {
             if (err) {
