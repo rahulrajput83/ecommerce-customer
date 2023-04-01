@@ -3,7 +3,6 @@ import RegisterModel from "@/Model/User"
 import CryptoJS from 'crypto-js'
 import Insta from "@/Utils/InstamojoConfig"
 import PaymentRequestModel from "@/Model/PaymentRequest"
-import moment from "moment"
 
 
 const handler = async (req, res) => {
@@ -18,10 +17,8 @@ const handler = async (req, res) => {
         res.json({ message: error })
       } else {
         const { status } = response.payment_request.payment;
-        console.log(status)
         if (status === 'Credit') {
-          const date = moment().add(5, 'days').format('dddd, Do MMMM.');
-          await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, deliveryDate: date } })
+          await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true } })
           res.json({ message: 'Success', status: 'Paid' })
         }
         else {
