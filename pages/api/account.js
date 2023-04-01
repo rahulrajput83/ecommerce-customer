@@ -27,7 +27,8 @@ const handler = async (req, res) => {
             email: decryptEmail,
             type: decryptType,
             number: decryptNumber,
-            address: decryptAddress
+            address: decryptAddress,
+            id: responseData._id
         }
         let ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.JWT).toString();
         res.json({ message: 'Success', value: ciphertext})

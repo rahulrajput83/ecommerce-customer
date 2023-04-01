@@ -37,6 +37,7 @@ export default function Cart() {
         try {
             const data = await getRequest('/api/account')
             setAccountData(data)
+            console.log(data)
         } catch (error) {
             console.log(error)
         }
@@ -105,16 +106,15 @@ export default function Cart() {
             alert('Please add address and mobile number.')
             return;
         }
-        return;
         fetch('/api/payment', {
             method: 'POST',
             body: JSON.stringify({
-                amount: 100,
-                purpose: 'Product Purchase',
+                amount: finalPrice,
+                purpose: JSON.stringify({cart: cart}),
                 redirect: 'https://rahulrajput83-to-do.vercel.app/todo/',
-                email: 'abc@gmail.com',
-                number: 9000000000,
-                name: 'Rahul Rajput'
+                email: accountData.email,
+                number: accountData.number,
+                name: accountData.name
             })
         })
             .then(res => res.json())
