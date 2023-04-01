@@ -6,6 +6,9 @@ import responsiveHOC from 'react-lines-ellipsis/lib/responsiveHOC'
 import { BiMap, BiMinus, BiPlus } from 'react-icons/bi'
 import { MdDeleteOutline } from 'react-icons/md'
 import Link from 'next/link'
+import AccountEdit from '@/components/AccountEdit'
+import { getRequest } from '@/Functions/Requests'
+import SmallLoading from '@/components/SmallLoading'
 
 const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
@@ -15,7 +18,12 @@ export default function Cart() {
     const [productPrice, setProductPrice] = useState(0);
     const [shippingPrice, setShippingPrice] = useState(0);
     const [finalPrice, setFinalPrice] = useState(0);
-    const [taxPrice, setTaxPrice] = useState(0)
+    const [taxPrice, setTaxPrice] = useState(0);
+    const [accountData, setAccountData] = useState({})
+    const [edit, setEdit] = useState({
+        field: '',
+        valueField: ''
+    });
 
     const getLocalStorage = () => {
         setProductPrice(0);
@@ -25,7 +33,22 @@ export default function Cart() {
         setCart(localCart)
     }
 
+    const getAccount = async () => {
+        try {
+            const data = await getRequest('/api/account')
+            setAccountData(data)
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleEdit = (title, valueField) => {
+        setEdit({ field: title, valueField: valueField })
+    }
+
     useEffect(() => {
+        getAccount();
         getLocalStorage()
     }, [])
 
@@ -120,7 +143,7 @@ export default function Cart() {
                                     {cart.map((item, i) => {
                                         return (
                                             <div key={`cart${i}`} className='w-full relative flex gap-4 flex-row justify-start items-start'>
-                                                <img alt={item.title} src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
+                                                <img alt='' src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col w-full'>
                                                     <div className='font-medium flex justify-between items-center w-full'>
                                                         <Link href={`/product/${item.id}`} className='w-full text-red-500 p-0 m-0'>
@@ -183,11 +206,23 @@ export default function Cart() {
                                         <div className='w-full flex items-center gap-2'>
                                             <BiMap className='text-lg' />
                                             <span className='font-medium mr-auto'>Address</span>
-                                            <Link href='/account' className='py-1 px-3 bg-red-500 text-white text-sm font-medium rounded-full border-[0.14rem] border-red-500 hover:bg-white hover:text-red-500'>Edit</Link>
+                                            <button onClick={() => handleEdit('Delivery Address', 'address')} className='py-1 px-3 bg-red-500 text-white text-sm font-medium rounded-full border-[0.14rem] border-red-500 hover:bg-white hover:text-red-500'>Edit</button>
                                         </div>
-                                        <span className='w-full text-sm'>extrcyvubinm ertyvbjnm ftyubn</span>
+                                        {accountData && accountData.address ?
+                                            <div className='w-full inline'>
+                                                <span className='text-sm'>{accountData.address}</span>
+                                                <span className='text-sm font-medium ml-1'>{accountData.number}</span>
+                                            </div>
+                                            :
+                                            <SmallLoading />
+                                        }
+
                                     </div>
-                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-3 mt-8 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Continue to Payment</button>
+                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-2 mt-8 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Continue to Payment</button>
+                                    {accountData ?
+                                        edit.field && <AccountEdit getAccount={getAccount} setEdit={setEdit} edit={edit} accountData={accountData} />
+                                        : null}
+
                                 </div>
                             </div>
                             :

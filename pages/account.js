@@ -26,7 +26,6 @@ function account() {
         try {
             const data = await getRequest('/api/account')
             setAccountData(data)
-            console.log(data)
         } catch (error) {
             console.log(error)
         }
