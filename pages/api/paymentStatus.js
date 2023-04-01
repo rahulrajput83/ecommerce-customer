@@ -10,7 +10,7 @@ const handler = async (req, res) => {
     res.json({ message: 'Only POST requests allowed.' })
   }
   try {
-    const { id, request } = JSON.parse(req.body);
+    const { id, request, time } = JSON.parse(req.body);
     await MongoDBConnect();
     Insta.getPaymentDetails(request, id, async function (error, response) {
       if (error) {
@@ -18,11 +18,11 @@ const handler = async (req, res) => {
       } else {
         const { status } = response.payment_request.payment;
         if (status === 'Credit') {
-          await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true } })
-          res.json({ message: 'Success', status: 'Paid' })
+          await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, paymentDate: response.payment_request.modified_at, deliveryDate: time } })
+          res.json({ message: 'Success', status: 'Paid', payment: response.payment_request.modified_at })
         }
         else {
-          res.json({ message: 'Success', status: 'Failed' })
+          res.json({ message: 'Success', status: 'Failed'})
         }
       }
     });

@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import moment from 'moment';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
@@ -10,18 +11,21 @@ function paymentStatus() {
     useEffect(() => {
         if (router.isReady) {
             const { payment_id, payment_request_id } = router.query;
-            if(payment_id && payment_request_id) {
-                console.log(payment_id, payment_request_id)
+            if (payment_id && payment_request_id) {
+                let time = moment().add(5, 'days').format('dddd, Do MMMM.');
                 fetch('/api/paymentStatus', {
                     method: 'POST',
                     body: JSON.stringify({
                         id: payment_id,
-                        request: payment_request_id
+                        request: payment_request_id,
+                        time: time
                     })
                 })
                     .then(res => res.json())
                     .then((res) => {
                         console.log(res)
+                       /*  let stillUtc = moment.utc(res.payment).toDate();
+                        let vad = moment(stillUtc).local().format('llll') */
                     })
                     .catch(() => {
                         console.log('err')
