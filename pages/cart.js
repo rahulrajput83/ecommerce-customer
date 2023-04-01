@@ -37,7 +37,6 @@ export default function Cart() {
         try {
             const data = await getRequest('/api/account')
             setAccountData(data)
-            console.log(data)
         } catch (error) {
             console.log(error)
         }
@@ -102,6 +101,11 @@ export default function Cart() {
     }
 
     const handlePayment = () => {
+        if(!accountData.address && !accountData.number) {
+            alert('Please add address and mobile number.')
+            return;
+        }
+        return;
         fetch('/api/payment', {
             method: 'POST',
             body: JSON.stringify({
