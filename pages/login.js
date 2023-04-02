@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Loading from '@/components/Loading'
 import { useRouter } from 'next/router'
+import { getToken } from '@/Functions/getToken'
 
 
 export default function Login() {
@@ -20,6 +21,12 @@ export default function Login() {
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
+    }, [])
+
+    useEffect(() => {
+        if (getToken()) {
+            router.push('/');
+        }
     }, [])
 
     const handleForm = (e) => {

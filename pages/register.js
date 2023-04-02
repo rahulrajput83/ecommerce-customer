@@ -5,9 +5,12 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Label from '@/components/Label'
 import Loading from '@/components/Loading'
+import { useRouter } from 'next/router'
+import { getToken } from '@/Functions/getToken'
 
 
 export default function Register() {
+    const router = useRouter();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState({
@@ -20,6 +23,12 @@ export default function Register() {
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
+    }, [])
+
+    useEffect(() => {
+        if (getToken()) {
+            router.push('/');
+        }
     }, [])
 
     const handleForm = (e) => {

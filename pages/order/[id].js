@@ -1,30 +1,36 @@
 import Line from '@/components/Line';
 import Head from 'next/head'
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar'
 import moment from 'moment/moment';
 import { BiCart } from 'react-icons/bi';
-import { localSave } from '@/Functions/LocalStorage';
 import ProductLoading from '@/components/ProductLoading';
+import { postRequest } from '@/Functions/Requests';
+import { useRouter } from 'next/router';
+import { getToken } from '@/Functions/getToken';
+import { Logout } from '@/Functions/Logout';
 
-export default function product() {
+export default function order() {
     const router = useRouter();
     const [data, setData] = useState({});
-    const [image, setImage] = useState('');
     const [cart, setCart] = useState([]);
 
+    const getOrder = async (id) => {
+        try {
+            const data = await postRequest('/api/orderDetail', id)
+            setData(data)
+            console.log(data)
+        } catch (error) {
+            console.log('err')
+        }
+    }
 
     useEffect(() => {
         if (router.isReady) {
-            const { id } = router.query
-            fetch(`https://dummyjson.com/products/${id}`)
-                .then(res => res.json())
-                .then((res) => {
-                    setData(res)
-                    setImage(res.thumbnail)
-                })
+            const { id } = router.query;
+            getOrder(id)
+            
         }
     }, [router.isReady])
 
@@ -33,20 +39,11 @@ export default function product() {
         setCart(localCart)
     }, [])
 
-
-    const handleAddToCart = (item) => {
-        const find = cart.findIndex((e) => e.title === item.title);
-        if (find === -1) {
-            setCart(element => [{ quantity: 1, ...item }, ...element]);
-        }
-        return;
-    }
-
     useEffect(() => {
-        if (cart.length > 0) {
-            localSave(cart)
+        if (!getToken()) {
+            router.push(Logout());
         }
-    }, [cart])
+    }, [])
 
 
     return (
@@ -60,7 +57,6 @@ export default function product() {
 
             <main className='w-100 flex flex-col'>
                 <Navbar cart={cart} />
-                {'images' in data ?
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
                         <div className='w-full grid gap-6 grid-cols-1 md:grid-cols-12'>
                             <div className='flex flex-row md:flex-col gap-4 order-2 md:order-1 overflow-scroll md:overflow-hidden w-full md:col-span-1'>
@@ -124,11 +120,10 @@ export default function product() {
                             </div>
                         </div>
 
-                    </div> :
+                    </div>
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
                         <ProductLoading />
                     </div>
-                }
             </main>
         </>
     )

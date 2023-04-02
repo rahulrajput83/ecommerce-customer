@@ -43,7 +43,7 @@ export default function Cart() {
             const data = await getRequest('/api/account')
             setAccountData(data)
         } catch (error) {
-            console.log(error)
+            console.log('err')
         }
     }
 
@@ -123,7 +123,11 @@ export default function Cart() {
                 name: accountData.name,
                 id: accountData.id,
                 product: cart,
-                address: accountData.address
+                address: accountData.address,
+                tax: taxPrice,
+                grandTotal: finalPrice,
+                subTotal: productPrice,
+                shippingCharges: shippingPrice
             })
         })
             .then(res => res.json())

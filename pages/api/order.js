@@ -12,7 +12,7 @@ const handler = async (req, res) => {
         await MongoDBConnect();
         let responseData = await PaymentRequestModel.find({ userId: req.user.id, paymentStatus: true })
         const data = responseData.map((e) => {
-            const { _id, userId, paymentStatus, products, deliveryDate, orderId, paymentDate } = e;
+            const { _id, userId, paymentStatus, products, deliveryDate, orderId, paymentDate, grandTotal, deliveredDate, deliveryStatus } = e;
             return {
                 id: _id,
                 userId: userId,
@@ -21,6 +21,9 @@ const handler = async (req, res) => {
                 deliveryDate: deliveryDate,
                 orderId: orderId,
                 paymentDate: paymentDate,
+                deliveredDate: deliveredDate,
+                deliveryStatus: deliveryStatus,
+                grandTotal: grandTotal
             }
         })
         let ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.JWT).toString();

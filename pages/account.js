@@ -5,7 +5,9 @@ import Navbar from '@/components/Navbar';
 import { getToken } from '@/Functions/getToken';
 import { Logout } from '@/Functions/Logout';
 import { getRequest } from '@/Functions/Requests';
+import moment from 'moment';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 
@@ -28,17 +30,22 @@ function account() {
             const data = await getRequest('/api/account')
             setAccountData(data)
         } catch (error) {
-            console.log(error)
+            console.log('err')
         }
     }
 
     const getOrders = async () => {
         try {
             const data = await getRequest('/api/order')
-            setOrder(data)
-            console.log(data)
+            let responseData = data.map((e) => {
+                let stillUtc = moment.utc(e.paymentDate).toDate();
+                let responseTime = moment(stillUtc).local().format('LL')
+                return { ...e, paymentDate: responseTime}
+            })
+            setOrder(responseData)
+            console.log(responseData)
         } catch (error) {
-            console.log(error)
+            console.log('err')
         }
     }
 
@@ -103,17 +110,33 @@ function account() {
                         }
                         {selectedItem === 'My Orders' && order.length > 0 ?
                             <div className='w-full gap-4 px-1 md:w-11/12 flex flex-col'>
-                                {order.map(({ id, products, deliveryDate, paymentStatus, orderId, paymentDate }) => {
+                                {order.map(({ id, products, deliveryDate, paymentStatus, grandTotal, orderId, paymentDate }) => {
                                     return (
-                                        <div className={`w-full relative flex justify-start gap-2 items-start`} key={id}>
-                                            <img src={products[0].thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
-                                            <div className='w-full flex flex-col md:gap-2'>
-                                                <span className='text-sm font-medium'>{products[0].title}</span>
-                                                <span className='text-xs font-medium'>Delivery Date: <span className='text-red-500'>{deliveryDate}</span></span>
-                                                <span className='text-xs font-medium'>Order ID: {orderId}</span>
-                                                <span className='text-xs font-medium text-red-500'>{products.length > 0 && `${products.length - 1}+ Products`}</span>
+                                        <div className={`w-full rounded flex border-2 border-gray-200 flex-col justify-start items-start`} key={id}>
+                                            <div className='w-full flex text-xs font-medium p-4 gap-4 items-center  justify-between rounded-br-none rounded-bl-none bg-gray-200'>
+                                                <div className='flex flex-col justify-center items-center'>
+                                                    <span>ORDER PLACED</span>
+                                                    <span>{paymentDate}</span>
+                                                </div>
+                                                <div className='flex flex-col justify-center items-center'>
+                                                    <span>TOTAL</span>
+                                                    <span>&#x20b9; {grandTotal}</span>
+                                                </div>
+                                                <div className='flex flex-col justify-center items-center'>
+                                                    <span>Order ID</span>
+                                                    <span>{orderId}</span>
+                                                </div>
                                             </div>
-                                            <span className='absolute right-0 text-sm font-semibold text-red-500'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
+                                            <div className='flex w-full gap-2 px-2 pt-2 relative'>
+                                                <img src={products[0].thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
+                                                <div className='w-full flex flex-col md:gap-2'>
+                                                    <Link href={`/product/${products[0].id}`} className='text-sm font-medium text-red-500'>{products[0].title}</Link>
+                                                    <span className='text-xs font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
+                                                    <span className='text-xs font-medium text-red-500'>{products.length > 1 && `${products.length - 1}+ Products`}</span>
+                                                    <Link href={`/order/${id}`} className='p-2 text-xs rounded w-fit uppercase text-white font-medium bg-red-500 hover:bg-red-400'>View Order</Link>
+                                                </div>
+                                                <span className='absolute right-2 text-sm font-semibold text-red-500'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
+                                            </div>
                                         </div>
                                     )
                                 })}

@@ -13,6 +13,14 @@ const PaymentRequest = new mongoose.Schema({
     deliveryDate: String,
     paymentDate: String,
     orderId: String,
+    subTotal: String,
+    shippingCharges: String,
+    tax: String,
+    grandTotal: String,
+    deliveryStatus: Boolean,
+    deliveredDate: String,
+    deliveredBy: String,
+    receivedBy: String,
 });
 
 const PaymentRequestModel = mongoose.models.Order || mongoose.model('Order', PaymentRequest);

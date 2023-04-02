@@ -11,7 +11,7 @@ const payment = async (req, res) => {
             return
         }
         await MongoDBConnect();
-        const { amount, purpose, redirect, email, number, name, product, id, address } = JSON.parse(req.body);
+        const { amount, purpose, redirect, email, tax, grandTotal, subTotal, number, name, product, id, address, shippingCharges } = JSON.parse(req.body);
         const data = new Insta.PaymentData();
         data.purpose = purpose;
         data.amount = amount;
@@ -43,6 +43,12 @@ const payment = async (req, res) => {
                         products: product,
                         paymentURL: paymentResponse.payment_request.longurl,
                         paymentID: paymentResponse.payment_request.id,
+                        shippingCharges: shippingCharges,
+                        tax: tax,
+                        grandTotal: grandTotal,
+                        subTotal: subTotal,
+                        deliveryStatus: false
+
                     })
                     await newPayment.save();
                     res.json({ message: 'Success', data: paymentResponse.payment_request.longurl })

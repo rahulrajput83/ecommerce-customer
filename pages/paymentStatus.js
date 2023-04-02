@@ -27,13 +27,10 @@ function paymentStatus() {
                     .then((res) => {
                         const response = res;
                         if (res.status === 'Paid') {
-                            
                             let stillUtc = moment.utc(res.payment).toDate();
                             let responseTime = moment(stillUtc).local().format('llll')
                             response.payment = responseTime;
-                            if(res.status === 'Paid') {
-                                localStorage.removeItem('cart');
-                            }
+                            localStorage.removeItem('cart');
                         }
                         setData(response)
                     })

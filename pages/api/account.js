@@ -34,7 +34,6 @@ const handler = async (req, res) => {
         res.json({ message: 'Success', value: ciphertext})
 
     } catch (error) {
-        console.log(error)
         res.json({ message: 'Error, please try again...' })
     }
 }

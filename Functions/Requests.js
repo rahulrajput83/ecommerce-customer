@@ -29,3 +29,16 @@ export const putRequest = async (path, field, data) => {
         return { message: 'Error, please try again' }
     }
 }
+
+export const postRequest = async (path, data) => {
+    try {
+        const response = await axios.post(path, { data });
+        if (response.data.message === 'Success') {
+            let bytes = CryptoJS.AES.decrypt(response.data.value, process.env.JWT);
+            return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        }
+        return response.data;
+    } catch (error) {
+        return { message: 'Error, please try again' }
+    }
+}
