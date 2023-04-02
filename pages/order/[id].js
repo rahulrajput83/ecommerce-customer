@@ -55,7 +55,7 @@ export default function order() {
                 <link rel="icon" href="favicon.ico" />
             </Head>
 
-            <main className='w-100 flex flex-col'>
+            {/* <main className='w-100 flex flex-col'>
                 <Navbar cart={cart} />
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
                         <div className='w-full grid gap-6 grid-cols-1 md:grid-cols-12'>
@@ -124,7 +124,7 @@ export default function order() {
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
                         <ProductLoading />
                     </div>
-            </main>
+            </main> */}
         </>
     )
 }
