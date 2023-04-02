@@ -132,14 +132,14 @@ function account() {
                                                 <div className='w-full flex flex-col md:gap-2'>
                                                     <Link href={`/product/${products[0].id}`} className='text-sm font-medium text-red-500'>{products[0].title}</Link>
                                                     <span className='text-xs font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
-                                                    {products.length > 1 && <span className='text-xs absolute left-0 bg-red-500 px-3 py-2 font-medium text-white'>{products.length - 1}+</span>}
+                                                    {products.length > 1 && <span className='text-xs absolute left-0 top-0 bg-red-500 px-3 py-2 font-medium text-white'>{products.length - 1}+</span>}
                                                     <div className='flex md:hidden text-xs gap-2 font-medium'>
                                                         <span>Order ID: </span>
                                                         <span>{orderId}</span>
                                                     </div>
                                                     <Link href={`/order/${id}`} className='p-2 text-xs mt-2 rounded w-fit uppercase text-white font-medium bg-red-500 hover:bg-red-400'>View Order</Link>
                                                 </div>
-                                                <span className='absolute right-2 text-sm font-semibold text-red-500'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
+                                                <span className='absolute right-2 top-0 text-sm font-semibold text-red-500'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
                                             </div>
                                         </div>
                                     )
