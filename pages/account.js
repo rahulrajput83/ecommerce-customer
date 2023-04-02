@@ -40,7 +40,8 @@ function account() {
             let responseData = data.map((e) => {
                 let stillUtc = moment.utc(e.paymentDate).toDate();
                 let responseTime = moment(stillUtc).local().format('LL')
-                return { ...e, paymentDate: responseTime}
+                let deliveryDateTime = moment(e.deliveryDate).local().format('dddd, MMM Do YY')
+                return { ...e, paymentDate: responseTime, deliveryDate: deliveryDateTime }
             })
             setOrder(responseData)
         } catch (error) {
@@ -121,7 +122,7 @@ function account() {
                                                     <span>TOTAL</span>
                                                     <span>&#x20b9; {grandTotal}</span>
                                                 </div>
-                                                <div className='flex flex-col justify-center items-center'>
+                                                <div className='hidden md:flex  flex-col justify-center items-center'>
                                                     <span>Order ID</span>
                                                     <span>{orderId}</span>
                                                 </div>
@@ -132,7 +133,11 @@ function account() {
                                                     <Link href={`/product/${products[0].id}`} className='text-sm font-medium text-red-500'>{products[0].title}</Link>
                                                     <span className='text-xs font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
                                                     <span className='text-xs font-medium text-red-500'>{products.length > 1 && `${products.length - 1}+ Products`}</span>
-                                                    <Link href={`/order/${id}`} className='p-2 text-xs rounded w-fit uppercase text-white font-medium bg-red-500 hover:bg-red-400'>View Order</Link>
+                                                    <div className='flex md:hidden text-xs gap-2 font-medium'>
+                                                        <span>Order ID: </span>
+                                                        <span>{orderId}</span>
+                                                    </div>
+                                                    <Link href={`/order/${id}`} className='p-2 text-xs mt-2 rounded w-fit uppercase text-white font-medium bg-red-500 hover:bg-red-400'>View Order</Link>
                                                 </div>
                                                 <span className='absolute right-2 text-sm font-semibold text-red-500'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
                                             </div>
