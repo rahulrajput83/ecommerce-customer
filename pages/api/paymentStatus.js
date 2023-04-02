@@ -16,13 +16,19 @@ const handler = async (req, res) => {
       if (error) {
         res.json({ message: error })
       } else {
-        const { status } = response.payment_request.payment;
-        if (status === 'Credit') {
-          await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, paymentDate: response.payment_request.modified_at, deliveryDate: time } })
-          res.json({ message: 'Success', status: 'Paid', payment: response.payment_request.modified_at })
+        if (response.message === 'Not found') {
+          response.status = 'Invalid'
+          res.json(response)
         }
         else {
-          res.json({ message: 'Failed', status: 'Failed'})
+          const { status, failure } = response.payment_request.payment;
+          if (status === 'Credit') {
+            await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, paymentDate: response.payment_request.modified_at, deliveryDate: time,   } })
+            res.json({ message: 'Success', status: 'Paid', payment: response.payment_request.modified_at })
+          }
+          else {
+            res.json({ message: 'Failed', status: 'failed', failedMessage: failure })
+          }
         }
       }
     });
