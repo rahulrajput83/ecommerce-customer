@@ -73,8 +73,8 @@ function paymentStatus() {
                                     <span className='text-sm font-medium'>{data.status === 'failed' && 'Payment Failed, please try again after some time.'}</span>
                                     {data.message === 'Not found' && <span className='text-sm font-medium'>Invalid Payment Request. If amount is deducted from your account, please <span className='text-red-500'>contact us</span>.</span>}
                                 </div>
-                                <div className='absolute p-10 border-2 border-red-500 rounded-full right-0 uppercase'>
-                                    <span className='absolute font-bold -rotate-[30deg] text-sm text-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                                <div className='absolute p-16 md:p-10 border-2 border-red-500 rounded-full right-1/2 top-1/2 md:top-0 translate-y-1/2 md:translate-y-0 translate-x-1/2 md:translate-x-0 md:right-0 uppercase'>
+                                    <span className='absolute font-bold -rotate-[30deg] text-xl md:text-sm text-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
                                         {data.status}
                                     </span>
                                 </div>
