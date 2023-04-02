@@ -25,7 +25,6 @@ function paymentStatus() {
                 })
                     .then(res => res.json())
                     .then((res) => {
-                        console.log(res)
                         const response = res;
                         if (res.status === 'Paid') {
                             

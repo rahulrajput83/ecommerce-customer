@@ -23,7 +23,7 @@ const handler = async (req, res) => {
         else {
           const { status, failure } = response.payment_request.payment;
           if (status === 'Credit') {
-            await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, paymentDate: response.payment_request.modified_at, deliveryDate: time,   } })
+            await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, paymentDate: response.payment_request.modified_at, deliveryDate: time, orderId: response.payment_request.payment.payment_id} })
             res.json({ message: 'Success', status: 'Paid', payment: response.payment_request.modified_at })
           }
           else {
