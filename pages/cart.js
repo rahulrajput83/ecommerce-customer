@@ -9,6 +9,7 @@ import Link from 'next/link'
 import AccountEdit from '@/components/AccountEdit'
 import { getRequest } from '@/Functions/Requests'
 import SmallLoading from '@/components/SmallLoading'
+import Loading from '@/components/Loading'
 
 const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
@@ -24,6 +25,7 @@ export default function Cart() {
         field: '',
         valueField: ''
     });
+    const [loading, setLoading] = useState(false)
 
     const getLocalStorage = () => {
         setProductPrice(0);
@@ -105,6 +107,7 @@ export default function Cart() {
             alert('Please add address and mobile number.')
             return;
         }
+        setLoading(true)
         fetch('/api/payment', {
             method: 'POST',
             body: JSON.stringify({
@@ -121,6 +124,7 @@ export default function Cart() {
         })
             .then(res => res.json())
             .then((res) => {
+                setLoading(false)
                 if(res.message === 'Success') {
                     window.location.replace(res.data)
                 }
@@ -235,6 +239,7 @@ export default function Cart() {
                                         : null}
 
                                 </div>
+                                {loading ? <Loading /> : null}
                             </div>
                             :
                             <div className='flex justify-center gap-2  text-lg items-center font-medium'>

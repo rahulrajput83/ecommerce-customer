@@ -21,6 +21,7 @@ function account() {
         field: '',
         valueField: ''
     });
+    const [order, setOrder] = useState([])
 
     const getAccount = async () => {
         try {
@@ -31,10 +32,21 @@ function account() {
         }
     }
 
+    const getOrders = async () => {
+        try {
+            const data = await getRequest('/api/order')
+            setOrder(data)
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(localCart)
         getAccount();
+        getOrders();
     }, [])
 
     useEffect(() => {
@@ -48,6 +60,10 @@ function account() {
             router.push(Logout());
         }
         else {
+            setAccountData()
+            setOrder([]);
+            getAccount();
+            getOrders();
             setSelectedItem(title)
         }
     }
@@ -75,15 +91,34 @@ function account() {
                     </div>
                     <div className='w-full gap-3 md:w-3/4 justify-start items-center flex flex-col'>
                         <span className='text-xl font-medium'>{selectedItem}</span>
-                        {accountData  ?
-                            <div className='w-full px-1 md:w-2/3 flex flex-col'>
+                        {selectedItem === 'My Account' && accountData ?
+                            <div className='w-full px-1 md:w-11/12 flex flex-col'>
                                 <AccountDetail setEdit={setEdit} title='Name' value={accountData.name} valueField='name' className='border-2 rounded-tl-lg rounded-tr-lg' />
                                 <AccountDetail setEdit={setEdit} title='E-mail' value={accountData.email} valueField='email' className='border-2 border-t-0' />
                                 <AccountDetail setEdit={setEdit} title='Mobile Number' value={accountData.number} valueField='number' className='border-2 border-t-0' />
-                                <AccountDetail setEdit={setEdit} title='Delivery Address' value={accountData.address} valueField='address' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg'  />
+                                <AccountDetail setEdit={setEdit} title='Delivery Address' value={accountData.address} valueField='address' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg' />
                                 {edit.field && <AccountEdit getAccount={getAccount} setEdit={setEdit} edit={edit} accountData={accountData} />}
                             </div>
-                            : <AccountLoading />
+                            : selectedItem === 'My Account' && <AccountLoading />
+                        }
+                        {selectedItem === 'My Orders' && order.length > 0 ?
+                            <div className='w-full gap-4 px-1 md:w-11/12 flex flex-col'>
+                                {order.map(({ id, products, deliveryDate, paymentStatus, orderId, paymentDate }) => {
+                                    return (
+                                        <div className={`w-full relative flex justify-start gap-2 items-start`} key={id}>
+                                            <img src={products[0].thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
+                                            <div className='w-full flex flex-col md:gap-2'>
+                                                <span className='text-sm font-medium'>{products[0].title}</span>
+                                                <span className='text-xs font-medium'>Delivery Date: <span className='text-red-500'>{deliveryDate}</span></span>
+                                                <span className='text-xs font-medium'>Order ID: {orderId}</span>
+                                                <span className='text-xs font-medium text-red-500'>{products.length > 0 && `${products.length - 1}+ Products`}</span>
+                                            </div>
+                                            <span className='absolute right-0 text-sm font-semibold text-red-500'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            : selectedItem === 'My Orders' && <AccountLoading />
                         }
                     </div>
 
