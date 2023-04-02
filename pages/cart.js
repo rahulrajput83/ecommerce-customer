@@ -10,6 +10,7 @@ import AccountEdit from '@/components/AccountEdit'
 import { getRequest } from '@/Functions/Requests'
 import SmallLoading from '@/components/SmallLoading'
 import Loading from '@/components/Loading'
+import { getToken } from '@/Functions/getToken'
 
 const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
@@ -26,6 +27,8 @@ export default function Cart() {
         valueField: ''
     });
     const [loading, setLoading] = useState(false)
+    const [token, setToken] = useState('')
+
 
     const getLocalStorage = () => {
         setProductPrice(0);
@@ -50,7 +53,8 @@ export default function Cart() {
 
     useEffect(() => {
         getAccount();
-        getLocalStorage()
+        getLocalStorage();
+        setToken(getToken())
     }, [])
 
     /* Increase Quantity of Product */
@@ -103,7 +107,7 @@ export default function Cart() {
     }
 
     const handlePayment = () => {
-        if(!accountData.address && !accountData.number) {
+        if (!accountData.address && !accountData.number) {
             alert('Please add address and mobile number.')
             return;
         }
@@ -125,10 +129,10 @@ export default function Cart() {
             .then(res => res.json())
             .then((res) => {
                 setLoading(false)
-                if(res.message === 'Success') {
+                if (res.message === 'Success') {
                     window.location.replace(res.data)
                 }
-                else{
+                else {
                     console.log('Error')
                 }
             })
@@ -217,23 +221,27 @@ export default function Cart() {
                                         <span className='font-medium'>Final Price</span>
                                         <span className='font-semibold'>&#x20b9; {finalPrice}</span>
                                     </div>
-                                    <div className='w-full mt-6 flex flex-col items-center justify-center'>
-                                        <div className='w-full flex items-center gap-2'>
-                                            <BiMap className='text-lg' />
-                                            <span className='font-medium mr-auto'>Address</span>
-                                            <button onClick={() => handleEdit('Delivery Address', 'address')} className='py-1 px-3 bg-red-500 text-white text-sm font-medium rounded-full border-[0.14rem] border-red-500 hover:bg-white hover:text-red-500'>Edit</button>
-                                        </div>
-                                        {accountData && accountData.address ?
-                                            <div className='w-full inline'>
-                                                <span className='text-sm'>{accountData.address}</span>
-                                                <span className='text-sm font-medium ml-1'>{accountData.number}</span>
+                                    {token &&
+                                        <div className='w-full mt-6 flex flex-col items-center justify-center'>
+                                            <div className='w-full flex items-center gap-2'>
+                                                <BiMap className='text-lg' />
+                                                <span className='font-medium mr-auto'>Address</span>
+                                                <button onClick={() => handleEdit('Delivery Address', 'address')} className='py-1 px-3 bg-red-500 text-white text-sm font-medium rounded-full border-[0.14rem] border-red-500 hover:bg-white hover:text-red-500'>Edit</button>
                                             </div>
-                                            :
-                                            <SmallLoading />
-                                        }
+                                            {accountData && accountData.address ?
+                                                <div className='w-full inline'>
+                                                    <span className='text-sm'>{accountData.address}</span>
+                                                    <span className='text-sm font-medium ml-1'>{accountData.number}</span>
+                                                </div>
+                                                :
+                                                <SmallLoading />
+                                            }
 
-                                    </div>
-                                    <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-2 mt-8 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Continue to Payment</button>
+                                        </div>
+                                    }
+                                    {token ? <button onClick={handlePayment} className='w-full font-medium bg-red-500 py-2 mt-8 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Continue to payment</button>
+                                        :
+                                        <Link href='/login' className='w-full font-medium bg-red-500 text-center py-2 mt-8 mb-1 text-white text-sm rounded-full hover:text-red-500 border-[0.14rem] border-red-500 hover:bg-white'>Login</Link>}
                                     {accountData ?
                                         edit.field && <AccountEdit getAccount={getAccount} setEdit={setEdit} edit={edit} accountData={accountData} />
                                         : null}

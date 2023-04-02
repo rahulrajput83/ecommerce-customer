@@ -9,7 +9,7 @@ export default function Navbar({ setSearchQuery, cart, searchQuery }) {
     const [input, setInput] = useState('')
 
     const handlebtn = () => {
-        if (router.pathname.includes('login') || router.pathname.includes('register')) {
+        if (router.pathname.includes('login') || router.pathname.includes('register') || router.pathname.includes('account')) {
             router.push('/')
             return;
         }
