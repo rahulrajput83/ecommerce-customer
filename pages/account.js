@@ -110,7 +110,7 @@ function account() {
                         }
                         {selectedItem === 'My Orders' && order.length > 0 ?
                             <div className='w-full gap-4 px-1 md:w-11/12 flex flex-col'>
-                                {order.map(({ id, products, deliveryDate, paymentStatus, grandTotal, orderId, paymentDate }) => {
+                                {order.map(({ id, products, deliveryDate, paymentStatus, grandTotal, orderId, paymentDate, deliveredDate, deliveryStatus }) => {
                                     return (
                                         <div className={`w-full rounded flex border-2 border-gray-200 flex-col justify-start items-start`} key={id}>
                                             <div className='w-full flex text-xs font-medium p-4 gap-4 items-center  justify-between rounded-br-none rounded-bl-none bg-gray-200'>
@@ -131,7 +131,12 @@ function account() {
                                                 <img src={products[0].thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
                                                 <div className='w-full flex flex-col md:gap-2'>
                                                     <Link href={`/product/${products[0].id}`} className='text-sm font-medium text-red-500'>{products[0].title}</Link>
-                                                    <span className='text-xs font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
+                                                    {deliveryStatus ?
+                                                        <span className='text-xs font-medium'>Delivered on <span className='font-semibold'>{deliveredDate}</span></span>
+                                                        :
+                                                        <span className='text-xs font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
+                                                    }
+
                                                     {products.length > 1 && <span className='text-xs absolute left-0 top-0 bg-red-500 px-3 py-2 font-medium text-white'>{products.length - 1}+</span>}
                                                     <div className='flex md:hidden text-xs gap-2 font-medium'>
                                                         <span>Order ID: </span>
