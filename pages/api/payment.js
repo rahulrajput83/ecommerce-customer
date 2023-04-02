@@ -1,6 +1,7 @@
 import PaymentRequestModel from '@/Model/PaymentRequest';
 import Insta from '@/Utils/InstamojoConfig';
 import MongoDBConnect from '@/Utils/MongoDB';
+import CryptoJS from 'crypto-js'
 
 
 const payment = async (req, res) => {
@@ -21,20 +22,24 @@ const payment = async (req, res) => {
         data.send_email = true;
         data.allow_repeated_payments = false;
         data.redirect_url = redirect;
-        Insta.createPayment(data, async(err, instaResponse) => {
+        Insta.createPayment(data, async (err, instaResponse) => {
             if (err) {
                 res.json({ message: 'Error, please try again...' })
             }
             else {
                 let paymentResponse = await JSON.parse(instaResponse)
-                if(paymentResponse.success){
+                if (paymentResponse.success) {
+                    let nameEncrypt = CryptoJS.AES.encrypt(name, process.env.JWT).toString();
+                    let emailEncrypt = CryptoJS.AES.encrypt(email, process.env.JWT).toString();
+                    let mobileEncrypt = CryptoJS.AES.encrypt(number, process.env.JWT).toString();
+                    let deliveryEncrypt = CryptoJS.AES.encrypt(address, process.env.JWT).toString();
                     const newPayment = new PaymentRequestModel({
                         paymentStatus: false,
                         userId: id,
-                        fullName: name,
-                        email: email,
-                        mobileNumber: number,
-                        DeliveryAddress: address,
+                        fullName: nameEncrypt,
+                        email: emailEncrypt,
+                        mobileNumber: mobileEncrypt,
+                        DeliveryAddress: deliveryEncrypt,
                         products: product,
                         paymentURL: paymentResponse.payment_request.longurl,
                         paymentID: paymentResponse.payment_request.id,
@@ -42,10 +47,10 @@ const payment = async (req, res) => {
                     await newPayment.save();
                     res.json({ message: 'Success', data: paymentResponse.payment_request.longurl })
                 }
-                else{
+                else {
                     res.json({ message: 'Error, please try again...' })
                 }
-                
+
             }
         });
 
