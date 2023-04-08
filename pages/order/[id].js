@@ -14,13 +14,11 @@ import { Logout } from '@/Functions/Logout';
 export default function order() {
     const router = useRouter();
     const [data, setData] = useState({});
-    const [cart, setCart] = useState([]);
 
     const getOrder = async (id) => {
         try {
             const data = await postRequest('/api/orderDetail', id)
             setData(data)
-            console.log(data)
         } catch (error) {
             console.log('err')
         }
@@ -33,11 +31,6 @@ export default function order() {
             
         }
     }, [router.isReady])
-
-    useEffect(() => {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(localCart)
-    }, [])
 
     useEffect(() => {
         if (!getToken()) {
@@ -56,7 +49,7 @@ export default function order() {
             </Head>
 
             {/* <main className='w-100 flex flex-col'>
-                <Navbar cart={cart} />
+                <Navbar />
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
                         <div className='w-full grid gap-6 grid-cols-1 md:grid-cols-12'>
                             <div className='flex flex-row md:flex-col gap-4 order-2 md:order-1 overflow-scroll md:overflow-hidden w-full md:col-span-1'>

@@ -1,12 +1,23 @@
+import { getRequest } from "@/Functions/Requests";
 import { getToken } from "@/Functions/getToken";
 import Link from "next/link";
 import { useRouter } from "next/router"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiCart, BiHomeAlt2, BiSearch, BiUser } from 'react-icons/bi'
 
-export default function Navbar({ setSearchQuery, cart, searchQuery }) {
+export default function Navbar({ setSearchQuery, cartData, searchQuery }) {
     const router = useRouter();
+    const [cart, setCart] = useState(cartData)
     const [input, setInput] = useState('')
+
+    const getCart = async() => {
+        const response = await getRequest('/api/findAllCart')
+        setCart(response)
+    }
+
+    useEffect(() => {
+        getCart();
+    }, [cartData])
 
     const handlebtn = () => {
         if (router.pathname.includes('login') || router.pathname.includes('register') || router.pathname.includes('account')) {
@@ -45,7 +56,7 @@ export default function Navbar({ setSearchQuery, cart, searchQuery }) {
                     <>
                         <BiCart className="text-xl " />
                         <span className="text-sm hidden sm:block">Cart</span>
-                        <span className="text-sm">{cart && cart.length}</span>
+                        <span className="text-sm">{cart && cart.length || '0'}</span>
                     </>
                 }
 

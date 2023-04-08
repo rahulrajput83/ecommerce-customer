@@ -16,7 +16,6 @@ const accountItem = ['My Account', 'My Orders', 'Logout']
 
 function account() {
     const router = useRouter();
-    const [cart, setCart] = useState([]);
     const [selectedItem, setSelectedItem] = useState('My Account');
     const [accountData, setAccountData] = useState();
     const [edit, setEdit] = useState({
@@ -50,8 +49,6 @@ function account() {
     }
 
     useEffect(() => {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(localCart)
         getAccount();
         getOrders();
     }, [])
@@ -85,7 +82,7 @@ function account() {
             </Head>
 
             <main className='w-100 flex flex-col box-border'>
-                <Navbar cart={cart} />
+                <Navbar />
                 <div className='w-full px-2 md:px-4 gap-4 pb-10 mt-20 flex flex-col md:flex-row'>
                     <div className='w-full md:w-1/4'>
                         <div className='w-full flex gap-4 flex-row md:flex-col'>

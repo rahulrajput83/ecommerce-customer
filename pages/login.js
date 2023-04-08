@@ -16,12 +16,6 @@ export default function Login() {
         password: ''
     })
     const [loading, setLoading] = useState(false)
-    const [cart, setCart] = useState([]);
-
-    useEffect(() => {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(localCart)
-    }, [])
 
     useEffect(() => {
         if (getToken()) {
@@ -84,7 +78,7 @@ export default function Login() {
             </Head>
 
             <main className='w-100 flex flex-col'>
-                <Navbar cart={cart} />
+                <Navbar />
                 <div className='w-full gap-4 pb-10 mt-20 flex flex-col'>
                     <form onSubmit={handleForm} className='w-full flex py-4 px-2 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
                         <span className='text-center font-semibold text-xl'>Login</span>

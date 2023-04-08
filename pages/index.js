@@ -3,10 +3,10 @@ import Card from '@/components/Card'
 import Navbar from '@/components/Navbar'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { localSave } from '@/Functions/LocalStorage'
 import Category from '@/components/Category'
 import { useWindowSize } from '@/Functions/GetWidth'
 import { addToCart } from '@/Functions/addToCart'
+import { getRequest } from '@/Functions/Requests'
 
 const categories = ['Electronics', 'Footwear', 'Home, Kitchen, Pets', 'Beauty, Health, Grocery', 'Books', "Men's Fashion", "Women's Fashion", "Kid's Fashion"]
 const price = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹10,000', 'Over ₹10,000']
@@ -16,7 +16,6 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);
   const [filter, setFilter] = useState({
     Category: '',
     Price: '',
@@ -24,11 +23,7 @@ export default function Home() {
   })
   const size = useWindowSize();
   const [showFilter, setShowFilter] = useState(false)
-
-  useEffect(() => {
-    const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCart(localCart)
-  }, [])
+  const [cartData, setCartData] = useState([])
 
   const getProducts = (title) => {
     setLoading(true)
@@ -58,17 +53,16 @@ export default function Home() {
     getProducts(searchQuery);
   }, [searchQuery])
 
-  const handleAddToCart = async(item) => {
-    const response = await addToCart(item);
-    console.log(response)
-    return;
+  const getCart = async () => {
+    const response = await getRequest('/api/findAllCart')
+    setCartData(response)
   }
 
-  useEffect(() => {
-    if (cart.length > 0) {
-      localSave(cart)
-    }
-  }, [cart])
+  const handleAddToCart = async (item) => {
+    const response = await addToCart(item);
+    getCart();
+    return;
+  }
 
   return (
     <>
@@ -80,7 +74,7 @@ export default function Home() {
       </Head>
 
       <main className='w-100 flex flex-col box-border'>
-        <Navbar cart={cart} setSearchQuery={setSearchQuery} />
+        <Navbar cartData={cartData} setSearchQuery={setSearchQuery} />
         <div className='w-full grid px-2 md:px-4 gap-4 pb-10 mt-20 md:mt-20 grid-cols-1 md:grid-cols-5'>
           <div className='md:col-span-1 gap-2 font-medium flex flex-col'>
             <span onClick={() => {

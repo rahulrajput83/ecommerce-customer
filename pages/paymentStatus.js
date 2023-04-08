@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react'
 
 function paymentStatus() {
     const router = useRouter()
-    const [cart, setCart] = useState([])
     const [data, setData] = useState({})
 
     useEffect(() => {
@@ -30,7 +29,6 @@ function paymentStatus() {
                             let stillUtc = moment.utc(res.payment).toDate();
                             let responseTime = moment(stillUtc).local().format('llll')
                             response.payment = responseTime;
-                            localStorage.removeItem('cart');
                         }
                         setData(response)
                     })
@@ -40,11 +38,6 @@ function paymentStatus() {
             }
         }
     }, [router.isReady])
-
-    useEffect(() => {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(localCart)
-    }, [])
 
     return (
         <>
@@ -56,7 +49,7 @@ function paymentStatus() {
             </Head>
 
             <main className='w-full'>
-                <Navbar cart={cart} />
+                <Navbar />
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full justify-center items-center flex flex-col'>
 

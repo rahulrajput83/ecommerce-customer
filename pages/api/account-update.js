@@ -18,7 +18,6 @@ const handler = async (req, res) => {
         res.json({ message: 'Success' })
 
     } catch (error) {
-        console.log(error)
         res.json({ message: 'Error, please try again...' })
     }
 }

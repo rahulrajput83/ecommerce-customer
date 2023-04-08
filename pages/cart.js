@@ -78,7 +78,7 @@ export default function Cart() {
         /* getLocalStorage(); */
     }
 
-    /* Remove PRoduct from Cart */
+    /* Remove Product from Cart */
     const RemoveCart = (item) => {
         const increaseItem = [...cart]
         const findIndex = increaseItem.findIndex((e) => e.id === item.id);

@@ -6,15 +6,20 @@ import { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar'
 import moment from 'moment/moment';
 import { BiCart } from 'react-icons/bi';
-import { localSave } from '@/Functions/LocalStorage';
 import ProductLoading from '@/components/ProductLoading';
+import { addToCart } from '@/Functions/addToCart';
+import { getRequest } from '@/Functions/Requests';
 
 export default function product() {
     const router = useRouter();
     const [data, setData] = useState({});
     const [image, setImage] = useState('');
-    const [cart, setCart] = useState([]);
+    const [cartData, setCartData] = useState([])
 
+    const getCart = async () => {
+        const response = await getRequest('/api/findAllCart')
+        setCartData(response)
+      }
 
     useEffect(() => {
         if (router.isReady) {
@@ -28,25 +33,10 @@ export default function product() {
         }
     }, [router.isReady])
 
-    useEffect(() => {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(localCart)
-    }, [])
-
-
-    const handleAddToCart = (item) => {
-        const find = cart.findIndex((e) => e.title === item.title);
-        if (find === -1) {
-            setCart(element => [{ quantity: 1, ...item }, ...element]);
-        }
-        return;
+    const handleAddToCart = async(item) => {
+        const response = await addToCart(item);
+        getCart()
     }
-
-    useEffect(() => {
-        if (cart.length > 0) {
-            localSave(cart)
-        }
-    }, [cart])
 
 
     return (
@@ -59,7 +49,7 @@ export default function product() {
             </Head>
 
             <main className='w-100 flex flex-col'>
-                <Navbar cart={cart} />
+                <Navbar cartData={cartData} />
                 {'images' in data ?
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
                         <div className='w-full grid gap-6 grid-cols-1 md:grid-cols-12'>
