@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { localSave } from '@/Functions/LocalStorage'
 import Category from '@/components/Category'
 import { useWindowSize } from '@/Functions/GetWidth'
+import { addToCart } from '@/Functions/AddToCart'
 
 const categories = ['Electronics', 'Footwear', 'Home, Kitchen, Pets', 'Beauty, Health, Grocery', 'Books', "Men's Fashion", "Women's Fashion", "Kid's Fashion"]
 const price = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹10,000', 'Over ₹10,000']
@@ -57,11 +58,8 @@ export default function Home() {
     getProducts(searchQuery);
   }, [searchQuery])
 
-  const handleAddToCart = (item) => {
-    const find = cart.findIndex((e) => e.title === item.title);
-    if (find === -1) {
-      setCart(element => [{ quantity: 1, ...item }, ...element]);
-    }
+  const handleAddToCart = async(item) => {
+    const response = await addToCart(item);
     return;
   }
 
