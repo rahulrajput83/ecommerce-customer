@@ -9,9 +9,9 @@ import React, { useEffect, useState } from 'react'
 function paymentStatus() {
     const router = useRouter()
     const [data, setData] = useState({})
+    const [cartData, setCartData] = useState([])
 
     const getPaymentData = async () => {
-        console.log('After')
         const { payment_id, payment_request_id } = router.query;
         if (payment_id && payment_request_id) {
             let time = moment().add(5, 'days').format('llll');
@@ -27,14 +27,17 @@ function paymentStatus() {
                 response.payment = responseTime;
             }
             setData(response)
-            console.log(response)
+            getCart()
         }
     }
 
+    const getCart = async () => {
+        const response = await getRequest('/api/findAllCart')
+        setCartData(response)
+      }
+
     useEffect(() => {
-        console.log('Before')
         if (router.isReady) {
-            console.log('Before')
             getPaymentData();
         }
     }, [router.isReady])
@@ -49,7 +52,7 @@ function paymentStatus() {
             </Head>
 
             <main className='w-full'>
-                <Navbar />
+                <Navbar cartData={cartData} />
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full justify-center items-center flex flex-col'>
 
