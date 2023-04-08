@@ -1,4 +1,4 @@
-import { postRequest } from '@/Functions/Requests';
+import { getRequest, postRequest } from '@/Functions/Requests';
 import Loading from '@/components/Loading';
 import Navbar from '@/components/Navbar';
 import moment from 'moment';
@@ -22,12 +22,12 @@ function paymentStatus() {
             });
 
             if (response.status === 'Paid') {
+                getCart()
                 let stillUtc = moment.utc(response.payment).toDate();
                 let responseTime = moment(stillUtc).local().format('llll')
                 response.payment = responseTime;
             }
             setData(response)
-            getCart()
         }
     }
 
@@ -41,6 +41,10 @@ function paymentStatus() {
             getPaymentData();
         }
     }, [router.isReady])
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
 
     return (
         <>
@@ -58,16 +62,17 @@ function paymentStatus() {
 
                         {data && data.message || data.status ?
                             <div className='w-full flex flex-col md:mt-6 relative md:w-1/2'>
-                                <div className='w-full flex flex-col'>
+                                <div className='w-full flex flex-col md:w-10/12'>
                                     <span className='font-medium text-lg text-red-500'>{data.status === 'Paid' && 'Order Confirmed !!'}</span>
+                                    <span className='text-sm font-medium'>{data.status === 'Paid' && `Paid on ${data.payment}`}</span>
                                     <span className='text-sm font-medium'>{data.status === 'Paid' && 'Thank you for your order.'}</span>
                                     <span className='text-sm font-medium text-red-500'>{data.status === 'failed' && data.failedMessage && data.failedMessage.reason && `Message: ${data.failedMessage.reason}`}</span>
                                     <span className='text-sm font-medium'>{data.status === 'failed' && data.failedMessage && data.failedMessage.message && `Reason: ${data.failedMessage.message}`}</span>
                                     <span className='text-sm font-medium'>{data.status === 'failed' && 'Payment Failed, please try again after some time.'}</span>
-                                    {data.message === 'Not found' && <span className='text-sm font-medium'>Invalid Payment Request. If amount is deducted from your account, please <span className='text-red-500'>contact us</span>.</span>}
+                                    {data.status === 'Not Found' && <span className='text-sm font-medium'>Invalid Payment Request. If amount is deducted from your account, please <span className='text-red-500'>contact us</span>.</span>}
                                 </div>
                                 <div className='absolute p-16 md:p-10 border-2 border-red-500 rounded-full right-1/2 top-1/2 md:top-0 translate-y-1/2 md:translate-y-0 translate-x-1/2 md:translate-x-0 md:right-0 uppercase'>
-                                    <span className='absolute font-bold -rotate-[30deg] text-xl md:text-sm text-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                                    <span className='absolute font-bold -rotate-[25deg] text-xl md:text-sm text-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
                                         {data.status}
                                     </span>
                                 </div>
