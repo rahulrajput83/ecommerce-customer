@@ -30,12 +30,15 @@ export default function Cart() {
     const [token, setToken] = useState('')
 
 
-    const getLocalStorage = () => {
+    const getCart = async() => {
         setProductPrice(0);
         setShippingPrice(0)
         setFinalPrice(0)
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(localCart)
+        const response = await getRequest('/api/findAllCart')
+        if(response.length > 0) {
+            setCart(response)
+        }
+        
     }
 
     const getAccount = async () => {
@@ -53,7 +56,7 @@ export default function Cart() {
 
     useEffect(() => {
         getAccount();
-        getLocalStorage();
+        getCart();
         setToken(getToken())
     }, [])
 
@@ -63,7 +66,7 @@ export default function Cart() {
         const findIndex = increaseItem.findIndex((e) => e.id === item.id);
         increaseItem[findIndex].quantity++;
         localStorage.setItem('cart', JSON.stringify(increaseItem));
-        getLocalStorage();
+        /* getLocalStorage(); */
     }
 
     /* Decrease Quantity of Product */
@@ -72,7 +75,7 @@ export default function Cart() {
         const findIndex = increaseItem.findIndex((e) => e.id === item.id);
         increaseItem[findIndex].quantity > 1 ? increaseItem[findIndex].quantity-- : 1;
         localStorage.setItem('cart', JSON.stringify(increaseItem));
-        getLocalStorage();
+        /* getLocalStorage(); */
     }
 
     /* Remove PRoduct from Cart */
@@ -81,7 +84,7 @@ export default function Cart() {
         const findIndex = increaseItem.findIndex((e) => e.id === item.id);
         increaseItem.splice(findIndex, 1)
         localStorage.setItem('cart', JSON.stringify(increaseItem));
-        getLocalStorage();
+        /* getLocalStorage(); */
     }
 
     useEffect(() => {
@@ -92,7 +95,7 @@ export default function Cart() {
     const calculatePrice = () => {
         if (cart.length > 0) {
             const price = cart.reduce((total, item, index, arr) => {
-                const quantity = arr[index].quantity * item.price;
+                const quantity = arr[index].product.quantity * item.product.price;
                 return total + quantity;
             }, 0);
             const shipping = 100;
@@ -163,28 +166,28 @@ export default function Cart() {
                             <div className='w-full grid gap-6 justify-start items-start grid-cols-1 md:grid-cols-3'>
                                 <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 md:p-4 shadow-lg'>
                                     <span>Total Item : {cart.length}</span>
-                                    {cart.map((item, i) => {
+                                    {cart.map(({product}) => {
                                         return (
-                                            <div key={`cart${i}`} className='w-full relative flex gap-4 flex-row justify-start items-start'>
-                                                <img alt='' src={item.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
+                                            <div key={product.id} className='w-full relative flex gap-4 flex-row justify-start items-start'>
+                                                <img alt='' src={product.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col w-full'>
                                                     <div className='font-medium flex justify-between items-center w-full'>
-                                                        <Link href={`/product/${item.id}`} className='w-full text-red-500 p-0 m-0'>
+                                                        <Link href={`/product/${product.id}`} className='w-full text-red-500 p-0 m-0'>
                                                             <ResponsiveEllipsis
-                                                                text={item.title}
+                                                                text={product.title}
                                                                 maxLine='1'
                                                                 ellipsis='...'
                                                                 trimRight
                                                                 basedOn='letters'
                                                             />
                                                         </Link>
-                                                        <button onClick={() => RemoveCart(item)} className='font-semibold text-red-500 z-10 text-xl bg-white'>
+                                                        <button onClick={() => RemoveCart(product)} className='font-semibold text-red-500 z-10 text-xl bg-white'>
                                                             <MdDeleteOutline />
                                                         </button>
                                                     </div>
                                                     <span className='font-medium text-xs'>
                                                         <ResponsiveEllipsis
-                                                            text={item.description}
+                                                            text={product.description}
                                                             maxLine='3'
                                                             ellipsis='...'
                                                             trimRight
@@ -192,17 +195,17 @@ export default function Cart() {
                                                         />
                                                     </span>
                                                     <div className='flex gap-4 mt-4 items-center'>
-                                                        <button onClick={() => MinusQuantity(item)} className='p-2 bg-red-500 text-white'>
+                                                        <button onClick={() => MinusQuantity(product)} className='p-2 bg-red-500 text-white'>
                                                             <BiMinus />
                                                         </button>
-                                                        <span>{item.quantity}</span>
-                                                        <button onClick={() => AddQuantity(item)} className='p-2 bg-red-500 text-white'>
+                                                        <span>{product.quantity}</span>
+                                                        <button onClick={() => AddQuantity(product)} className='p-2 bg-red-500 text-white'>
                                                             <BiPlus />
                                                         </button>
                                                     </div>
                                                 </div>
 
-                                                <span className='font-semibold absolute left-0 px-2 py-1 bg-red-500 text-white z-10 text-sm'>&#x20b9; {item.price}</span>
+                                                <span className='font-semibold absolute left-0 px-2 py-1 bg-red-500 text-white z-10 text-sm'>&#x20b9; {product.price}</span>
                                             </div>
                                         )
                                     })}

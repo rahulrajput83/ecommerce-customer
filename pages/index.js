@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { localSave } from '@/Functions/LocalStorage'
 import Category from '@/components/Category'
 import { useWindowSize } from '@/Functions/GetWidth'
-import { addToCart } from '@/Functions/AddToCart'
+import { addToCart } from '@/Functions/addToCart'
 
 const categories = ['Electronics', 'Footwear', 'Home, Kitchen, Pets', 'Beauty, Health, Grocery', 'Books', "Men's Fashion", "Women's Fashion", "Kid's Fashion"]
 const price = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹10,000', 'Over ₹10,000']
@@ -60,6 +60,7 @@ export default function Home() {
 
   const handleAddToCart = async(item) => {
     const response = await addToCart(item);
+    console.log(response)
     return;
   }
 

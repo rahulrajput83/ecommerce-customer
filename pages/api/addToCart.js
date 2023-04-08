@@ -14,7 +14,8 @@ const handler = async (req, res) => {
         const { id } = req.user;
         const findProduct = await CartModel.findOne({ productId: productId, userId: id });
         if (findProduct !== null && findProduct !== undefined && Object.keys(findProduct).length >= 1) {
-            res.json({ message: 'Already' })
+            let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "Already" }), process.env.JWT).toString();
+            res.json({ message: 'Success', value: ciphertext })
         }
         else {
             const newCart = new CartModel({
@@ -23,7 +24,8 @@ const handler = async (req, res) => {
                 userId: id,
             })
             await newCart.save()
-            res.json({ message: 'Saved' })
+            let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "Saved" }), process.env.JWT).toString();
+            res.json({ message: 'Success', value: ciphertext })
         }
 
     } catch (error) {
