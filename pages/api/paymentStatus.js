@@ -19,7 +19,8 @@ const handler = async (req, res) => {
         let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({ status: 'Error' }), process.env.JWT).toString();
         res.json({ message: 'Success', value: ciphertext })
       } else {
-        if (response.message.startsWith('Not found')) {
+        console.log(response)
+        if (response.message && response.message.startsWith('Not found')) {
           let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({ status: 'Not Found' }), process.env.JWT).toString();
           res.json({ message: 'Success', value: ciphertext })
         }
