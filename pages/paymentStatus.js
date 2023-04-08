@@ -1,3 +1,4 @@
+import { postRequest } from '@/Functions/Requests';
 import Loading from '@/components/Loading';
 import Navbar from '@/components/Navbar';
 import moment from 'moment';
@@ -9,33 +10,32 @@ function paymentStatus() {
     const router = useRouter()
     const [data, setData] = useState({})
 
-    useEffect(() => {
-        if (router.isReady) {
-            const { payment_id, payment_request_id } = router.query;
-            if (payment_id && payment_request_id) {
-                let time = moment().add(5, 'days').format('llll');
-                fetch('/api/paymentStatus', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: payment_id,
-                        request: payment_request_id,
-                        time: time
-                    })
-                })
-                    .then(res => res.json())
-                    .then((res) => {
-                        const response = res;
-                        if (res.status === 'Paid') {
-                            let stillUtc = moment.utc(res.payment).toDate();
-                            let responseTime = moment(stillUtc).local().format('llll')
-                            response.payment = responseTime;
-                        }
-                        setData(response)
-                    })
-                    .catch(() => {
-                        console.log('err')
-                    })
+    const getPaymentData = async () => {
+        console.log('After')
+        const { payment_id, payment_request_id } = router.query;
+        if (payment_id && payment_request_id) {
+            let time = moment().add(5, 'days').format('llll');
+            const response = await postRequest('/api/paymentStatus', {
+                id: payment_id,
+                request: payment_request_id,
+                time: time
+            });
+
+            if (response.status === 'Paid') {
+                let stillUtc = moment.utc(response.payment).toDate();
+                let responseTime = moment(stillUtc).local().format('llll')
+                response.payment = responseTime;
             }
+            setData(response)
+            console.log(response)
+        }
+    }
+
+    useEffect(() => {
+        console.log('Before')
+        if (router.isReady) {
+            console.log('Before')
+            getPaymentData();
         }
     }, [router.isReady])
 
@@ -53,7 +53,7 @@ function paymentStatus() {
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full justify-center items-center flex flex-col'>
 
-                        {data && data.message ?
+                        {data && data.message || data.status ?
                             <div className='w-full flex flex-col md:mt-6 relative md:w-1/2'>
                                 <div className='w-full flex flex-col'>
                                     <span className='font-medium text-lg text-red-500'>{data.status === 'Paid' && 'Order Confirmed !!'}</span>

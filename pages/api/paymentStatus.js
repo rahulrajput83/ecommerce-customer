@@ -12,8 +12,9 @@ const handler = async (req, res) => {
     res.json({ message: 'Only POST requests allowed.' })
   }
   try {
-    const { id, request, time } = JSON.parse(req.body);
+    const { id, request, time } = req.body.data;
     await MongoDBConnect();
+    console.log(req.body)
     Insta.getPaymentDetails(request, id, async function (error, response) {
       if (error) {
         res.json({ message: error })
@@ -26,17 +27,20 @@ const handler = async (req, res) => {
           const { status, failure } = response.payment_request.payment;
           if (status === 'Credit') {
             await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, paymentDate: response.payment_request.modified_at, deliveryDate: time, orderId: response.payment_request.payment.payment_id} })
-            await CartModel.updateOne({ userId: req.user.id }, { $set: { paid: true} })
-            res.json({ message: 'Success', status: 'Paid', payment: response.payment_request.modified_at })
+            await CartModel.updateMany({ userId: req.user.id }, { $set: { paid: true} })
+            let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({status: 'Paid', payment: response.payment_request.modified_at}), process.env.JWT).toString();
+            res.json({ message: 'Success', value: ciphertext})
           }
           else {
-            res.json({ message: 'Failed', status: 'failed', failedMessage: failure })
+            let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({status: 'failed', failedMessage: failure}), process.env.JWT).toString();
+            res.json({ message: 'Failed', value: ciphertext })
           }
         }
       }
     });
 
   } catch (error) {
+    console.log(error)
     res.json({ message: 'Error, please try again...' })
   }
 }
