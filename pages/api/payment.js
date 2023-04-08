@@ -1,5 +1,6 @@
 import PaymentRequestModel from '@/Model/PaymentRequest';
 import Insta from '@/Utils/InstamojoConfig';
+import JWTAuth from '@/Utils/JWTAuth';
 import MongoDBConnect from '@/Utils/MongoDB';
 import CryptoJS from 'crypto-js'
 
@@ -67,4 +68,4 @@ const payment = async (req, res) => {
     }
 }
 
-export default payment
+export default JWTAuth(payment)
