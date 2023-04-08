@@ -22,6 +22,7 @@ const handler = async (req, res) => {
                 product: req.body.data,
                 productId: productId,
                 userId: id,
+                paid: false
             })
             await newCart.save()
             let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "Saved" }), process.env.JWT).toString();

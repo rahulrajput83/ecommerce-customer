@@ -21,11 +21,9 @@ const handler = async (req, res) => {
             quantity++
         }
         const dataValue = await CartModel.updateOne({ _id: id }, { $set: { 'product.quantity': quantity } });
-        console.log('dataValue', dataValue)
         res.json({ message: 'Success', value: 'Success' })
 
     } catch (error) {
-        console.log(error)
         res.json({ message: 'Error, please try again...', error: error })
     }
 }

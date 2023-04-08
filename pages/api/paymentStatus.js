@@ -3,6 +3,8 @@ import RegisterModel from "@/Model/User"
 import CryptoJS from 'crypto-js'
 import Insta from "@/Utils/InstamojoConfig"
 import PaymentRequestModel from "@/Model/PaymentRequest"
+import CartModel from "@/Model/Cart"
+import JWTAuth from "@/Utils/JWTAuth"
 
 
 const handler = async (req, res) => {
@@ -24,6 +26,7 @@ const handler = async (req, res) => {
           const { status, failure } = response.payment_request.payment;
           if (status === 'Credit') {
             await PaymentRequestModel.updateOne({ paymentID: request }, { $set: { paymentStatus: true, paymentDate: response.payment_request.modified_at, deliveryDate: time, orderId: response.payment_request.payment.payment_id} })
+            await CartModel.updateOne({ userId: req.user.id }, { $set: { paid: true} })
             res.json({ message: 'Success', status: 'Paid', payment: response.payment_request.modified_at })
           }
           else {
@@ -39,4 +42,4 @@ const handler = async (req, res) => {
 }
 
 
-export default handler;
+export default JWTAuth(handler);

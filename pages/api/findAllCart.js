@@ -11,7 +11,7 @@ const handler = async (req, res) => {
     try {
         await MongoDBConnect();
         const { id } = req.user;
-        const findProduct = await CartModel.find({ userId: id });
+        const findProduct = await CartModel.find({ userId: id, paid: false });
         if (findProduct.length > 0) {
             let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify(findProduct), process.env.JWT).toString();
             res.json({ message: 'Success', value: ciphertext })
