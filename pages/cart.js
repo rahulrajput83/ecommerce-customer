@@ -7,7 +7,7 @@ import { BiMap, BiMinus, BiPlus } from 'react-icons/bi'
 import { MdDeleteOutline } from 'react-icons/md'
 import Link from 'next/link'
 import AccountEdit from '@/components/AccountEdit'
-import { getRequest, putRequest } from '@/Functions/Requests'
+import { getRequest, postRequest, putRequest } from '@/Functions/Requests'
 import SmallLoading from '@/components/SmallLoading'
 import Loading from '@/components/Loading'
 import { getToken } from '@/Functions/getToken'
@@ -64,7 +64,6 @@ export default function Cart() {
     /* Increase Quantity of Product */
     const AddQuantity = async(id, currentQuantity) => {
         const response = await putRequest('/api/updateCart', 'add', {id, currentQuantity})
-        console.log(response)
         getCart()
     }
 
@@ -101,43 +100,30 @@ export default function Cart() {
         }
     }
 
-    const handlePayment = () => {
+    const handlePayment = async() => {
         if (!accountData.address && !accountData.number) {
             alert('Please add address and mobile number.')
             return;
         }
         setLoading(true)
-        fetch('/api/payment', {
-            method: 'POST',
-            body: JSON.stringify({
-                amount: finalPrice,
-                purpose: 'Product Purchase',
-                redirect: `https://rahulrajput83-ecommerce.vercel.app/paymentStatus`,
-                email: accountData.email,
-                number: accountData.number,
-                name: accountData.name,
-                id: accountData.id,
-                product: cart,
-                address: accountData.address,
-                tax: taxPrice,
-                grandTotal: finalPrice,
-                subTotal: productPrice,
-                shippingCharges: shippingPrice
-            })
-        })
-            .then(res => res.json())
-            .then((res) => {
-                setLoading(false)
-                if (res.message === 'Success') {
-                    window.location.replace(res.data)
-                }
-                else {
-                    console.log('Error')
-                }
-            })
-            .catch(() => {
-                console.log('err')
-            })
+        const data = await postRequest('/api/payment', {
+            amount: finalPrice,
+            purpose: 'Product Purchase',
+            redirect: `https://rahulrajput83-ecommerce.vercel.app/paymentStatus`,
+            email: accountData.email,
+            number: accountData.number,
+            name: accountData.name,
+            id: accountData.id,
+            product: cart,
+            address: accountData.address,
+            tax: taxPrice,
+            grandTotal: finalPrice,
+            subTotal: productPrice,
+            shippingCharges: shippingPrice
+        });
+        if (data.link) {
+            window.location.replace(data.link)
+        }
     }
 
     return (

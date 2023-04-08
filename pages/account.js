@@ -43,7 +43,6 @@ function account() {
                 return { ...e, paymentDate: responseTime, deliveryDate: deliveryDateTime }
             })
             setOrder(responseData)
-            console.log(responseData)
         } catch (error) {
             console.log('err')
         }

@@ -12,7 +12,7 @@ const payment = async (req, res) => {
             return
         }
         await MongoDBConnect();
-        const { amount, purpose, redirect, email, tax, grandTotal, subTotal, number, name, product, id, address, shippingCharges } = JSON.parse(req.body);
+        const { amount, purpose, redirect, email, tax, grandTotal, subTotal, number, name, product, id, address, shippingCharges } = req.body.data;
         const data = new Insta.PaymentData();
         data.purpose = purpose;
         data.amount = amount;
@@ -52,7 +52,8 @@ const payment = async (req, res) => {
 
                     })
                     await newPayment.save();
-                    res.json({ message: 'Success', data: paymentResponse.payment_request.longurl })
+                    let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({link: paymentResponse.payment_request.longurl}), process.env.JWT).toString();
+                    res.json({ message: 'Success', value: ciphertext})
                 }
                 else {
                     res.json({ message: 'Error, please try again...' })
@@ -63,7 +64,6 @@ const payment = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error)
         res.json({ message: 'Error, please try again...' })
     }
 }
