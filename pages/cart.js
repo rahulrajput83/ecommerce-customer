@@ -7,7 +7,7 @@ import { BiMap, BiMinus, BiPlus } from 'react-icons/bi'
 import { MdDeleteOutline } from 'react-icons/md'
 import Link from 'next/link'
 import AccountEdit from '@/components/AccountEdit'
-import { getRequest } from '@/Functions/Requests'
+import { getRequest, putRequest } from '@/Functions/Requests'
 import SmallLoading from '@/components/SmallLoading'
 import Loading from '@/components/Loading'
 import { getToken } from '@/Functions/getToken'
@@ -61,30 +61,21 @@ export default function Cart() {
     }, [])
 
     /* Increase Quantity of Product */
-    const AddQuantity = (item) => {
-        const increaseItem = [...cart]
-        const findIndex = increaseItem.findIndex((e) => e.id === item.id);
-        increaseItem[findIndex].quantity++;
-        localStorage.setItem('cart', JSON.stringify(increaseItem));
-        /* getLocalStorage(); */
+    const AddQuantity = async(id, currentQuantity) => {
+        const response = await putRequest('/api/updateCart', 'add', {id, currentQuantity})
+        console.log(response)
+        getCart()
     }
 
     /* Decrease Quantity of Product */
-    const MinusQuantity = (item) => {
-        const increaseItem = [...cart]
-        const findIndex = increaseItem.findIndex((e) => e.id === item.id);
-        increaseItem[findIndex].quantity > 1 ? increaseItem[findIndex].quantity-- : 1;
-        localStorage.setItem('cart', JSON.stringify(increaseItem));
-        /* getLocalStorage(); */
+    const MinusQuantity = async(id, currentQuantity) => {
+        const response = await putRequest('/api/updateCart', 'minus', {id, currentQuantity})
+        getCart();
     }
 
     /* Remove Product from Cart */
     const RemoveCart = (item) => {
-        const increaseItem = [...cart]
-        const findIndex = increaseItem.findIndex((e) => e.id === item.id);
-        increaseItem.splice(findIndex, 1)
-        localStorage.setItem('cart', JSON.stringify(increaseItem));
-        /* getLocalStorage(); */
+        
     }
 
     useEffect(() => {
@@ -166,9 +157,9 @@ export default function Cart() {
                             <div className='w-full grid gap-6 justify-start items-start grid-cols-1 md:grid-cols-3'>
                                 <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 md:p-4 shadow-lg'>
                                     <span>Total Item : {cart.length}</span>
-                                    {cart.map(({product}) => {
+                                    {cart.map(({product, _id}) => {
                                         return (
-                                            <div key={product.id} className='w-full relative flex gap-4 flex-row justify-start items-start'>
+                                            <div key={_id} className='w-full relative flex gap-4 flex-row justify-start items-start'>
                                                 <img alt='' src={product.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col w-full'>
                                                     <div className='font-medium flex justify-between items-center w-full'>
@@ -181,7 +172,7 @@ export default function Cart() {
                                                                 basedOn='letters'
                                                             />
                                                         </Link>
-                                                        <button onClick={() => RemoveCart(product)} className='font-semibold text-red-500 z-10 text-xl bg-white'>
+                                                        <button onClick={() => RemoveCart(_id)} className='font-semibold text-red-500 z-10 text-xl bg-white'>
                                                             <MdDeleteOutline />
                                                         </button>
                                                     </div>
@@ -195,11 +186,11 @@ export default function Cart() {
                                                         />
                                                     </span>
                                                     <div className='flex gap-4 mt-4 items-center'>
-                                                        <button onClick={() => MinusQuantity(product)} className='p-2 bg-red-500 text-white'>
+                                                        <button onClick={() => MinusQuantity(_id, product.quantity)} className='p-2 bg-red-500 text-white'>
                                                             <BiMinus />
                                                         </button>
                                                         <span>{product.quantity}</span>
-                                                        <button onClick={() => AddQuantity(product)} className='p-2 bg-red-500 text-white'>
+                                                        <button onClick={() => AddQuantity(_id, product.quantity)} className='p-2 bg-red-500 text-white'>
                                                             <BiPlus />
                                                         </button>
                                                     </div>

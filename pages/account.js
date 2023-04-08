@@ -43,6 +43,7 @@ function account() {
                 return { ...e, paymentDate: responseTime, deliveryDate: deliveryDateTime }
             })
             setOrder(responseData)
+            console.log(responseData)
         } catch (error) {
             console.log('err')
         }
@@ -125,9 +126,9 @@ function account() {
                                                 </div>
                                             </div>
                                             <div className='flex w-full gap-2 px-2 pt-2 relative'>
-                                                <img src={products[0].thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
+                                                <img src={products[0].product.thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
                                                 <div className='w-full flex flex-col md:gap-2'>
-                                                    <Link href={`/product/${products[0].id}`} className='text-sm font-medium text-red-500'>{products[0].title}</Link>
+                                                    <Link href={`/product/${products[0].product.id}`} className='text-sm font-medium text-red-500'>{products[0].product.title}</Link>
                                                     {deliveryStatus ?
                                                         <span className='text-xs font-medium'>Delivered on <span className='font-semibold'>{deliveredDate}</span></span>
                                                         :
