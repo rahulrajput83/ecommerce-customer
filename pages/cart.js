@@ -34,6 +34,7 @@ export default function Cart() {
         setProductPrice(0);
         setShippingPrice(0)
         setFinalPrice(0)
+        setTaxPrice(0)
         const response = await getRequest('/api/findAllCart')
         if(response.length > 0) {
             setCart(response)

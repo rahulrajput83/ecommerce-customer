@@ -39,7 +39,7 @@ export default function Navbar({ setSearchQuery, cartData, searchQuery }) {
     return (
         <div className={`flex flex-row fixed z-20 gap-2 sm:gap-5 w-full items-center bg-red-500 ${router.pathname.includes('cart') ? 'justify-end' : 'justify-center'} p-3 box-border`}>
             <Link href='/' className={`text-white ${(router.pathname.includes('cart') || router.pathname.includes('login') || router.pathname.includes('register') || router.pathname.includes('/product') || router.pathname.includes('/account')) ? '' : 'hidden'} sm:block font-medium mr-auto text-base`}><span className="font-semibold text-lg">EASY</span> ORDER</Link>
-            {(router.pathname.includes('cart') || router.pathname.includes('login') || router.pathname.includes('register') || router.pathname.includes('/product') || router.pathname.includes('/account')) ? null :
+            {(router.pathname.includes('cart') || router.pathname.includes('login') || router.pathname.includes('register') || router.pathname.includes('/product') || router.pathname.includes('/account')) || router.pathname.includes('/paymentStatus') || router.pathname.includes('/order') ? null :
                 <form onSubmit={handleSubmit} className="flex flex-row relative w-full sm:w-2/3 md:w-1/3 justify-center items-center">
                     <input value={searchQuery} onChange={(e) => setInput(e.target.value)} className="w-full font-medium py-2 rounded-full bg-white outline-none text-sm px-3" type='text' placeholder="Search" />
                     <button type="submit" className="bg-red-200 rounded-full hover:bg-red-100 cursor-pointer absolute flex w-10 justify-center items-center right-0 h-full">
