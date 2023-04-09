@@ -6,7 +6,7 @@ import PaymentRequestModel from "@/Model/PaymentRequest"
 
 const handler = async (req, res) => {
     if (req.method !== 'POST') {
-        res.json({ message: 'Only POST requests allowed.' })
+        res.status(400).json({ message: 'Only POST requests allowed.' })
     }
     try {
         await MongoDBConnect();
@@ -39,8 +39,7 @@ const handler = async (req, res) => {
         res.json({ message: 'Success', value: ciphertext })
 
     } catch (error) {
-        console.log(error)
-        res.json({ message: 'Error, please try again...', error: error })
+        res.status(400).json({ message: 'Error, please try again...', error: error })
     }
 }
 

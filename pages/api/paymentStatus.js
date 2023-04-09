@@ -9,7 +9,7 @@ import JWTAuth from "@/Utils/JWTAuth"
 
 const handler = async (req, res) => {
   if (req.method !== 'POST') {
-    res.json({ message: 'Only POST requests allowed.' })
+    res.status(400).json({ message: 'Only POST requests allowed.' })
   }
   try {
     const { id, request, time } = req.body.data;
@@ -17,7 +17,7 @@ const handler = async (req, res) => {
     Insta.getPaymentDetails(request, id, async function (error, response) {
       if (error) {
         let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({ status: 'Error' }), process.env.JWT).toString();
-        res.json({ message: 'Success', value: ciphertext })
+        res.status(400).json({ message: 'Success', value: ciphertext })
       } else {
         if (response.message && response.message.startsWith('Not found')) {
           let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({ status: 'Not Found' }), process.env.JWT).toString();
@@ -40,7 +40,7 @@ const handler = async (req, res) => {
     });
 
   } catch (error) {
-    res.json({ message: 'Error, please try again...' })
+    res.status(400).json({ message: 'Error, please try again...' })
   }
 }
 

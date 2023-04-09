@@ -6,7 +6,7 @@ import CartModel from "@/Model/Cart"
 
 const handler = async (req, res) => {
     if (req.method !== 'POST') {
-        res.json({ message: 'Only POST requests allowed.' })
+        res.status(400).json({ message: 'Only POST requests allowed.' })
     }
     try {
         await MongoDBConnect();
@@ -30,7 +30,7 @@ const handler = async (req, res) => {
         }
 
     } catch (error) {
-        res.json({ message: 'Error, please try again...', error: error })
+        res.status(400).json({ message: 'Error, please try again...', error: error })
     }
 }
 

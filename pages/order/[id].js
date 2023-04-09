@@ -19,7 +19,6 @@ export default function order() {
         try {
             const data = await postRequest('/api/orderDetail', { id: id })
             setData(data)
-            console.log(data)
         } catch (error) {
             console.log('err')
         }

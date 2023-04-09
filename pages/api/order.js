@@ -6,11 +6,14 @@ import PaymentRequestModel from "@/Model/PaymentRequest"
 
 const handler = async (req, res) => {
     if (req.method !== 'GET') {
-        res.json({ message: 'Only GET requests allowed.' })
+        res.status(400).json({ message: 'Only GET requests allowed.' })
     }
     try {
         await MongoDBConnect();
         let responseData = await PaymentRequestModel.find({ userId: req.user.id, paymentStatus: true })
+        if(responseData.length > 0) {
+            responseData = responseData.reverse();
+        }
         const data = responseData.map((e) => {
             const { _id, userId, paymentStatus, products, deliveryDate, orderId, paymentDate, grandTotal, deliveredDate, deliveryStatus } = e;
             return {
@@ -30,7 +33,7 @@ const handler = async (req, res) => {
         res.json({ message: 'Success', value: ciphertext })
 
     } catch (error) {
-        res.json({ message: 'Error, please try again...', error: error })
+        res.status(400).json({ message: 'Error, please try again...', error: error })
     }
 }
 

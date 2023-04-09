@@ -8,7 +8,7 @@ import CryptoJS from 'crypto-js'
 const payment = async (req, res) => {
     try {
         if (req.method !== 'POST') {
-            res.json({ message: 'Only POST requests allowed' })
+            res.status(400).json({ message: 'Only POST requests allowed' })
             return
         }
         await MongoDBConnect();
@@ -25,7 +25,7 @@ const payment = async (req, res) => {
         data.redirect_url = redirect;
         Insta.createPayment(data, async (err, instaResponse) => {
             if (err) {
-                res.json({ message: 'Error, please try again...' })
+                res.status(400).json({ message: 'Error, please try again...' })
             }
             else {
                 let paymentResponse = await JSON.parse(instaResponse)
@@ -56,7 +56,7 @@ const payment = async (req, res) => {
                     res.json({ message: 'Success', value: ciphertext})
                 }
                 else {
-                    res.json({ message: 'Error, please try again...' })
+                    res.status(400).json({ message: 'Error, please try again...' })
                 }
 
             }
@@ -64,7 +64,7 @@ const payment = async (req, res) => {
 
 
     } catch (error) {
-        res.json({ message: 'Error, please try again...' })
+        res.status(400).json({ message: 'Error, please try again...' })
     }
 }
 

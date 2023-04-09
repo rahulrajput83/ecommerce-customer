@@ -6,7 +6,7 @@ import JWTAuth from "@/Utils/JWTAuth"
 
 const handler = async (req, res) => {
     if (req.method !== 'GET') {
-        res.json({ message: 'Only GET requests allowed.' })
+        res.status(400).json({ message: 'Only GET requests allowed.' })
     }
     try {
         await MongoDBConnect();
@@ -34,7 +34,7 @@ const handler = async (req, res) => {
         res.json({ message: 'Success', value: ciphertext})
 
     } catch (error) {
-        res.json({ message: 'Error, please try again...' })
+        res.status(400).json({ message: 'Error, please try again...' })
     }
 }
 

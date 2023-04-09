@@ -6,7 +6,7 @@ import JWTAuth from "@/Utils/JWTAuth"
 
 const handler = async (req, res) => {
     if (req.method !== 'PUT') {
-        res.json({ message: 'Only PUT requests allowed.' })
+        res.status(400).json({ message: 'Only PUT requests allowed.' })
     }
     try {
         const { field, data } = req.body;
@@ -18,7 +18,7 @@ const handler = async (req, res) => {
         res.json({ message: 'Success' })
 
     } catch (error) {
-        res.json({ message: 'Error, please try again...' })
+        res.status(400).json({ message: 'Error, please try again...' })
     }
 }
 
