@@ -42,10 +42,6 @@ function paymentStatus() {
         }
     }, [router.isReady])
 
-    useEffect(() => {
-        console.log(data)
-    }, [data])
-
     return (
         <>
             <Head>
@@ -72,7 +68,7 @@ function paymentStatus() {
                                     {data.status === 'Not Found' && <span className='text-sm font-medium'>Invalid Payment Request. If amount is deducted from your account, please <span className='text-red-500'>contact us</span>.</span>}
                                 </div>
                                 <div className='absolute p-16 md:p-10 border-2 border-red-500 rounded-full right-1/2 top-1/2 md:top-0 translate-y-1/2 md:translate-y-0 translate-x-1/2 md:translate-x-0 md:right-0 uppercase'>
-                                    <span className='absolute font-bold -rotate-[25deg] text-xl md:text-sm text-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                                    <span className='absolute font-bold text-center w-full text-xl md:text-sm text-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
                                         {data.status}
                                     </span>
                                 </div>
