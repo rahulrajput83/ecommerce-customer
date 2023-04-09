@@ -42,3 +42,12 @@ export const postRequest = async (path, data) => {
         return { message: 'Error, please try again', error: error }
     }
 }
+ 
+export const deleteRequest = async (path, id) => {
+    try {
+        const response = await axios.put(path, { id });
+        return response
+    } catch (error) {
+        return { message: 'Error, please try again...' }
+    }
+}

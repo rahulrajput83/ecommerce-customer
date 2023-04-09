@@ -7,7 +7,7 @@ import { BiMap, BiMinus, BiPlus } from 'react-icons/bi'
 import { MdDeleteOutline } from 'react-icons/md'
 import Link from 'next/link'
 import AccountEdit from '@/components/AccountEdit'
-import { getRequest, postRequest, putRequest } from '@/Functions/Requests'
+import { deleteRequest, getRequest, postRequest, putRequest } from '@/Functions/Requests'
 import SmallLoading from '@/components/SmallLoading'
 import Loading from '@/components/Loading'
 import { getToken } from '@/Functions/getToken'
@@ -36,10 +36,7 @@ export default function Cart() {
         setFinalPrice(0)
         setTaxPrice(0)
         const response = await getRequest('/api/findAllCart')
-        if(response.length > 0) {
-            setCart(response)
-        }
-        
+            setCart(response)  
     }
 
     const getAccount = async () => {
@@ -63,19 +60,20 @@ export default function Cart() {
 
     /* Increase Quantity of Product */
     const AddQuantity = async(id, currentQuantity) => {
-        const response = await putRequest('/api/updateCart', 'add', {id, currentQuantity})
+        await putRequest('/api/updateCart', 'add', {id, currentQuantity})
         getCart()
     }
 
     /* Decrease Quantity of Product */
     const MinusQuantity = async(id, currentQuantity) => {
-        const response = await putRequest('/api/updateCart', 'minus', {id, currentQuantity})
+        await putRequest('/api/updateCart', 'minus', {id, currentQuantity})
         getCart();
     }
 
     /* Remove Product from Cart */
-    const RemoveCart = (item) => {
-        
+    const RemoveCart = async(item) => {
+        await deleteRequest('/api/removeItem', item)
+        getCart()
     }
 
     useEffect(() => {
