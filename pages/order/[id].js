@@ -3,13 +3,13 @@ import Head from 'next/head'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar'
-import moment from 'moment/moment';
-import { BiCart } from 'react-icons/bi';
 import ProductLoading from '@/components/ProductLoading';
 import { postRequest } from '@/Functions/Requests';
 import { useRouter } from 'next/router';
 import { getToken } from '@/Functions/getToken';
 import { Logout } from '@/Functions/Logout';
+import CryptoJS from "crypto-js"
+import moment from 'moment';
 
 export default function order() {
     const router = useRouter();
@@ -18,6 +18,17 @@ export default function order() {
     const getOrder = async (id) => {
         try {
             const data = await postRequest('/api/orderDetail', { id: id })
+            let bytesDelivery = CryptoJS.AES.decrypt(data.DeliveryAddress, process.env.JWT);
+            let bytesEmail = CryptoJS.AES.decrypt(data.email, process.env.JWT);
+            data.DeliveryAddress = bytesDelivery.toString(CryptoJS.enc.Utf8);
+            data.email = bytesEmail.toString(CryptoJS.enc.Utf8);
+            let bytesFullName = CryptoJS.AES.decrypt(data.fullName, process.env.JWT);
+            data.fullName = bytesFullName.toString(CryptoJS.enc.Utf8);
+            let bytesMobileNumber = CryptoJS.AES.decrypt(data.mobileNumber, process.env.JWT);
+            data.mobileNumber = bytesMobileNumber.toString(CryptoJS.enc.Utf8);
+            data.deliveryDate = moment(data.deliveryDate).local().format('dddd, MMM Do YY');
+            data.paymentDate = moment(data.paymentDate).local().format('dddd, MMM Do, h:mm a');
+            console.log(data)
             setData(data)
         } catch (error) {
             console.log('err')
@@ -47,21 +58,73 @@ export default function order() {
                 <link rel="icon" href="favicon.ico" />
             </Head>
 
-            <main className='w-100 flex flex-col'>
+            <main className='w-full flex flex-col'>
                 <Navbar />
                 {data && data.id ?
-                    <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
-                        <div className='w-full grid gap-6 grid-cols-1 md:grid-cols-3'>
-                            <div className='flex flex-col gap-4 overflow-scroll md:overflow-hidden w-full md:col-span-2'>
+                    <div className='w-full flex flex-col gap-2 px-2 md:px-4 mt-20 pb-20'>
+                        <div className='w-full md:w-11/12 mx-auto grid gap-6 grid-cols-1 md:grid-cols-3'>
+                            <div className='flex flex-col order-3 md:order-1 gap-4 md:overflow-hidden p-2 w-full md:col-span-1'>
+                                <span className='font-semibold uppercase'>Products</span>
                                 {data.products.map((e, i) => {
                                     return (
-                                        <div  key={`thumbnail-${i}`} className='w-full flex-col md:flex-row shadow-lg p-2 flex gap-4'>
-                                            <img className='w-full md:w-48' src={e.product.thumbnail} alt='' />
-                                            <span>{e.product.title}</span>
-                                        </div>
+                                        <Link href={`/product/${e.product.id}`} key={`thumbnail-${i}`} className='w-full relative flex-col hover:shadow-lg hover:rounded-b-lg cursor-pointer flex'>
+                                            <img className='w-full rounded-lg' src={e.product.thumbnail} alt='' />
+                                            <span className='pt-2 px-2 text-red-500 text-sm font-medium'>{e.product.title}</span>
+                                            <div className='font-medium flex justify-between px-2 text-sm'>
+                                                <span>Product Price :</span>
+                                                <span>&#x20b9; {e.product.price}</span>
+                                            </div>
+                                            <div className='font-medium flex justify-between px-2 text-sm'>
+                                                <span>Quantity :</span>
+                                                <span>{e.product.quantity}</span>
+                                            </div>
+                                            <div className='font-medium flex justify-between px-2 pb-2 text-sm'>
+                                                <span>Total Price:</span>
+                                                <span>&#x20b9; {e.product.price  * e.product.quantity}</span>
+                                            </div>
+                                        </Link>
                                     )
                                 })}
 
+                            </div>
+                            <div className='flex flex-col order-2 md:order-2 md:overflow-hidden p-2 w-full md:col-span-1'>
+                                <span className='mb-2 font-semibold uppercase'>Track Order</span>
+                                {data.paymentDate && <div className='w-full mt-8 flex flex-row gap-3 items-center'>
+                                    <span className='w-3 h-3 rounded-full bg-red-500'></span>
+                                    <span className='text-sm'>Order - <span className='font-medium'>{data.paymentDate}</span></span>
+                                </div>}
+                                {data.paymentDate && <div className='w-full flex mt-8 flex-row gap-3 items-center'>
+                                    <span className='w-3 h-3 rounded-full bg-red-500'></span>
+                                    <span className='text-sm'>Packed - <span className='font-medium'>{data.paymentDate}</span></span>
+                                </div>}
+                                {data.paymentDate && <div className='w-full flex mt-8 flex-row gap-3 items-center'>
+                                    <span className='w-3 h-3 rounded-full bg-red-500'></span>
+                                    <span className='text-sm'>Out for delivery - <span className='font-medium'>{data.paymentDate}</span></span>
+                                </div>}
+                                {data.deliveredDate && <div className='w-full flex mt-8 flex-row gap-3 items-center'>
+                                    <span className='w-3 h-3 rounded-full bg-red-500'></span>
+                                    <span className='text-sm'>Delivered - <span className='font-medium'>{data.deliveredDate}</span></span>
+                                </div>}
+                            </div>
+                            <div className='flex flex-col order-1 md:order-3 md:overflow-hidden p-2 w-full md:col-span-1'>
+                                <span className='mb-2 font-semibold uppercase'>Summary</span>
+                                <div className='w-full font-medium flex flex-row justify-between items-center'>
+                                    <span className='font-medium'>Product Price</span>
+                                    <span className='font-semibold'>&#x20b9; {data.subTotal}</span>
+                                </div>
+                                <div className='w-full font-medium flex flex-row justify-between items-center'>
+                                    <span className='font-medium'>Shipping Charges</span>
+                                    <span className='font-semibold'>&#x20b9; {data.shippingCharges}</span>
+                                </div>
+                                <div className='w-full font-medium flex flex-row justify-between items-center'>
+                                    <span className='font-medium'>Tax</span>
+                                    <span className='font-semibold'>&#x20b9; {data.tax}</span>
+                                </div>
+                                <div className='w-full font-medium flex flex-row justify-between items-center'>
+                                    <span className='font-medium'>Final Price</span>
+                                    <span className='font-semibold'>&#x20b9; {data.grandTotal}</span>
+                                </div>
+                                <span className='w-full my-4 bg-red-500 text-sm text-white font-medium p-2 rounded text-center'>{data.deliveryStatus ? 'Delivered on' : `Arriving on ${data.deliveryDate}`}</span>
                             </div>
                         </div>
                     </div>
