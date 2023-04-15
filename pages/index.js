@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Category from '@/components/Category'
+import ErrorComponent from '@/components/ErrorComponent'
 import { useWindowSize } from '@/Functions/GetWidth'
 import { addToCart } from '@/Functions/addToCart'
 import { getRequest } from '@/Functions/Requests'
@@ -24,23 +25,29 @@ export default function Home() {
   const size = useWindowSize();
   const [showFilter, setShowFilter] = useState(false)
   const [cartData, setCartData] = useState([])
+  const [error, setError] = useState(false)
 
   const getProducts = (title) => {
     setLoading(true)
     fetch('https://dummyjson.com/products')
       .then(res => res.json())
       .then((res) => {
-        setLoading(false)
-        if (title) {
-          const filter = res.products.filter((e) => { return (e.category.toLowerCase().includes(title.toLowerCase()) || e.title.toLowerCase().includes(title.toLowerCase())) })
-          setProducts(filter)
-          return;
+        if (res.products.length > 0) {
+          setLoading(false)
+          if (title) {
+            const filter = res.products.filter((e) => { return (e.category.toLowerCase().includes(title.toLowerCase()) || e.title.toLowerCase().includes(title.toLowerCase())) })
+            setProducts(filter)
+            return;
+          }
+          setProducts(res.products)
         }
-        setProducts(res.products)
 
       })
       .catch(() => {
-        console.log('err')
+        setError(true)
+        setTimeout(() => {
+          setError(false)
+        }, 3000)
       })
   }
 
@@ -55,11 +62,11 @@ export default function Home() {
 
   const getCart = async () => {
     const response = await getRequest('/api/findAllCart')
-    setCartData(response)
+    setCartData(response || [])
   }
 
   const handleAddToCart = async (item) => {
-    const response = await addToCart(item);
+    await addToCart(item);
     getCart();
     return;
   }
@@ -75,6 +82,7 @@ export default function Home() {
 
       <main className='w-100 flex flex-col box-border'>
         <Navbar cartData={cartData} setSearchQuery={setSearchQuery} />
+        {error && <ErrorComponent />}
         <div className='w-full grid px-2 md:px-4 gap-4 pb-10 mt-20 md:mt-20 grid-cols-1 md:grid-cols-5'>
           <div className='md:col-span-1 gap-2 font-medium flex flex-col'>
             <span onClick={() => {

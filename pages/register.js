@@ -7,6 +7,7 @@ import Label from '@/components/Label'
 import Loading from '@/components/Loading'
 import { useRouter } from 'next/router'
 import { getToken } from '@/Functions/getToken'
+import ErrorComponent from '@/components/ErrorComponent'
 
 
 export default function Register() {
@@ -18,6 +19,7 @@ export default function Register() {
         password: '',
         type: ''
     })
+    const [getError, setGetError] = useState(false)
 
     useEffect(() => {
         if (getToken()) {
@@ -40,12 +42,24 @@ export default function Register() {
                 })
                     .then(res => res.json())
                     .then((res) => {
-                        setError(res.message)
-                        setLoading(false)
+                        if (res.message && res.message.startsWith('Error')) {
+                            setGetError(true)
+                            setLoading(false)
+                            setTimeout(() => {
+                                setGetError(false)
+                            }, 6000)
+                        }
+                        else {
+                            setError(res.message)
+                            setLoading(false)
+                        }
                     })
                     .catch(() => {
-                        setError('Error, please try again...')
+                        setGetError(true)
                         setLoading(false)
+                        setTimeout(() => {
+                            setGetError(false)
+                        }, 6000)
                     })
             }
             else {
@@ -73,6 +87,7 @@ export default function Register() {
 
             <main className='w-100 flex flex-col'>
                 <Navbar />
+                {getError && <ErrorComponent />}
                 <div className='w-full gap-4 pb-10 mt-20 flex flex-col'>
                     <form onSubmit={handleForm} className='w-full flex py-4 px-4 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
                         <span className='text-center font-semibold text-xl'>Register</span>

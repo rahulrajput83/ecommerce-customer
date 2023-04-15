@@ -48,6 +48,6 @@ export const deleteRequest = async (path, id) => {
         const response = await axios.put(path, { id });
         return response
     } catch (error) {
-        return { message: 'Error, please try again...' }
+        return { message: 'Error, please try again' }
     }
 }

@@ -18,7 +18,7 @@ const handler = async (req, res) => {
         res.json({ message: 'Success' })
 
     } catch (error) {
-        res.status(400).json({ message: 'Error, please try again...' })
+        res.status(400).json({ message: 'Error, please try again' })
     }
 }
 

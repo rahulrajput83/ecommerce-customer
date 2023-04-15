@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Loading from '@/components/Loading'
 import { useRouter } from 'next/router'
 import { getToken } from '@/Functions/getToken'
+import ErrorComponent from '@/components/ErrorComponent'
 
 
 export default function Login() {
@@ -16,6 +17,7 @@ export default function Login() {
         password: ''
     })
     const [loading, setLoading] = useState(false)
+    const [getError, setGetError] = useState(false)
 
     useEffect(() => {
         if (getToken()) {
@@ -43,6 +45,13 @@ export default function Login() {
                             setLoading(false)
                             router.push('/')
                         }
+                        else if (res.message && res.message.startsWith('Error')) {
+                            setGetError(true)
+                            setLoading(false)
+                            setTimeout(() => {
+                                setGetError(false)
+                            }, 6000)
+                        }
                         else {
                             setLoading(false)
                             setError(res.message)
@@ -50,8 +59,11 @@ export default function Login() {
 
                     })
                     .catch(() => {
-                        setError('Error, please try again...')
+                        setGetError(true)
                         setLoading(false)
+                        setTimeout(() => {
+                            setGetError(false)
+                        }, 6000)
                     })
             }
             else {
@@ -79,6 +91,7 @@ export default function Login() {
 
             <main className='w-100 flex flex-col'>
                 <Navbar />
+                {getError && <ErrorComponent />}
                 <div className='w-full gap-4 pb-10 mt-20 flex flex-col'>
                     <form onSubmit={handleForm} className='w-full flex py-4 px-2 md:px-20 flex-col gap-8 md:w-1/2 mx-auto shadow-xl'>
                         <span className='text-center font-semibold text-xl'>Login</span>

@@ -11,6 +11,7 @@ import { deleteRequest, getRequest, postRequest, putRequest } from '@/Functions/
 import SmallLoading from '@/components/SmallLoading'
 import Loading from '@/components/Loading'
 import { getToken } from '@/Functions/getToken'
+import ErrorComponent from '@/components/ErrorComponent'
 
 const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
@@ -28,24 +29,39 @@ export default function Cart() {
     });
     const [loading, setLoading] = useState(false)
     const [token, setToken] = useState('')
+    const [error, setError] = useState(false)
 
 
-    const getCart = async() => {
+    const getCart = async () => {
         setProductPrice(0);
         setShippingPrice(0)
         setFinalPrice(0)
         setTaxPrice(0)
         const response = await getRequest('/api/findAllCart')
-            setCart(response)  
+        if (response.message && response.message.startsWith('Error')) {
+            setError(true);
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
+        }
+        else {
+            setCart(response)
+        }
+
     }
 
     const getAccount = async () => {
-        try {
-            const data = await getRequest('/api/account')
-            setAccountData(data)
-        } catch (error) {
-            console.log('err')
+        const data = await getRequest('/api/account')
+        if (data.message && data.message.startsWith('Error')) {
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
         }
+        else {
+            setAccountData(data)
+        }
+
     }
 
     const handleEdit = (title, valueField) => {
@@ -59,21 +75,46 @@ export default function Cart() {
     }, [])
 
     /* Increase Quantity of Product */
-    const AddQuantity = async(id, currentQuantity) => {
-        await putRequest('/api/updateCart', 'add', {id, currentQuantity})
-        getCart()
+    const AddQuantity = async (id, currentQuantity) => {
+        const data = await putRequest('/api/updateCart', 'add', { id, currentQuantity })
+        if (data.message && data.message.startsWith('Error')) {
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
+        }
+        else {
+            getCart()
+        }
+
     }
 
     /* Decrease Quantity of Product */
-    const MinusQuantity = async(id, currentQuantity) => {
-        await putRequest('/api/updateCart', 'minus', {id, currentQuantity})
-        getCart();
+    const MinusQuantity = async (id, currentQuantity) => {
+        const data = await putRequest('/api/updateCart', 'minus', { id, currentQuantity })
+        if (data.message && data.message.startsWith('Error')) {
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
+        }
+        else {
+            getCart()
+        }
     }
 
     /* Remove Product from Cart */
-    const RemoveCart = async(item) => {
+    const RemoveCart = async (item) => {
         await deleteRequest('/api/removeItem', item)
-        getCart()
+        if (data.message && data.message.startsWith('Error')) {
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
+        }
+        else {
+            getCart()
+        }
     }
 
     useEffect(() => {
@@ -98,7 +139,7 @@ export default function Cart() {
         }
     }
 
-    const handlePayment = async() => {
+    const handlePayment = async () => {
         if (!accountData.address && !accountData.number) {
             alert('Please add address and mobile number.')
             return;
@@ -119,9 +160,18 @@ export default function Cart() {
             subTotal: productPrice,
             shippingCharges: shippingPrice
         });
-        if (data.link) {
-            window.location.replace(data.link)
+        if (data.message && data.message.startsWith('Error')) {
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
         }
+        else {
+            if (data.link) {
+                window.location.replace(data.link)
+            }
+        }
+
     }
 
     return (
@@ -135,6 +185,7 @@ export default function Cart() {
 
             <main className='w-full'>
                 <Navbar cart={cart} />
+                {error && <ErrorComponent />}
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full flex flex-col'>
                         <span className='text-xl uppercase font-semibold mb-4 text-red-500 mx-auto'>Cart</span>
@@ -142,7 +193,7 @@ export default function Cart() {
                             <div className='w-full grid gap-6 justify-start items-start grid-cols-1 md:grid-cols-3'>
                                 <div className='md:col-span-2 justify-start items-start font-medium flex flex-col gap-4 p-2 md:p-4 shadow-lg'>
                                     <span>Total Item : {cart.length}</span>
-                                    {cart.map(({product, _id}) => {
+                                    {cart.map(({ product, _id }) => {
                                         return (
                                             <div key={_id} className='w-full relative flex gap-4 flex-row justify-start items-start'>
                                                 <img alt='' src={product.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
