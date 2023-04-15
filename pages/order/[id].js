@@ -1,37 +1,48 @@
-import Line from '@/components/Line';
 import Head from 'next/head'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar'
-import ProductLoading from '@/components/ProductLoading';
 import { postRequest } from '@/Functions/Requests';
 import { useRouter } from 'next/router';
 import { getToken } from '@/Functions/getToken';
 import { Logout } from '@/Functions/Logout';
 import CryptoJS from "crypto-js"
 import moment from 'moment';
+import ErrorComponent from '@/components/ErrorComponent'
+
 
 export default function order() {
     const router = useRouter();
     const [data, setData] = useState({});
+    const [getError, setGetError] = useState(false)
 
     const getOrder = async (id) => {
         try {
             const data = await postRequest('/api/orderDetail', { id: id })
-            let bytesDelivery = CryptoJS.AES.decrypt(data.DeliveryAddress, process.env.JWT);
-            let bytesEmail = CryptoJS.AES.decrypt(data.email, process.env.JWT);
-            data.DeliveryAddress = bytesDelivery.toString(CryptoJS.enc.Utf8);
-            data.email = bytesEmail.toString(CryptoJS.enc.Utf8);
-            let bytesFullName = CryptoJS.AES.decrypt(data.fullName, process.env.JWT);
-            data.fullName = bytesFullName.toString(CryptoJS.enc.Utf8);
-            let bytesMobileNumber = CryptoJS.AES.decrypt(data.mobileNumber, process.env.JWT);
-            data.mobileNumber = bytesMobileNumber.toString(CryptoJS.enc.Utf8);
-            data.deliveryDate = moment(data.deliveryDate).local().format('dddd, MMM Do YY');
-            data.paymentDate = moment(data.paymentDate).local().format('dddd, MMM Do, h:mm a');
-            console.log(data)
-            setData(data)
+            if (res.message && res.message.startsWith('Error')) {
+                setGetError(true)
+                setLoading(false)
+                setTimeout(() => {
+                    setGetError(false)
+                }, 6000)
+            } else {
+                let bytesDelivery = CryptoJS.AES.decrypt(data.DeliveryAddress, process.env.JWT);
+                let bytesEmail = CryptoJS.AES.decrypt(data.email, process.env.JWT);
+                data.DeliveryAddress = bytesDelivery.toString(CryptoJS.enc.Utf8);
+                data.email = bytesEmail.toString(CryptoJS.enc.Utf8);
+                let bytesFullName = CryptoJS.AES.decrypt(data.fullName, process.env.JWT);
+                data.fullName = bytesFullName.toString(CryptoJS.enc.Utf8);
+                let bytesMobileNumber = CryptoJS.AES.decrypt(data.mobileNumber, process.env.JWT);
+                data.mobileNumber = bytesMobileNumber.toString(CryptoJS.enc.Utf8);
+                data.deliveryDate = moment(data.deliveryDate).local().format('dddd, MMM Do YY');
+                data.paymentDate = moment(data.paymentDate).local().format('dddd, MMM Do, h:mm a');
+                setData(data)
+            }
         } catch (error) {
-            console.log('err')
+            setGetError(true)
+            setTimeout(() => {
+                setGetError(false)
+            }, 6000)
         }
     }
 
@@ -60,10 +71,11 @@ export default function order() {
 
             <main className='w-full flex flex-col'>
                 <Navbar />
+                {getError && <ErrorComponent />}
                 {data && data.id ?
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 mt-20 pb-20'>
                         <div className='w-full md:w-11/12 mx-auto grid gap-6 grid-cols-1 md:grid-cols-3'>
-                            <div className='flex flex-col order-3 md:order-1 gap-4 md:overflow-hidden p-2 w-full md:col-span-1'>
+                            <div className='flex flex-col order-3 md:order-1 gap-4 md:overflow-hidden p-2 w-full'>
                                 <span className='font-semibold uppercase'>Products</span>
                                 {data.products.map((e, i) => {
                                     return (
@@ -80,16 +92,16 @@ export default function order() {
                                             </div>
                                             <div className='font-medium flex justify-between px-2 pb-2 text-sm'>
                                                 <span>Total Price:</span>
-                                                <span>&#x20b9; {e.product.price  * e.product.quantity}</span>
+                                                <span>&#x20b9; {e.product.price * e.product.quantity}</span>
                                             </div>
                                         </Link>
                                     )
                                 })}
 
                             </div>
-                            <div className='flex flex-col order-2 md:order-2 md:overflow-hidden p-2 w-full md:col-span-1'>
+                            <div className='flex flex-col order-2 md:order-2 md:overflow-hidden p-2 w-full'>
                                 <span className='mb-2 font-semibold uppercase'>Track Order</span>
-                                {data.paymentDate && <div className='w-full mt-8 flex flex-row gap-3 items-center'>
+                                {data.paymentDate && <div className='w-full flex flex-row gap-3 items-center'>
                                     <span className='w-3 h-3 rounded-full bg-red-500'></span>
                                     <span className='text-sm'>Order - <span className='font-medium'>{data.paymentDate}</span></span>
                                 </div>}
@@ -106,7 +118,7 @@ export default function order() {
                                     <span className='text-sm'>Delivered - <span className='font-medium'>{data.deliveredDate}</span></span>
                                 </div>}
                             </div>
-                            <div className='flex flex-col order-1 md:order-3 md:overflow-hidden p-2 w-full md:col-span-1'>
+                            <div className='flex flex-col order-1 md:order-3 md:overflow-hidden p-2 w-full '>
                                 <span className='mb-2 font-semibold uppercase'>Summary</span>
                                 <div className='w-full font-medium flex flex-row justify-between items-center'>
                                     <span className='font-medium'>Product Price</span>
@@ -130,7 +142,15 @@ export default function order() {
                     </div>
                     :
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
-                        <ProductLoading />
+                        <div className='w-full animate-pulse md:w-11/12 mx-auto grid gap-6 grid-cols-1 md:grid-cols-3'>
+                            <div className='flex flex-row md:flex-col gap-4 w-full'>
+                                <div className='w-full h-40 md:h-72 bg-slate-200' ></div>
+                            </div>
+                            <div className='bg-slate-200 h-40 w-full md:h-72'>
+                            </div>
+                            <div className='bg-slate-200 h-40 w-full md:h-72'>
+                            </div>
+                        </div>
                     </div>
                 }
             </main>

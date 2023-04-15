@@ -141,7 +141,17 @@ export default function Cart() {
 
     const handlePayment = async () => {
         if (!accountData.address && !accountData.number) {
-            alert('Please add address and mobile number.')
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
+            return;
+        }
+        else if(accountData.address === 'Empty' && accountData.number === 'Empty') {
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 6000)
             return;
         }
         setLoading(true)
@@ -162,9 +172,11 @@ export default function Cart() {
         });
         if (data.message && data.message.startsWith('Error')) {
             setError(true)
+            setLoading(false)
             setTimeout(() => {
                 setError(false)
             }, 6000)
+            
         }
         else {
             if (data.link) {
@@ -264,8 +276,8 @@ export default function Cart() {
                                             </div>
                                             {accountData && accountData.address ?
                                                 <div className='w-full inline'>
-                                                    <span className='text-sm'>{accountData.address}</span>
-                                                    <span className='text-sm font-medium ml-1'>{accountData.number}</span>
+                                                    <span className='text-sm'>{accountData.address !== 'Empty' && accountData.address}</span>
+                                                    <span className='text-sm font-medium ml-1'>{accountData.number !== 'Empty' && accountData.number}</span>
                                                 </div>
                                                 :
                                                 <SmallLoading />

@@ -17,7 +17,7 @@ export default function Register() {
     const [data, setData] = useState({
         email: '',
         password: '',
-        type: ''
+        type: 'Customer'
     })
     const [getError, setGetError] = useState(false)
 
@@ -93,11 +93,11 @@ export default function Register() {
                         <span className='text-center font-semibold text-xl'>Register</span>
                         <Input type='email' data={data} setData={setData} placeholder='Email Address' name='email' value={data.email} />
                         <Input type='password' data={data} setData={setData} placeholder='Password' name='password' value={data.password} />
-                        <div className='grid grid-cols-2 sm:grid-cols-3 w-full items-center gap-5'>
+                        {/* <div className='grid grid-cols-2 sm:grid-cols-3 w-full items-center gap-5'>
                             <Label data={data} setData={setData} text='Customer' />
                             <Label data={data} setData={setData} text='Seller' />
                             <Label data={data} setData={setData} text='Partner' />
-                        </div>
+                        </div> */}
                         <div className='w-full text-sm font-medium flex gap-10'>
                             <button type='submit' disabled={error ? true : false} className='rounded-full w-full border-[0.14rem] text-medium hover:bg-white hover:text-red-500 bg-red-500 text-white border-red-500 p-2'>Register</button>
                             <Link className='rounded-full w-full border-[0.14rem] text-medium hover:bg-red-500 hover:text-white text-center bg-white text-red-500 border-red-500 p-2' href='/login'>Login</Link>
