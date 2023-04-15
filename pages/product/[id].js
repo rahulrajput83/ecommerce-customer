@@ -9,12 +9,14 @@ import { BiCart } from 'react-icons/bi';
 import ProductLoading from '@/components/ProductLoading';
 import { addToCart } from '@/Functions/addToCart';
 import { getRequest } from '@/Functions/Requests';
+import ErrorComponent from '@/components/ErrorComponent'
 
 export default function product() {
     const router = useRouter();
     const [data, setData] = useState({});
     const [image, setImage] = useState('');
     const [cartData, setCartData] = useState([])
+    const [getError, setGetError] = useState(false)
 
     const getCart = async () => {
         const response = await getRequest('/api/findAllCart')
@@ -29,12 +31,24 @@ export default function product() {
                 .then((res) => {
                     setData(res)
                     setImage(res.thumbnail)
+                    if (res.message && res.message.startsWith('Error')) {
+                        setGetError(true)
+                        setTimeout(() => {
+                            setGetError(false)
+                        }, 6000)
+                    }
+                })
+                .catch(() => {
+                    setGetError(true)
+                    setTimeout(() => {
+                        setGetError(false)
+                    }, 6000)
                 })
         }
     }, [router.isReady])
 
     const handleAddToCart = async(item) => {
-        const response = await addToCart(item);
+        await addToCart(item);
         getCart()
     }
 
@@ -50,6 +64,7 @@ export default function product() {
 
             <main className='w-100 flex flex-col'>
                 <Navbar cartData={cartData} />
+                {getError && <ErrorComponent />}
                 {'images' in data ?
                     <div className='w-full flex flex-col gap-2 px-2 md:px-4 pb-10 mt-20 md:mt-20'>
                         <div className='w-full grid gap-6 grid-cols-1 md:grid-cols-12'>

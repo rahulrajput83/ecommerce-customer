@@ -10,6 +10,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
+import ErrorComponent from '@/components/ErrorComponent'
 
 
 const accountItem = ['My Account', 'My Orders', 'Logout']
@@ -23,28 +24,52 @@ function account() {
         valueField: ''
     });
     const [order, setOrder] = useState([])
+    const [getError, setGetError] = useState(false)
 
     const getAccount = async () => {
         try {
             const data = await getRequest('/api/account')
-            setAccountData(data)
+            if (data.message && data.message.startsWith('Error')) {
+                setGetError(true)
+                setLoading(false)
+                setTimeout(() => {
+                    setGetError(false)
+                }, 6000)
+            } else {
+                setAccountData(data)
+            }
         } catch (error) {
-            console.log('err')
+            setGetError(true)
+            setTimeout(() => {
+                setGetError(false)
+            }, 6000)
         }
     }
 
     const getOrders = async () => {
         try {
             const data = await getRequest('/api/order')
-            let responseData = data.map((e) => {
-                let stillUtc = moment.utc(e.paymentDate).toDate();
-                let responseTime = moment(stillUtc).local().format('LL')
-                let deliveryDateTime = moment(e.deliveryDate).local().format('dddd, MMM Do YY')
-                return { ...e, paymentDate: responseTime, deliveryDate: deliveryDateTime }
-            })
-            setOrder(responseData)
+            if (data.message && data.message.startsWith('Error')) {
+                setGetError(true)
+                setLoading(false)
+                setTimeout(() => {
+                    setGetError(false)
+                }, 6000)
+            } else {
+                let responseData = data.map((e) => {
+                    let stillUtc = moment.utc(e.paymentDate).toDate();
+                    let responseTime = moment(stillUtc).local().format('LL')
+                    let deliveryDateTime = moment(e.deliveryDate).local().format('dddd, MMM Do YY')
+                    return { ...e, paymentDate: responseTime, deliveryDate: deliveryDateTime }
+                })
+                setOrder(responseData)
+            }
+
         } catch (error) {
-            console.log('err')
+            setGetError(true)
+            setTimeout(() => {
+                setGetError(false)
+            }, 6000)
         }
     }
 
@@ -83,6 +108,7 @@ function account() {
 
             <main className='w-100 flex flex-col box-border'>
                 <Navbar />
+                {getError && <ErrorComponent />}
                 <div className='w-full px-2 md:px-4 gap-4 pb-10 mt-20 flex flex-col md:flex-row'>
                     <div className='w-full md:w-1/4'>
                         <div className='w-full flex gap-4 flex-row md:flex-col'>

@@ -5,11 +5,14 @@ import moment from 'moment';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
+import ErrorComponent from '@/components/ErrorComponent'
+
 
 function paymentStatus() {
     const router = useRouter()
     const [data, setData] = useState({})
     const [cartData, setCartData] = useState([])
+    const [getError, setGetError] = useState(false)
 
     const getPaymentData = async () => {
         const { payment_id, payment_request_id } = router.query;
@@ -20,6 +23,13 @@ function paymentStatus() {
                 request: payment_request_id,
                 time: time
             });
+
+            if (response.message && response.message.startsWith('Error')) {
+                setGetError(true)
+                setTimeout(() => {
+                    setGetError(false)
+                }, 6000)
+            }
 
             if (response.status === 'Paid') {
                 getCart()
@@ -33,7 +43,14 @@ function paymentStatus() {
 
     const getCart = async () => {
         const response = await getRequest('/api/findAllCart')
-        setCartData(response)
+        if (response.message && response.message.startsWith('Error')) {
+            setGetError(true)
+            setTimeout(() => {
+                setGetError(false)
+            }, 6000)
+        }else{
+            setCartData(response)
+        }
       }
 
     useEffect(() => {
@@ -53,6 +70,7 @@ function paymentStatus() {
 
             <main className='w-full'>
                 <Navbar cartData={cartData} />
+                {getError && <ErrorComponent />}
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full justify-center items-center flex flex-col'>
 
