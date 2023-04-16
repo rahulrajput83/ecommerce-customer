@@ -19,7 +19,7 @@ export default function order() {
     const getOrder = async (id) => {
         try {
             const data = await postRequest('/api/orderDetail', { id: id })
-            if (res.message && res.message.startsWith('Error')) {
+            if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
                 setTimeout(() => {

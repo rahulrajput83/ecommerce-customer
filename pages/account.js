@@ -149,21 +149,32 @@ function account() {
                                                     <span>Order ID</span>
                                                     <span>{orderId}</span>
                                                 </div>
+                                                {deliveryStatus ?
+                                                    <div className='text-xs flex flex-col md:hidden font-medium'>
+                                                        <span>Delivered on</span>
+                                                        <span className='font-semibold'>{deliveredDate}</span>
+                                                    </div>
+                                                    :
+                                                    <div className='text-xs flex flex-col md:hidden font-medium'>
+                                                        <span>Delivery Date: </span>
+                                                        <span className='font-semibold'>{deliveryDate}</span>
+                                                    </div>
+                                                }
                                             </div>
                                             <div className='flex w-full gap-2 px-2 pt-2 relative'>
                                                 <img src={products[0].product.thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
                                                 <div className='w-full flex flex-col md:gap-2'>
                                                     <Link href={`/product/${products[0].product.id}`} className='text-sm font-medium text-red-500'>{products[0].product.title}</Link>
                                                     {deliveryStatus ?
-                                                        <span className='text-xs font-medium'>Delivered on <span className='font-semibold'>{deliveredDate}</span></span>
+                                                        <span className='text-xs hidden md:block font-medium'>Delivered on <span className='font-semibold'>{deliveredDate}</span></span>
                                                         :
-                                                        <span className='text-xs font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
+                                                        <span className='text-xs hidden md:block font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
                                                     }
 
                                                     {products.length > 1 && <span className='text-xs absolute left-0 top-0 bg-red-500 px-3 py-2 font-medium text-white'>{products.length - 1}+</span>}
-                                                    <div className='flex md:hidden text-xs gap-2 font-medium'>
-                                                        <span>Order ID: </span>
-                                                        <span>{orderId}</span>
+                                                    <div className='flex md:hidden text-xs font-medium'>
+                                                        <span>Order ID:</span>
+                                                        <span className='ml-1'>{orderId}</span>
                                                     </div>
                                                     <Link href={`/order/${id}`} className='p-2 text-xs mt-2 rounded w-fit uppercase text-white font-medium bg-red-500 hover:bg-red-400'>View Order</Link>
                                                 </div>
