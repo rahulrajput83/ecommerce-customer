@@ -19,6 +19,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({
+    title: '',
     Category: '',
     Price: '',
     productOrder: ''
@@ -29,27 +30,23 @@ export default function Home() {
   const [error, setError] = useState(false)
   const [status, setStatus] = useState('')
 
-  const getProducts = (title) => {
+  const getProducts = () => {
     setLoading(true)
-    fetch('/api/getProduct')
+    fetch('/api/getProduct', {
+      method: 'POST',
+      body: JSON.stringify(filter)
+    })
       .then(res => res.json())
       .then((res) => {
         if (res.message === 'Success' && res.value) {
           setLoading(false)
           let bytes = CryptoJS.AES.decrypt(res.value, process.env.JWT);
           const productsItem = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-          console.log(productsItem)
-          if (title) {
-            const filter = productsItem.filter((e) => { return (e.category.toLowerCase().includes(title.toLowerCase()) || e.title.toLowerCase().includes(title.toLowerCase())) })
-            setProducts(filter)
-            return;
-          }
           setProducts(productsItem)
         }
 
       })
       .catch((err) => {
-        console.log(err)
         setError(true)
         setTimeout(() => {
           setError(false)
@@ -63,7 +60,11 @@ export default function Home() {
 
   useEffect(() => {
     setProducts([])
-    getProducts(searchQuery);
+    getProducts();
+  }, [filter])
+
+  useEffect(() => {
+    setFilter({...filter, title: searchQuery})
   }, [searchQuery])
 
   const getCart = async () => {
