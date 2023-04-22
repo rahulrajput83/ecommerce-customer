@@ -105,7 +105,7 @@ export default function Cart() {
 
     /* Remove Product from Cart */
     const RemoveCart = async (item) => {
-        await deleteRequest('/api/removeItem', item)
+        const data = await deleteRequest('/api/removeItem', item)
         if (data.message && data.message.startsWith('Error')) {
             setError(true)
             setTimeout(() => {
@@ -211,7 +211,7 @@ export default function Cart() {
                                                 <img alt='' src={product.thumbnail} className='bg-cover w-24 md:w-44 h-24 md:h-44 bg-no-repeat' />
                                                 <div className='flex flex-col w-full'>
                                                     <div className='font-medium flex justify-between items-center w-full'>
-                                                        <Link href={`/product/${product.id}`} className='w-full text-red-500 p-0 m-0'>
+                                                        <Link href={`/product/${product._id}`} className='w-full text-red-500 p-0 m-0'>
                                                             <ResponsiveEllipsis
                                                                 text={product.title}
                                                                 maxLine='1'
