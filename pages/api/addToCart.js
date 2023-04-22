@@ -14,19 +14,27 @@ const handler = async (req, res) => {
         const { id } = req.user;
         const findProduct = await CartModel.findOne({ productId: productId, userId: id, paid: false });
         if (findProduct !== null && findProduct !== undefined && Object.keys(findProduct).length >= 1) {
-            let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "Already" }), process.env.JWT).toString();
+            let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "Already in cart..." }), process.env.JWT).toString();
             res.json({ message: 'Success', value: ciphertext })
         }
         else {
-            const newCart = new CartModel({
-                product: req.body.data,
-                productId: productId,
-                userId: id,
-                paid: false
-            })
-            await newCart.save()
-            let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "Saved" }), process.env.JWT).toString();
-            res.json({ message: 'Success', value: ciphertext })
+            const findProduct = await CartModel.findOne({userId: id, paid: false });
+            if (findProduct) {
+                let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "One product is already in cart..." }), process.env.JWT).toString();
+                res.json({ message: 'Success', value: ciphertext })
+            }
+            else {
+                const newCart = new CartModel({
+                    product: req.body.data,
+                    productId: productId,
+                    userId: id,
+                    paid: false
+                })
+                await newCart.save()
+                let ciphertext = await CryptoJS.AES.encrypt(JSON.stringify({ message: "Successfully added..." }), process.env.JWT).toString();
+                res.json({ message: 'Success', value: ciphertext })
+            }
+
         }
 
     } catch (error) {

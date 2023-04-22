@@ -26,6 +26,7 @@ export default function Home() {
   const [showFilter, setShowFilter] = useState(false)
   const [cartData, setCartData] = useState([])
   const [error, setError] = useState(false)
+  const [status, setStatus] = useState('')
 
   const getProducts = (title) => {
     setLoading(true)
@@ -47,7 +48,7 @@ export default function Home() {
         setError(true)
         setTimeout(() => {
           setError(false)
-        }, 3000)
+        }, 5000)
       })
   }
 
@@ -66,8 +67,31 @@ export default function Home() {
   }
 
   const handleAddToCart = async (item) => {
-    await addToCart(item);
-    getCart();
+    try {
+      setStatus('Adding...')
+      setTimeout(() => {
+        setStatus('')
+      }, 5000)
+      const response = await addToCart(item);
+      if (response.message && response.message.includes('Error')) {
+        setError(true)
+        setTimeout(() => {
+          setError(false)
+        }, 3000)
+      }
+      else {
+        setStatus(response.message)
+        setTimeout(() => {
+          setStatus('')
+        }, 5000)
+        getCart();
+      }
+    } catch (error) {
+      setError(true)
+      setTimeout(() => {
+        setError(false)
+      }, 3000)
+    }
     return;
   }
 
@@ -82,6 +106,9 @@ export default function Home() {
 
       <main className='w-100 flex flex-col box-border'>
         <Navbar cartData={cartData} setSearchQuery={setSearchQuery} />
+        {status && <div className="p-4 fixed right-1 top-1 z-50 w-10/12 md:w-3/12 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+          {status}
+        </div>}
         {error && <ErrorComponent />}
         <div className='w-full grid px-2 md:px-4 gap-4 pb-10 mt-20 md:mt-20 grid-cols-1 md:grid-cols-5'>
           <div className='md:col-span-1 gap-2 font-medium flex flex-col'>
