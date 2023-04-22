@@ -10,6 +10,8 @@ import ProductLoading from '@/components/ProductLoading';
 import { addToCart } from '@/Functions/addToCart';
 import { getRequest } from '@/Functions/Requests';
 import ErrorComponent from '@/components/ErrorComponent'
+import CryptoJS from 'crypto-js'
+
 
 export default function product() {
     const router = useRouter();
@@ -27,19 +29,23 @@ export default function product() {
     useEffect(() => {
         if (router.isReady) {
             const { id } = router.query
-            fetch(`https://dummyjson.com/products/${id}`)
+            fetch(`/api/getOneProduct/${id}`)
                 .then(res => res.json())
                 .then((res) => {
-                    setData(res)
-                    setImage(res.thumbnail)
-                    if (res.message && res.message.startsWith('Error')) {
-                        setGetError(true)
+                    if (res.message === 'Success' && res.value) {
+                        let bytes = CryptoJS.AES.decrypt(res.value, process.env.JWT);
+                        const response = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                        setData(response)
+                        setImage(response.thumbnail)
+                      }
+                      else {
+                        setError(true)
                         setTimeout(() => {
-                            setGetError(false)
-                        }, 6000)
-                    }
+                          setError(false)
+                        }, 5000)
+                      }
                 })
-                .catch(() => {
+                .catch((err) => {
                     setGetError(true)
                     setTimeout(() => {
                         setGetError(false)
@@ -99,7 +105,7 @@ export default function product() {
                             <div className='flex flex-row md:flex-col gap-4 order-2 md:order-1 overflow-scroll md:overflow-hidden w-full md:col-span-1'>
                                 {data.images.map((e, i) => {
                                     return (
-                                        <img key={`thumbnail-${i}`} onClick={() => setImage(e)} className='md:w-full w-20 cursor-pointer' src={e} alt={data.title} />
+                                        e.image && <img key={`thumbnail-${i}`} onClick={() => setImage(e.image)} className='md:w-full w-20 cursor-pointer' src={e.image} alt={data.title} />
                                     )
                                 })}
                             </div>
@@ -122,11 +128,7 @@ export default function product() {
                                 <Line />
                                 <div className='w-full flex flex-col'>
                                     <span className='font-medium'>About this item</span>
-                                    <span className='text-justify'>Essential Oil, Makeup Primer, Foundation, Loose Powder, Blender, 2 Lipsticks, Eyelashes, Makeup Fixer, Compact Face powder, Concealer
-                                        Waterproof foundation,face primer,makeup fixer
-                                        After testing, we found there are still around 3-5% of powder-based cosmetic such as eye shadow will be damaged during the long way of international shipment, no matter how carefully we packed them. Except contact us for help or claim your damage, here is a handy tip for reforming the damaged powder-based make-up into new one.
-                                        The trendy and stylish, makeup set for traveling or everyday use for all makeup enthusiasts.
-                                        A creamy semi-matte lipstick, Leaves lips with a luminous shine and rich full coverage,This formula moisturizes and comforts lips.</span>
+                                    <span className='text-justify'>{data.description}</span>
                                 </div>
                             </div>
                             <div className='md:col-span-3 gap-1 p-2 md:p-4 order-3 md:order-4 rounded shadow-lg w-full flex flex-col h-fit justify-start items-start'>
@@ -148,9 +150,9 @@ export default function product() {
                             <div className='flex flex-col gap-12 w-full justify-center md:px-28'>
                                 {data.images.map((e, i) => {
                                     return (
-                                        <div key={`imagedesc-${i}`} className='w-full gap-4 grid grid-cols-1 md:grid-cols-6'>
-                                            <img className={`bg-cover md:col-span-2 w-fit order-1 ${i % 2 === 0 ? '' : 'md:order-2'}`} src={e} alt={data.title} />
-                                            <span className={`order-2 md:col-span-4 ${i % 2 === 0 ? '' : 'md:order-1'}`}>Essential Oil, Makeup Primer, Foundation, Loose Powder, Blender, 2 Lipsticks, Eyelashes, Makeup Fixer, Compact Face powder, Concealer Waterproof foundation,face primer,makeup fixer After testing, we found there are still around 3-5% of powder-based cosmetic such as eye shadow will be damaged during the long way of international shipment, no matter how carefully we packed them.</span>
+                                        e.image && <div key={`imagedesc-${i}`} className='w-full gap-4 grid grid-cols-1 md:grid-cols-6'>
+                                            <img className={`bg-cover md:col-span-2 w-fit order-1 ${i % 2 === 0 ? '' : 'md:order-2'}`} src={e.image} alt={data.title} />
+                                            <span className={`order-2 md:col-span-4 ${i % 2 === 0 ? '' : 'md:order-1'}`}>{e.desc}</span>
                                         </div>
                                     )
                                 })}

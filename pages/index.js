@@ -44,6 +44,12 @@ export default function Home() {
           const productsItem = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
           setProducts(productsItem)
         }
+        else {
+          setError(true)
+          setTimeout(() => {
+            setError(false)
+          }, 5000)
+        }
 
       })
       .catch((err) => {
@@ -64,7 +70,7 @@ export default function Home() {
   }, [filter])
 
   useEffect(() => {
-    setFilter({...filter, title: searchQuery})
+    setFilter({ ...filter, title: searchQuery })
   }, [searchQuery])
 
   const getCart = async () => {
