@@ -29,6 +29,9 @@ function account() {
     const getAccount = async () => {
         try {
             const data = await getRequest('/api/account')
+            if (data.message && data.message === 'Unauthorized') {
+                router.push(Logout())
+              }
             if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
@@ -49,7 +52,10 @@ function account() {
     const getOrders = async () => {
         try {
             const data = await getRequest('/api/order')
-            if (data.message && data.message.startsWith('Error')) {
+            if (data.message && data.message === 'Unauthorized') {
+                router.push(Logout())
+              }
+            else if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
                 setTimeout(() => {
@@ -164,7 +170,7 @@ function account() {
                                             <div className='flex w-full gap-2 px-2 pt-2 relative'>
                                                 <img src={products[0].product.thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
                                                 <div className='w-full flex flex-col md:gap-2'>
-                                                    <Link href={`/product/${products[0].product.id}`} className='text-sm font-medium text-red-500'>{products[0].product.title}</Link>
+                                                    <Link href={`/product/${products[0].product._id}`} className='text-sm font-medium text-red-500'>{products[0].product.title}</Link>
                                                     {deliveryStatus ?
                                                         <span className='text-xs hidden md:block font-medium'>Delivered on <span className='font-semibold'>{deliveredDate}</span></span>
                                                         :

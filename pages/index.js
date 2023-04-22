@@ -9,12 +9,15 @@ import { useWindowSize } from '@/Functions/GetWidth'
 import { addToCart } from '@/Functions/addToCart'
 import { getRequest } from '@/Functions/Requests'
 import CryptoJS from 'crypto-js'
+import { useRouter } from 'next/router'
+import { Logout } from '@/Functions/Logout'
 
 const categories = ['Electronics', 'Footwear', 'Home, Kitchen, Pets', 'Beauty, Health, Grocery', 'Books', "Men's Fashion", "Women's Fashion", "Kid's Fashion"]
 const price = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹10,000', 'Over ₹10,000']
 const productOrder = ['Low to High', 'High to Low']
 
 export default function Home() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
@@ -92,11 +95,21 @@ export default function Home() {
         }, 3000)
       }
       else {
-        setStatus(response.message)
-        setTimeout(() => {
-          setStatus('')
-        }, 5000)
-        getCart();
+        if (response.message && response.message === 'Unauthorized') {
+          setStatus("Please Login.")
+          router.push(Logout())
+          setTimeout(() => {
+            setStatus('')
+          }, 5000)
+        }
+        else {
+          setStatus(response.message)
+          setTimeout(() => {
+            setStatus('')
+          }, 5000)
+          getCart();
+        }
+
       }
     } catch (error) {
       setError(true)

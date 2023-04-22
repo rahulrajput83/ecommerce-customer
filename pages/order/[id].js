@@ -19,7 +19,10 @@ export default function order() {
     const getOrder = async (id) => {
         try {
             const data = await postRequest('/api/orderDetail', { id: id })
-            if (data.message && data.message.startsWith('Error')) {
+            if (data.message && data.message === 'Unauthorized') {
+                router.push(Logout())
+              }
+            else if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
                 setTimeout(() => {
@@ -79,7 +82,7 @@ export default function order() {
                                 <span className='font-semibold uppercase'>Products</span>
                                 {data.products.map((e, i) => {
                                     return (
-                                        <Link href={`/product/${e.product.id}`} key={`thumbnail-${i}`} className='w-full relative flex-col hover:shadow-lg hover:rounded-b-lg cursor-pointer flex'>
+                                        <Link href={`/product/${e.product._id}`} key={`thumbnail-${i}`} className='w-full relative flex-col hover:shadow-lg hover:rounded-b-lg cursor-pointer flex'>
                                             <img className='w-full rounded-lg' src={e.product.thumbnail} alt='' />
                                             <span className='pt-2 px-2 text-red-500 text-sm font-medium'>{e.product.title}</span>
                                             <div className='font-medium flex justify-between px-2 text-sm'>

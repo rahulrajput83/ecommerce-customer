@@ -11,6 +11,7 @@ import { addToCart } from '@/Functions/addToCart';
 import { getRequest } from '@/Functions/Requests';
 import ErrorComponent from '@/components/ErrorComponent'
 import CryptoJS from 'crypto-js'
+import { Logout } from '@/Functions/Logout';
 
 
 export default function product() {
@@ -37,13 +38,13 @@ export default function product() {
                         const response = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
                         setData(response)
                         setImage(response.thumbnail)
-                      }
-                      else {
+                    }
+                    else {
                         setError(true)
                         setTimeout(() => {
-                          setError(false)
+                            setError(false)
                         }, 5000)
-                      }
+                    }
                 })
                 .catch((err) => {
                     setGetError(true)
@@ -61,10 +62,17 @@ export default function product() {
                 setStatus('')
             }, 5000)
             const response = await addToCart(item);
-            if (response.message && response.message.includes('Error')) {
-                setError(true)
+            if (response.message && response.message === 'Unauthorized') {
+                setStatus("Please Login.")
+                router.push(Logout())
                 setTimeout(() => {
-                    setError(false)
+                    setStatus('')
+                }, 5000)
+            }
+            else if (response.message && response.message.includes('Error')) {
+                setGetError(true)
+                setTimeout(() => {
+                    setGetError(false)
                 }, 3000)
             }
             else {
@@ -75,9 +83,9 @@ export default function product() {
                 getCart();
             }
         } catch (error) {
-            setError(true)
+            setGetError(true)
             setTimeout(() => {
-                setError(false)
+                setGetError(false)
             }, 3000)
         }
         return;
