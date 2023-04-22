@@ -8,6 +8,7 @@ import ErrorComponent from '@/components/ErrorComponent'
 import { useWindowSize } from '@/Functions/GetWidth'
 import { addToCart } from '@/Functions/addToCart'
 import { getRequest } from '@/Functions/Requests'
+import CryptoJS from 'crypto-js'
 
 const categories = ['Electronics', 'Footwear', 'Home, Kitchen, Pets', 'Beauty, Health, Grocery', 'Books', "Men's Fashion", "Women's Fashion", "Kid's Fashion"]
 const price = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹10,000', 'Over ₹10,000']
@@ -30,21 +31,25 @@ export default function Home() {
 
   const getProducts = (title) => {
     setLoading(true)
-    fetch('https://dummyjson.com/products')
+    fetch('/api/getProduct')
       .then(res => res.json())
       .then((res) => {
-        if (res.products.length > 0) {
+        if (res.message === 'Success' && res.value) {
           setLoading(false)
+          let bytes = CryptoJS.AES.decrypt(res.value, process.env.JWT);
+          const productsItem = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+          console.log(productsItem)
           if (title) {
-            const filter = res.products.filter((e) => { return (e.category.toLowerCase().includes(title.toLowerCase()) || e.title.toLowerCase().includes(title.toLowerCase())) })
+            const filter = productsItem.filter((e) => { return (e.category.toLowerCase().includes(title.toLowerCase()) || e.title.toLowerCase().includes(title.toLowerCase())) })
             setProducts(filter)
             return;
           }
-          setProducts(res.products)
+          setProducts(productsItem)
         }
 
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         setError(true)
         setTimeout(() => {
           setError(false)

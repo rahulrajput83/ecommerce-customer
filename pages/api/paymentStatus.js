@@ -1,5 +1,4 @@
 import MongoDBConnect from "@/Utils/MongoDB"
-import RegisterModel from "@/Model/User"
 import CryptoJS from 'crypto-js'
 import Insta from "@/Utils/InstamojoConfig"
 import PaymentRequestModel from "@/Model/PaymentRequest"
