@@ -32,7 +32,7 @@ function account() {
             if (data.message && data.message === 'Unauthorized') {
                 router.push(Logout())
               }
-            if (data.message && data.message.startsWith('Error')) {
+            else if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
                 setTimeout(() => {
