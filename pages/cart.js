@@ -30,6 +30,7 @@ export default function Cart() {
     const [loading, setLoading] = useState(false)
     const [token, setToken] = useState('')
     const [error, setError] = useState(false)
+    const [status, setStatus] = useState('')
 
 
     const getCart = async () => {
@@ -140,18 +141,19 @@ export default function Cart() {
     }
 
     const handlePayment = async () => {
+        console.log(accountData)
         if (!accountData.address && !accountData.number) {
             setError(true)
             setTimeout(() => {
                 setError(false)
-            }, 6000)
+            }, 5000)
             return;
         }
-        else if(accountData.address === 'Empty' && accountData.number === 'Empty') {
-            setError(true)
+        else if (accountData.address === 'Empty' || accountData.number === 'Empty' || !accountData.address || !accountData.number || !accountData.name || accountData.name === 'Empty') {
+            setStatus('Please complete your profile.')
             setTimeout(() => {
-                setError(false)
-            }, 6000)
+                setStatus('')
+            }, 5000)
             return;
         }
         setLoading(true)
@@ -176,7 +178,7 @@ export default function Cart() {
             setTimeout(() => {
                 setError(false)
             }, 6000)
-            
+
         }
         else {
             if (data.link) {
@@ -198,6 +200,9 @@ export default function Cart() {
             <main className='w-full'>
                 <Navbar cart={cart} />
                 {error && <ErrorComponent />}
+                {status && <div className="p-4 fixed right-1 top-1 z-50 w-10/12 md:w-4/12 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                    {status}
+                </div>}
                 <main className='w-full flex flex-col md:flex-row box-border'>
                     <div className='mt-20 md:mt-16 px-2 md:px-16 pb-4 md:pb-10 w-full flex flex-col'>
                         <span className='text-xl uppercase font-semibold mb-4 text-red-500 mx-auto'>Cart</span>
