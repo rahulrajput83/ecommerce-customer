@@ -121,49 +121,56 @@ export default function product() {
                                 <img className='w-full bg-cover' src={image} alt={data.title} />
                             </div>
                             <div className='md:col-span-4 order-4 md:order-3 w-full flex flex-col'>
-                                <span className='font-medium text-2xl'>{data.title}</span>
-                                <Link className='text-sm font-medium text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link>
+                                <span className='font-medium text-lg'>{data.title}</span>
+                                <Link className='text-xs font-medium text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link>
                                 <Line />
                                 <div className='w-full flex flex-col gap-1 font-medium'>
                                     <div className='w-full font-medium flex gap-1'>
                                         <span className=''>&#x20b9;</span>
-                                        <span className='text-4xl'>{data.price}</span>
+                                        <span className='text-lg'>{data.price}</span>
                                     </div>
-                                    <div className='font-medium'>
+                                    <div className='font-medium text-xs'>
                                         Inclusive of all taxes
                                     </div>
                                 </div>
                                 <Line />
                                 <div className='w-full flex font-medium flex-col'>
-                                    <span className='font-medium'>About this item</span>
-                                    <span className='text-justify'>{data.description}</span>
+                                    <span className='font-medium underline'>About this item</span>
+                                    <span className='text-justify text-sm'>{data.description}</span>
                                 </div>
                             </div>
                             <div className='md:col-span-3 gap-1 p-2 md:p-4 order-3 md:order-4 rounded shadow-lg w-full flex flex-col h-fit justify-start items-start'>
-                                <div className='w-full flex gap-1 font-medium'>
-                                    <span className=''>MRP : &#x20b9;</span>
-                                    <span className='text-4xl'>{data.price}</span>
+                                <div className='w-full flex gap-1 justify-start items-start font-medium'>
+                                    <span className='text-xs'>MRP : &#x20b9;</span>
+                                    <span className='text-lg'>{data.price}</span>
                                 </div>
-                                <span>Delivery on <span className='font-medium'>{moment().add(5, 'days').format('dddd, Do MMMM.')}</span></span>
-                                <span className='font-medium text-sm text-red-500'>In stock</span>
-                                <span className='font-medium text-sm inline-block'>Sold by <Link className='text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link> and Delivered by Easyorder.</span>
+                                <span className='text-xs'>Delivery on <span className='font-medium'>{moment().add(5, 'days').format('dddd, Do MMMM.')}</span></span>
+                                <span className='font-medium text-xs text-red-500'>In stock</span>
+                                <span className='font-medium text-xs inline-block'>Sold by <Link className='text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link> and Delivered by Easyorder.</span>
                                 <button onClick={() => handleAddToCart(data)} className='p-2 w-full mt-6 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-red-500 bg-red-500  hover:text-red-500 text-white uppercase font-medium hover:bg-white'>
                                     <BiCart className="text-xl " />
-                                    <span className="text-base">Add to Cart</span>
+                                    <span className="text-sm">Add to Cart</span>
                                 </button>
                             </div>
                         </div>
                         <div className='w-full flex flex-col gap-2'>
-                            <span className='font-medium mb-4 text-2xl'>Product Description</span>
+                            <span className='font-medium mb-4 text-lg underline'>Product Description</span>
                             <div className='flex flex-col gap-12 w-full justify-center md:px-28'>
-                                {data.images.map((e, i) => {
+                                <div className='w-full grid grid-cols-1 md:grid-cols-8'>
+                                    {data.images.map((e, i) => {
+                                        return (
+                                            e.image && <img key={`imagedesc-${i}`} className={`bg-cover md:col-span-2 w-fit order-1 ${i % 2 === 0 ? '' : 'md:order-2'}`} src={e.image} alt={data.title} />
+                                        )
+                                    })}
+                                </div>
+                                {/* {data.images.map((e, i) => {
                                     return (
                                         e.image && <div key={`imagedesc-${i}`} className='w-full gap-4 grid grid-cols-1 md:grid-cols-6'>
                                             <img className={`bg-cover md:col-span-2 w-fit order-1 ${i % 2 === 0 ? '' : 'md:order-2'}`} src={e.image} alt={data.title} />
                                             <span className={`order-2 font-medium md:col-span-4 ${i % 2 === 0 ? '' : 'md:order-1'}`}>{e.desc}</span>
                                         </div>
                                     )
-                                })}
+                                })} */}
                             </div>
                         </div>
 

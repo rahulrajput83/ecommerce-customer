@@ -172,9 +172,9 @@ function account() {
                                                 <div className='w-full flex flex-col md:gap-2'>
                                                     <Link href={`/product/${products[0].product._id}`} className='text-sm font-medium text-red-500'>{products[0].product.title}</Link>
                                                     {deliveryStatus ?
-                                                        <span className='text-xs hidden md:block font-medium'>Delivered on <span className='font-semibold'>{deliveredDate}</span></span>
+                                                        <span className='text-xs hidden md:block font-medium'>Delivered on <span className='font-medium'>{deliveredDate}</span></span>
                                                         :
-                                                        <span className='text-xs hidden md:block font-medium'>Delivery Date: <span className='font-semibold'>{deliveryDate}</span></span>
+                                                        <span className='text-xs hidden md:block font-medium'>Delivery Date: <span className='font-medium'>{deliveryDate}</span></span>
                                                     }
 
                                                     {products.length > 1 && <span className='text-xs absolute left-0 top-0 bg-red-500 px-3 py-2 font-medium text-white'>{products.length - 1}+</span>}
