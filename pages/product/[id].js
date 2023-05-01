@@ -103,7 +103,7 @@ export default function product() {
 
             <main className='w-100 flex flex-col'>
                 <Navbar cartData={cartData} />
-                {status && <div className="p-4 fixed right-1 top-1 z-50 w-10/12 md:w-3/12 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                {status && <div className="p-4 fixed font-medium right-1 top-1 z-50 w-10/12 md:w-3/12 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
                     {status}
                 </div>}
                 {getError && <ErrorComponent />}
@@ -125,16 +125,16 @@ export default function product() {
                                 <Link className='text-sm font-medium text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link>
                                 <Line />
                                 <div className='w-full flex flex-col gap-1 font-medium'>
-                                    <div className='w-full flex gap-1'>
+                                    <div className='w-full font-medium flex gap-1'>
                                         <span className=''>&#x20b9;</span>
                                         <span className='text-4xl'>{data.price}</span>
                                     </div>
-                                    <div className=''>
+                                    <div className='font-medium'>
                                         Inclusive of all taxes
                                     </div>
                                 </div>
                                 <Line />
-                                <div className='w-full flex flex-col'>
+                                <div className='w-full flex font-medium flex-col'>
                                     <span className='font-medium'>About this item</span>
                                     <span className='text-justify'>{data.description}</span>
                                 </div>
@@ -147,20 +147,20 @@ export default function product() {
                                 <span>Delivery on <span className='font-medium'>{moment().add(5, 'days').format('dddd, Do MMMM.')}</span></span>
                                 <span className='font-medium text-sm text-red-500'>In stock</span>
                                 <span className='font-medium text-sm inline-block'>Sold by <Link className='text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link> and Delivered by Easyorder.</span>
-                                <button onClick={() => handleAddToCart(data)} className='p-2 w-full mt-6 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-red-500 bg-red-500  hover:text-red-500 text-white uppercase font-semibold hover:bg-white'>
+                                <button onClick={() => handleAddToCart(data)} className='p-2 w-full mt-6 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-red-500 bg-red-500  hover:text-red-500 text-white uppercase font-medium hover:bg-white'>
                                     <BiCart className="text-xl " />
                                     <span className="text-base">Add to Cart</span>
                                 </button>
                             </div>
                         </div>
                         <div className='w-full flex flex-col gap-2'>
-                            <span className='font-semibold mb-4 text-2xl'>Product Description</span>
+                            <span className='font-medium mb-4 text-2xl'>Product Description</span>
                             <div className='flex flex-col gap-12 w-full justify-center md:px-28'>
                                 {data.images.map((e, i) => {
                                     return (
                                         e.image && <div key={`imagedesc-${i}`} className='w-full gap-4 grid grid-cols-1 md:grid-cols-6'>
                                             <img className={`bg-cover md:col-span-2 w-fit order-1 ${i % 2 === 0 ? '' : 'md:order-2'}`} src={e.image} alt={data.title} />
-                                            <span className={`order-2 md:col-span-4 ${i % 2 === 0 ? '' : 'md:order-1'}`}>{e.desc}</span>
+                                            <span className={`order-2 font-medium md:col-span-4 ${i % 2 === 0 ? '' : 'md:order-1'}`}>{e.desc}</span>
                                         </div>
                                     )
                                 })}

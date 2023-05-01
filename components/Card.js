@@ -14,7 +14,7 @@ export default function Card(props) {
                         <img alt="" src={thumbnail} className="bg-cover  bg-slate-200 w-full h-auto" />
                         <div className="absolute right-0 bg-red-500 p-2 text-sm font-medium text-white">&#x20b9; {price}</div>
                     </div>
-                    <div className="w-full truncate font-semibold">{title}</div>
+                    <div className="w-full truncate font-font-medium">{title}</div>
                 </Link>
                 <div className="w-full pb-2 flex gap-2 justify-center items-center">
                     <div onClick={() => props.handleAddToCart(props.data)} className="w-full cursor-pointer hover:bg-red-400 flex p-2 rounded text-white gap-2 bg-red-500 justify-center items-center">

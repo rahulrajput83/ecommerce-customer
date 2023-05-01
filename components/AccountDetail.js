@@ -8,7 +8,7 @@ function AccountDetail({title, value, className, valueField, setEdit}) {
         <div className={`w-full flex gap-4 px-3 py-4 justify-start items-start ${className}`}>
             <div className='w-full text-sm flex flex-col'>
                 <span className='font-medium'>{title}:</span>
-                <span className='w-full'>{value === 'Empty' ? '' : value}</span>
+                <span className='w-full font-medium'>{value === 'Empty' ? '' : value}</span>
             </div>
             <button onClick={handleEdit} className='px-6 font-medium md:px-10 text-sm py-1 md:py-2 rounded-md border-2 hover:shadow-xl shadow-lg'>Edit</button>
         </div>

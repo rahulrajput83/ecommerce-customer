@@ -43,11 +43,11 @@ function AccountEdit({ edit, accountData, setEdit, getAccount }) {
         <div className="w-full absolute top-0 bottom-0 right-0 justify-center items-center z-20 left-0 flex">
             <div className="flex flex-col w-full h-fit md:w-5/12 bg-white shadow-2xl gap-4 p-3">
                 <div className="w-full flex flex-row items-center justify-between">
-                    <span className="text-base font-semibold">{edit.field}:</span>
+                    <span className="text-base font-medium">{edit.field}:</span>
                     <MdClose onClick={empty} className="cursor-pointer" />
                 </div>
                 <form onSubmit={handleChanges} className="flex w-full flex-col gap-4">
-                    <input type={edit.valueField === 'name' ? 'text' : edit.valueField === 'email' ? 'email' : edit.valueField === 'number' ? 'number' : 'text'} onChange={(e) => setInputValue(e.target.value)} value={inputValue} className="outline-none text-sm focus:shadow-md focus:shadow-red-200 p-2 border-[0.14rem] border-red-500" />
+                    <input type={edit.valueField === 'name' ? 'text' : edit.valueField === 'email' ? 'email' : edit.valueField === 'number' ? 'number' : 'text'} onChange={(e) => setInputValue(e.target.value)} value={inputValue} className="outline-none text-sm focus:shadow-md font-medium placeholder:font-medium focus:shadow-red-200 p-2 border-[0.14rem] border-red-500" />
                     {invalid && <span className="text-sm font-medium">Mobile Number should be of 10 digits.</span>}
                     <button type="submit" className="ml-auto text-sm font-medium bg-red-500 rounded p-2 text-white hover:bg-red-400">Save changes</button>
 
