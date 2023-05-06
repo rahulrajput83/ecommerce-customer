@@ -21,6 +21,8 @@ const handler = async (req, res) => {
         let decryptNumber = bytesNumber ? bytesNumber.toString(CryptoJS.enc.Utf8) : 'Empty';
         let bytesAddress = responseData.DeliveryAddress ? CryptoJS.AES.decrypt(responseData.DeliveryAddress, process.env.JWT) : '';
         let decryptAddress = bytesAddress ? bytesAddress.toString(CryptoJS.enc.Utf8) : 'Empty';
+        let bytesCity = responseData.city ? CryptoJS.AES.decrypt(responseData.city, process.env.JWT) : '';
+        let decryptCity = bytesCity ? bytesCity.toString(CryptoJS.enc.Utf8) : 'Empty';
         /* Construct Account Data */
         const data = {
             name: decryptFullName,
@@ -28,7 +30,8 @@ const handler = async (req, res) => {
             type: decryptType,
             number: decryptNumber,
             address: decryptAddress,
-            id: responseData._id
+            id: responseData._id,
+            city: decryptCity
         }
         let ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.JWT).toString();
         res.json({ message: 'Success', value: ciphertext})

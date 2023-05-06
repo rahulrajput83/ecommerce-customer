@@ -141,7 +141,6 @@ export default function Cart() {
     }
 
     const handlePayment = async () => {
-        console.log(accountData)
         if (!accountData.address && !accountData.number) {
             setError(true)
             setTimeout(() => {
@@ -149,7 +148,7 @@ export default function Cart() {
             }, 5000)
             return;
         }
-        else if (accountData.address === 'Empty' || accountData.number === 'Empty' || !accountData.address || !accountData.number || !accountData.name || accountData.name === 'Empty') {
+        else if (!accountData.city || accountData.address === 'Empty' || accountData.number === 'Empty' || !accountData.address || !accountData.number || !accountData.name || accountData.name === 'Empty') {
             setStatus('Please complete your profile.')
             setTimeout(() => {
                 setStatus('')
@@ -170,7 +169,8 @@ export default function Cart() {
             tax: taxPrice,
             grandTotal: finalPrice,
             subTotal: productPrice,
-            shippingCharges: shippingPrice
+            shippingCharges: shippingPrice,
+            city: accountData.city,
         });
         if (data.message && data.message.startsWith('Error')) {
             setError(true)

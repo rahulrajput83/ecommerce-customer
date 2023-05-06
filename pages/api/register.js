@@ -23,10 +23,12 @@ const handler = async (req, res) => {
       let email = CryptoJS.AES.encrypt(req.body.email, process.env.JWT).toString();
       let password = CryptoJS.AES.encrypt(req.body.password, process.env.JWT).toString();
       let type = CryptoJS.AES.encrypt(req.body.type, process.env.JWT).toString();
+      let city = CryptoJS.AES.encrypt(req.body.city, process.env.JWT).toString();
       const createNewUser = new RegisterModel({
         email: email,
         password: password,
         type: type,
+        city: city,
       });
       await createNewUser.save();
       res.json({ message: 'Successfully registered...' })

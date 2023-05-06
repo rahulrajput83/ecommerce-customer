@@ -133,6 +133,7 @@ function account() {
                                 <AccountDetail setEdit={setEdit} title='E-mail' value={accountData.email} valueField='email' className='border-2 border-t-0' />
                                 <AccountDetail setEdit={setEdit} title='Mobile Number' value={accountData.number} valueField='number' className='border-2 border-t-0' />
                                 <AccountDetail setEdit={setEdit} title='Delivery Address' value={accountData.address} valueField='address' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg' />
+                                <AccountDetail title='City' value={accountData.city} valueField='city' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg' />
                                 {edit.field && <AccountEdit getAccount={getAccount} setEdit={setEdit} edit={edit} accountData={accountData} />}
                             </div>
                             : selectedItem === 'My Account' && <AccountLoading />

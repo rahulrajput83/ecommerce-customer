@@ -12,7 +12,7 @@ const payment = async (req, res) => {
             return
         }
         await MongoDBConnect();
-        const { amount, purpose, redirect, email, tax, grandTotal, subTotal, number, name, product, id, address, shippingCharges } = req.body.data;
+        const { amount, purpose, redirect, email, tax, city, grandTotal, subTotal, number, name, product, id, address, shippingCharges } = req.body.data;
         const data = new Insta.PaymentData();
         data.purpose = purpose;
         data.amount = amount;
@@ -48,8 +48,8 @@ const payment = async (req, res) => {
                         tax: tax,
                         grandTotal: grandTotal,
                         subTotal: subTotal,
-                        deliveryStatus: false
-
+                        deliveryStatus: false,
+                        city: city,
                     })
                     await newPayment.save();
                     let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({link: paymentResponse.payment_request.longurl}), process.env.JWT).toString();

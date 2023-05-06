@@ -7,7 +7,7 @@ function JWTAuth(handler) {
       if (err) {
         res.json({message: 'Unauthorized'})
       }
-      if(decoded.type !== 'Customer') {
+      if(decoded.type && decoded.type !== 'Customer') {
         res.json({message: 'Unauthorized'})
         return;
       }
