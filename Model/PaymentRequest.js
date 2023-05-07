@@ -23,6 +23,7 @@ const PaymentRequest = new mongoose.Schema({
     deliveredDate: String,
     deliveredBy: String,
     receivedBy: String,
+    city: String,
 });
 
 const PaymentRequestModel = mongoose.models.Order || mongoose.model('Order', PaymentRequest);
