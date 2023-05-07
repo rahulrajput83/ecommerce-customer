@@ -56,8 +56,7 @@ const payment = async (req, res) => {
                     res.json({ message: 'Success', value: ciphertext})
                 }
                 else {
-                    
-                    res.status(400).json({ message: 'Error, please try again...' })
+                    res.status(400).json({ message: 'Error, please try again...', error: 'Invalid phone number' })
                 }
 
             }

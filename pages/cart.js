@@ -31,6 +31,7 @@ export default function Cart() {
     const [token, setToken] = useState('')
     const [error, setError] = useState(false)
     const [status, setStatus] = useState('')
+    const [phoneError, setPhoneError] = useState(false)
 
 
     const getCart = async () => {
@@ -172,7 +173,14 @@ export default function Cart() {
             shippingCharges: shippingPrice,
             city: accountData.city,
         });
-        if (data.message && data.message.startsWith('Error')) {
+        if (data.message && data.error) {
+            setPhoneError(true)
+            setLoading(false)
+            setTimeout(() => {
+                setPhoneError(false)
+            }, 6000)
+        }
+        else if (data.message && data.message.startsWith('Error')) {
             setError(true)
             setLoading(false)
             setTimeout(() => {
@@ -200,6 +208,9 @@ export default function Cart() {
             <main className='w-full'>
                 <Navbar cart={cart} />
                 {error && <ErrorComponent />}
+                {phoneError && <div className="p-4 fixed right-1 top-1 z-50 w-10/12 md:w-4/12 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                    <span className="font-medium">Invalid Email/Phone</span>
+                </div>}
                 {status && <div className="p-4 fixed font-medium right-1 top-1 z-50 w-10/12 md:w-4/12 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
                     {status}
                 </div>}
