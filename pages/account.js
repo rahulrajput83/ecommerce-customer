@@ -130,7 +130,7 @@ function account() {
                         {selectedItem === 'My Account' && accountData ?
                             <div className='w-full px-1 md:w-11/12 flex flex-col'>
                                 <AccountDetail setEdit={setEdit} title='Name' value={accountData.name} valueField='name' className='border-2 rounded-tl-lg rounded-tr-lg' />
-                                <AccountDetail setEdit={setEdit} title='E-mail' value={accountData.email} valueField='email' className='border-2 border-t-0' />
+                                <AccountDetail title='E-mail' value={accountData.email} valueField='email' className='border-2 border-t-0' />
                                 <AccountDetail setEdit={setEdit} title='Mobile Number' value={accountData.number} valueField='number' className='border-2 border-t-0' />
                                 <AccountDetail setEdit={setEdit} title='Delivery Address' value={accountData.address} valueField='address' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg' />
                                 <AccountDetail title='City' value={accountData.city} valueField='city' className='border-2 rounded-bl-lg border-t-0 rounded-br-lg' />

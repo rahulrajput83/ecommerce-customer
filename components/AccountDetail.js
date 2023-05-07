@@ -10,7 +10,7 @@ function AccountDetail({ title, value, className, valueField, setEdit }) {
                 <span className='font-medium'>{title}:</span>
                 <span className='w-full font-medium'>{value === 'Empty' ? '' : value}</span>
             </div>
-            {title !== 'City' && <button onClick={handleEdit} className='px-6 font-medium md:px-10 text-sm py-1 md:py-2 rounded-md border-2 hover:shadow-xl shadow-lg'>Edit</button>}
+            {(title === 'City' || title === 'E-mail') ? null : <button onClick={handleEdit} className='px-6 font-medium md:px-10 text-sm py-1 md:py-2 rounded-md border-2 hover:shadow-xl shadow-lg'>Edit</button>}
         </div>
     )
 }
