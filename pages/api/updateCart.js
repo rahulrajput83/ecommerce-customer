@@ -20,10 +20,11 @@ const handler = async (req, res) => {
         else {
             quantity++
         }
-        const dataValue = await CartModel.updateOne({ _id: id }, { $set: { 'product.quantity': quantity } });
+        await CartModel.updateOne({ _id: id }, { $set: { 'product.quantity': quantity } });
         res.json({ message: 'Success', value: 'Success' })
 
     } catch (error) {
+        console.log(error)
         res.status(400).json({ message: 'Error, please try again...', error: error })
     }
 }

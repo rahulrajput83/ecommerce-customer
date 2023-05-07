@@ -56,6 +56,7 @@ const payment = async (req, res) => {
                     res.json({ message: 'Success', value: ciphertext})
                 }
                 else {
+                    console.log(error)
                     res.status(400).json({ message: 'Error, please try again...' })
                 }
 
