@@ -34,7 +34,6 @@ const payment = async (req, res) => {
                     let emailEncrypt = CryptoJS.AES.encrypt(email, process.env.JWT).toString();
                     let mobileEncrypt = CryptoJS.AES.encrypt(number, process.env.JWT).toString();
                     let deliveryEncrypt = CryptoJS.AES.encrypt(address, process.env.JWT).toString();
-                    let cityEncrypt = CryptoJS.AES.encrypt(city, process.env.JWT).toString();
                     const newPayment = new PaymentRequestModel({
                         paymentStatus: false,
                         userId: id,
@@ -50,7 +49,7 @@ const payment = async (req, res) => {
                         grandTotal: grandTotal,
                         subTotal: subTotal,
                         deliveryStatus: false,
-                        city: cityEncrypt,
+                        city: city,
                     })
                     await newPayment.save();
                     let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({link: paymentResponse.payment_request.longurl}), process.env.JWT).toString();
