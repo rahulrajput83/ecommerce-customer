@@ -10,7 +10,7 @@ const handler = async (req, res) => {
   }
   try {
     await MongoDBConnect();
-    let responseData = await RegisterModel.find({})
+    let responseData = await RegisterModel.find({});
     let newData = await responseData.map(element => {
       let bytesEmail = CryptoJS.AES.decrypt(element.email, process.env.JWT);
       let decryptEmail = bytesEmail.toString(CryptoJS.enc.Utf8);
@@ -18,8 +18,12 @@ const handler = async (req, res) => {
       let decryptPassword = bytesPassword.toString(CryptoJS.enc.Utf8);
       let bytesType = CryptoJS.AES.decrypt(element.type, process.env.JWT);
       let decryptType = bytesType.toString(CryptoJS.enc.Utf8);
-      let bytesCity = CryptoJS.AES.decrypt(element.city, process.env.JWT);
-      let decryptCity = bytesCity.toString(CryptoJS.enc.Utf8);
+      let bytesCity;
+      let decryptCity
+      if (element.city) {
+        bytesCity = CryptoJS.AES.decrypt(element.city, process.env.JWT);
+        decryptCity = bytesCity.toString(CryptoJS.enc.Utf8);
+      }
       return { _id: element._id, email: decryptEmail, password: decryptPassword, type: decryptType, city: decryptCity };
     });
     let findEmail = await newData.find((e) => e.email === req.body.email);
