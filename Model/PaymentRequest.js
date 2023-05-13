@@ -19,11 +19,15 @@ const PaymentRequest = new mongoose.Schema({
     grandTotal: String,
     packedStatus: Boolean,
     packedOn: String,
+    packedBy: String,
+    city: String,
     deliveryStatus: Boolean,
     deliveredDate: String,
     deliveredBy: String,
     receivedBy: String,
-    city: String,
+    acceptStatus: Boolean,
+    acceptBy: String,
+    acceptOn: String,
 });
 
 const PaymentRequestModel = mongoose.models.Order || mongoose.model('Order', PaymentRequest);
