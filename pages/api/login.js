@@ -27,7 +27,7 @@ const handler = async (req, res) => {
       return { _id: element._id, email: decryptEmail, password: decryptPassword, type: decryptType, city: decryptCity };
     });
     let findEmail = await newData.find((e) => e.email === req.body.email);
-    if (findEmail !== -1) {
+    if (findEmail) {
       if (findEmail.password === req.body.password) {
         const token = await jwt.sign({ id: findEmail._id, email: findEmail.email, type: findEmail.type, city: findEmail.city }, process.env.JWT);
         res.json({ message: 'Successfully Login...', token: token })
