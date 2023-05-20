@@ -139,18 +139,21 @@ export default function product() {
                                     <span className='text-justify text-sm'>{data.description}</span>
                                 </div>
                             </div>
-                            <div className='md:col-span-3 gap-1 p-2 md:p-4 order-3 md:order-4 rounded shadow-lg w-full flex flex-col h-fit justify-start items-start'>
-                                <div className='w-full flex gap-1 justify-start items-start font-medium'>
-                                    <span className='text-xs'>MRP : &#x20b9;</span>
-                                    <span className='text-lg'>{data.price}</span>
+                            <div className='md:col-span-3 relative gap-1 order-3 md:order-4 w-full flex flex-col justify-start items-start'>
+                                <div className='md:sticky top-16 gap-1 p-2 md:p-4 rounded shadow-lg w-full flex flex-col h-fit justify-start items-start'>
+                                    <div className='w-full flex gap-1 justify-start items-start font-medium'>
+                                        <span className='text-xs'>MRP : &#x20b9;</span>
+                                        <span className='text-lg'>{data.price}</span>
+                                    </div>
+                                    <span className='text-xs'>Delivery on <span className='font-medium'>{moment().add(5, 'days').format('dddd, Do MMMM.')}</span></span>
+                                    <span className='font-medium text-xs text-red-500'>In stock</span>
+                                    <span className='font-medium text-xs inline-block'>Sold by <Link className='text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link> and Delivered by Easyorder.</span>
+                                    <button onClick={() => handleAddToCart(data)} className='p-2 w-full mt-6 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-red-500 bg-red-500  hover:text-red-500 text-white uppercase font-medium hover:bg-white'>
+                                        <BiCart className="text-xl " />
+                                        <span className="text-sm">Add to Cart</span>
+                                    </button>
                                 </div>
-                                <span className='text-xs'>Delivery on <span className='font-medium'>{moment().add(5, 'days').format('dddd, Do MMMM.')}</span></span>
-                                <span className='font-medium text-xs text-red-500'>In stock</span>
-                                <span className='font-medium text-xs inline-block'>Sold by <Link className='text-red-500' href={'/seller/exrcvbh'}>Rahul Rajput</Link> and Delivered by Easyorder.</span>
-                                <button onClick={() => handleAddToCart(data)} className='p-2 w-full mt-6 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-red-500 bg-red-500  hover:text-red-500 text-white uppercase font-medium hover:bg-white'>
-                                    <BiCart className="text-xl " />
-                                    <span className="text-sm">Add to Cart</span>
-                                </button>
+
                             </div>
                         </div>
                         <div className='w-full flex flex-col gap-2'>
