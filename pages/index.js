@@ -120,6 +120,15 @@ export default function Home() {
     return;
   }
 
+  const resetFilter = () => {
+    setFilter({
+      title: searchQuery,
+      Category: '',
+      Price: '',
+      productOrder: ''
+    })
+  }
+
   return (
     <>
       <Head>
@@ -136,23 +145,29 @@ export default function Home() {
         </div>}
         {error && <ErrorComponent />}
         <div className='w-full grid px-2 md:px-4 gap-4 pb-10 mt-20 md:mt-20 grid-cols-1 md:grid-cols-5'>
-          <div className='md:col-span-1 gap-2 font-medium flex flex-col'>
-            <span onClick={() => {
-              size.width <= 768 ?
-                setShowFilter(!showFilter) :
-                console.log(size.width)
-            }} className='md:text-lg text-sm  bg-red-500 text-white px-4 py-2 md:p-0 md:text-black md:bg-transparent md:rounded-none rounded-full ml-auto md:ml-0'>Filters</span>
-            <Category showFilter={showFilter} data={categories} title='Category' filter={filter} setFilter={setFilter} />
-            <Category showFilter={showFilter} data={price} title='Price' filter={filter} setFilter={setFilter} />
-            <div className={` w-full gap-2 ${showFilter ? 'flex' : 'hidden'} md:flex mt-4`}>
-              {productOrder.map((e, i) => {
-                return (
-                  <span onClick={() => setFilter({ ...filter, productOrder: e })} className={`py-1 px-2 border-2 border-red-500 font-medium rounded-full text-sm text-red-500 cursor-pointer ${filter.productOrder === e ? 'bg-red-500 text-white' : ''}`} key={`productOrder${i}`}>{e}</span>
-                )
-              })}
+          <div className='md:col-span-1 w-full flex flex-col relative'>
+            <div className=' gap-2 font-medium md:sticky top-20 flex flex-col'>
+              <div className='w-full flex justify-between gap-6 items-center'>
+                <span onClick={() => {
+                  size.width <= 768 ?
+                    setShowFilter(!showFilter) :
+                    console.log(size.width)
+                }} className='md:text-lg text-sm  bg-red-500 text-white px-4 py-2 md:p-0 md:text-black md:bg-transparent md:rounded-none rounded-full ml-auto md:ml-0'>Filters</span>
+                {(filter.Price || filter.Category || filter.productOrder) && <button onClick={resetFilter} className='border-2 border-red-500 py-1 text-red-500 px-3 text-sm  rounded-full'>Reset</button>}
+              </div>
+              <Category showFilter={showFilter} data={categories} title='Category' filter={filter} setFilter={setFilter} />
+              <Category showFilter={showFilter} data={price} title='Price' filter={filter} setFilter={setFilter} />
+              <div className={` w-full gap-2 ${showFilter ? 'flex' : 'hidden'} md:flex mt-4`}>
+                {productOrder.map((e, i) => {
+                  return (
+                    <span onClick={() => setFilter({ ...filter, productOrder: e })} className={`py-1 px-2 border-2 border-red-500 font-medium rounded-full text-sm text-red-500 cursor-pointer ${filter.productOrder === e ? 'bg-red-500 text-white' : ''}`} key={`productOrder${i}`}>{e}</span>
+                  )
+                })}
+
+              </div>
             </div>
           </div>
-          <div className='w-full md:col-span-4  gap-5 gap-y-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+          <div className='w-full md:col-span-4 gap-5 gap-y-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
             {products && products.length > 0 ?
               products.map((data, i) => {
                 return (
