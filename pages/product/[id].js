@@ -21,6 +21,7 @@ export default function product() {
     const [cartData, setCartData] = useState([])
     const [getError, setGetError] = useState(false)
     const [status, setStatus] = useState('')
+    const [seller, setSeller] = useState({})
 
     const getCart = async () => {
         const response = await getRequest('/api/findAllCart')
@@ -38,7 +39,6 @@ export default function product() {
                         const response = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
                         setData(response);
                         setImage(response.thumbnail);
-                        console.log(response)
                         fetch('/api/getSeller', {
                             method: 'POST',
                             body: JSON.stringify({ data: response.sellerId })
@@ -47,13 +47,13 @@ export default function product() {
                             .then((val) => {
                                 if (val.message === 'Success' && val.value) {
                                     let bytes = CryptoJS.AES.decrypt(val.value, process.env.JWT);
-                                    let user = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-                                    console.log(user)
-                                    if (user) {
-                                        let bytesFullName = CryptoJS.AES.decrypt(response.user.fullName, process.env.JWT);
-                                        let decryptFullName = bytesFullName.toString(CryptoJS.enc.Utf8);
-                                        let bytesDisplay = CryptoJS.AES.decrypt(response.user.displayName, process.env.JWT);
-                                        let decryptDisplay = bytesDisplay.toString(CryptoJS.enc.Utf8);
+                                    let data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                                    if (data) {
+                                        let {displayName, fullName} = data.user;
+                                        let bytesFullName = fullName ? CryptoJS.AES.decrypt(fullName, process.env.JWT) : '';
+                                        let decryptFullName = bytesFullName ? bytesFullName.toString(CryptoJS.enc.Utf8) : '';
+                                        let bytesDisplay = displayName ? CryptoJS.AES.decrypt(displayName, process.env.JWT) : '';
+                                        let decryptDisplay = bytesDisplay ? bytesDisplay.toString(CryptoJS.enc.Utf8) : '';
                                         setSeller({
                                             displayName: decryptDisplay,
                                             fullName: decryptFullName
@@ -68,6 +68,7 @@ export default function product() {
                                 }
                             })
                             .catch((err) => {
+                                console.log(err)
                                 setGetError(true)
                                 setTimeout(() => {
                                     setGetError(false)
@@ -157,7 +158,7 @@ export default function product() {
                             </div>
                             <div className='md:col-span-4 order-4 md:order-3 w-full flex flex-col'>
                                 <span className='font-medium text-lg'>{data.title}</span>
-                                <Link className='text-xs font-medium text-red-500' href={`/seller/${data.sellerId}`}>Rahul Rajput</Link>
+                                <Link className='text-xs font-medium text-red-500' href={`/seller/${data.sellerId}`}>{seller && seller.displayName && seller.displayName}</Link>
                                 <Line />
                                 <div className='w-full flex flex-col gap-1 font-medium'>
                                     <div className='w-full font-medium flex gap-1'>
@@ -182,7 +183,7 @@ export default function product() {
                                     </div>
                                     <span className='text-xs'>Delivery on <span className='font-medium'>{moment().add(5, 'days').format('dddd, Do MMMM.')}</span></span>
                                     <span className='font-medium text-xs text-red-500'>In stock</span>
-                                    <span className='font-medium text-xs inline-block'>Sold by <Link className='text-red-500' href={`/seller/${data.sellerId}`}>Rahul Rajput</Link> and Delivered by Easyorder.</span>
+                                    <span className='font-medium text-xs inline-block'>Sold by <Link className='text-red-500' href={`/seller/${data.sellerId}`}>{seller && seller.displayName && seller.displayName}</Link> and Delivered by Easyorder.</span>
                                     <button onClick={() => handleAddToCart(data)} className='p-2 w-full mt-6 flex flex-row justify-center items-center gap-1 rounded-full border-[0.14rem] border-red-500 bg-red-500  hover:text-red-500 text-white uppercase font-medium hover:bg-white'>
                                         <BiCart className="text-xl " />
                                         <span className="text-sm">Add to Cart</span>

@@ -10,12 +10,12 @@ const handler = async (req, res) => {
     try {
         await MongoDBConnect();
         const {data} = JSON.parse(req.body)
-        const response = await RegisterModel.findOne({ _id: data });
+        let response = await RegisterModel.findOne({ _id: data });
+        response = JSON.stringify(response)
+        response = JSON.parse(response)
         const user = {
             displayName: response.displayName,
             fullName: response.fullName,
-            type: response.type,
-            data: 'ftgdyhu'
         }
         let ciphertext = CryptoJS.AES.encrypt(JSON.stringify({ user: user }), process.env.JWT).toString();
         res.status(200).json({ message: 'Success', value: ciphertext })
