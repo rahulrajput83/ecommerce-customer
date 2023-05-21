@@ -185,7 +185,7 @@ function account() {
                                                     {deliveryStatus ?
                                                         <span className='text-xs hidden md:block font-medium'>Delivered: <span className='font-medium'>{deliveredDate}</span></span>
                                                         :
-                                                        <span className='text-xs hidden md:block font-medium'>Delivery: <span className='font-medium'>{deliveryDate}</span></span>
+                                                        <span className='text-xs hidden md:block font-medium'>Arriving: <span className='font-medium'>{deliveryDate}</span></span>
                                                     }
 
                                                     {products.length > 1 && <span className='text-xs absolute left-0 top-0 bg-red-500 px-3 py-2 font-medium text-white'>{products.length - 1}+</span>}

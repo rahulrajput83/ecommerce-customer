@@ -21,7 +21,7 @@ export default function order() {
             const data = await postRequest('/api/orderDetail', { id: id })
             if (data.message && data.message === 'Unauthorized') {
                 router.push(Logout())
-              }
+            }
             else if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
@@ -37,9 +37,13 @@ export default function order() {
                 data.fullName = bytesFullName.toString(CryptoJS.enc.Utf8);
                 let bytesMobileNumber = CryptoJS.AES.decrypt(data.mobileNumber, process.env.JWT);
                 data.mobileNumber = bytesMobileNumber.toString(CryptoJS.enc.Utf8);
-                data.deliveryDate = moment(data.deliveryDate).local().format('dddd, MMM Do YY');
-                data.paymentDate = moment(data.paymentDate).local().format('dddd, MMM Do, h:mm a');
+                data.deliveryDate = data.deliveryDate ? moment(data.deliveryDate).local().format('dddd, MMM Do YY') : '';
+                data.paymentDate = data.paymentDate ? moment(data.paymentDate).local().format('dddd, MMM Do, h:mm a') : '';
+                data.packedOn = data.packedOn ? moment(data.packedOn).local().format('dddd, MMM Do, h:mm a') : '';
+                data.acceptOn = data.acceptOn ? moment(data.acceptOn).local().format('dddd, MMM Do, h:mm a') : '';
+                data.deliveredDate = data.deliveredDate ? moment(data.deliveredDate).local().format('dddd, MMM Do, h:mm a') : ''
                 setData(data)
+                console.log(data)
             }
         } catch (error) {
             setGetError(true)
@@ -108,9 +112,13 @@ export default function order() {
                                     <span className='w-3 h-3 rounded-full bg-red-500'></span>
                                     <span className=''>Order - <span className='font-medium'>{data.paymentDate}</span></span>
                                 </div>}
-                                {data.paymentDate && <div className='w-full flex text-xs mt-3 flex-row font-medium gap-3 items-center'>
+                                {data.packedStatus && <div className='w-full flex text-xs mt-3 flex-row font-medium gap-3 items-center'>
                                     <span className='w-3 h-3 rounded-full bg-red-500'></span>
-                                    <span className=''>Packed - <span className='font-medium'>{data.paymentDate}</span></span>
+                                    <span className=''>Packed - <span className='font-medium'>{data.packedOn}</span></span>
+                                </div>}
+                                {data.acceptStatus && <div className='w-full flex text-xs mt-3 flex-row font-medium gap-3 items-center'>
+                                    <span className='w-3 h-3 rounded-full bg-red-500'></span>
+                                    <span className=''>Out for Delivery - <span className='font-medium'>{data.acceptOn}</span></span>
                                 </div>}
                                 {data.deliveredDate && <div className='w-full text-xs flex mt-3 font-medium flex-row gap-3 items-center'>
                                     <span className='w-3 h-3 rounded-full bg-red-500'></span>
@@ -135,7 +143,7 @@ export default function order() {
                                     <span className='font-medium'>Final Price</span>
                                     <span className='font-medium'>&#x20b9; {data.grandTotal}</span>
                                 </div>
-                                <span className='w-full my-4 bg-red-500 text-sm text-white font-medium p-2 rounded text-center'>{data.deliveryStatus ? 'Delivered on' : `Arriving on ${data.deliveryDate}`}</span>
+                                <span className='w-full my-4 bg-red-500 text-sm text-white font-medium p-2 rounded text-center'>{data.deliveryStatus ? `Delivered on ${data.deliveredDate}` : `Arriving on ${data.deliveryDate}`}</span>
                             </div>
                         </div>
                     </div>
