@@ -68,7 +68,6 @@ export default function product() {
                                 }
                             })
                             .catch((err) => {
-                                console.log(err)
                                 setGetError(true)
                                 setTimeout(() => {
                                     setGetError(false)
