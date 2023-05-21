@@ -10,7 +10,6 @@ const handler = async (req, res) => {
     try {
         await MongoDBConnect();
         const { title, Category, Price, productOrder } = JSON.parse(req.body);
-        console.log(title, Category, Price, productOrder)
         let data = await ProductModel.find({})
         if (title) {
             data = data.filter((e) => { return (e.category.toLowerCase().includes(title.toLowerCase()) || e.brand.toLowerCase().includes(title.toLowerCase()) || e.title.toLowerCase().includes(title.toLowerCase())) })

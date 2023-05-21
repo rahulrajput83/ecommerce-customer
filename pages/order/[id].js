@@ -43,7 +43,6 @@ export default function order() {
                 data.acceptOn = data.acceptOn ? moment(data.acceptOn).local().format('dddd, MMM Do, h:mm a') : '';
                 data.deliveredDate = data.deliveredDate ? moment(data.deliveredDate).local().format('dddd, MMM Do, h:mm a') : ''
                 setData(data)
-                console.log(data)
             }
         } catch (error) {
             setGetError(true)
