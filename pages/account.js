@@ -11,6 +11,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import ErrorComponent from '@/components/ErrorComponent'
+import LinesEllipsis from 'react-lines-ellipsis'
+import responsiveHOC from 'react-lines-ellipsis/lib/responsiveHOC'
+
+const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis)
 
 
 const accountItem = ['My Account', 'My Orders', 'Logout']
@@ -31,7 +35,7 @@ function account() {
             const data = await getRequest('/api/account')
             if (data.message && data.message === 'Unauthorized') {
                 router.push(Logout())
-              }
+            }
             else if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
@@ -54,7 +58,7 @@ function account() {
             const data = await getRequest('/api/order')
             if (data.message && data.message === 'Unauthorized') {
                 router.push(Logout())
-              }
+            }
             else if (data.message && data.message.startsWith('Error')) {
                 setGetError(true)
                 setLoading(false)
@@ -65,8 +69,9 @@ function account() {
                 let responseData = data.map((e) => {
                     let stillUtc = moment.utc(e.paymentDate).toDate();
                     let responseTime = moment(stillUtc).local().format('LL')
-                    let deliveryDateTime = moment(e.deliveryDate).local().format('dddd, MMM Do YY')
-                    return { ...e, paymentDate: responseTime, deliveryDate: deliveryDateTime }
+                    let deliveryDateTime = moment(e.deliveryDate).local().format('dddd, MMM Do YYYY')
+                    let deliveredTime = e.deliveredDate ? moment(e.deliveredDate).local().format('dddd, MMM Do YYYY') : '';
+                    return { ...e, deliveredDate: deliveredTime, paymentDate: responseTime, deliveryDate: deliveryDateTime }
                 })
                 setOrder(responseData)
             }
@@ -116,8 +121,8 @@ function account() {
                 <Navbar />
                 {getError && <ErrorComponent />}
                 <div className='w-full px-2 md:px-4 gap-4 pb-10 mt-20 flex flex-col md:flex-row'>
-                    <div className='w-full md:w-1/4'>
-                        <div className='w-full flex gap-4 flex-row md:flex-col'>
+                    <div className='w-full md:w-1/4 relative'>
+                        <div className='w-full flex gap-4 md:sticky top-20 flex-row md:flex-col'>
                             {accountItem.map((e, i) => {
                                 return (
                                     <button onClick={() => handleItem(e)} key={`accountItem-${i}`} className={`p-3 rounded-md text-sm shadow-lg font-medium ${selectedItem === e ? 'text-white bg-red-500' : 'text-black'}`}>{e}</button>
@@ -158,12 +163,12 @@ function account() {
                                                 </div>
                                                 {deliveryStatus ?
                                                     <div className='text-xs flex flex-col md:hidden font-medium'>
-                                                        <span>Delivered on</span>
+                                                        <span>Delivered:</span>
                                                         <span className='font-medium'>{deliveredDate}</span>
                                                     </div>
                                                     :
                                                     <div className='text-xs flex flex-col md:hidden font-medium'>
-                                                        <span>Delivery Date: </span>
+                                                        <span>Delivery: </span>
                                                         <span className='ffont-medium'>{deliveryDate}</span>
                                                     </div>
                                                 }
@@ -171,11 +176,16 @@ function account() {
                                             <div className='flex w-full gap-2 px-2 pt-2 relative'>
                                                 <img src={products[0].product.thumbnail} alt='' className='bg-cover w-24 md:w-36 h-24 md:h-36 bg-no-repeat' />
                                                 <div className='w-full flex flex-col md:gap-2'>
-                                                    <Link href={`/product/${products[0].product._id}`} className='text-sm font-medium text-red-500'>{products[0].product.title}</Link>
+                                                    <Link href={`/product/${products[0].product._id}`} className='text-sm font-medium text-red-500'>
+                                                        <ResponsiveEllipsis text={products[0].product.title}
+                                                            maxLine='1'
+                                                            ellipsis='...'
+                                                            basedOn='letters' />
+                                                    </Link>
                                                     {deliveryStatus ?
-                                                        <span className='text-xs hidden md:block font-medium'>Delivered on <span className='font-medium'>{deliveredDate}</span></span>
+                                                        <span className='text-xs hidden md:block font-medium'>Delivered: <span className='font-medium'>{deliveredDate}</span></span>
                                                         :
-                                                        <span className='text-xs hidden md:block font-medium'>Delivery Date: <span className='font-medium'>{deliveryDate}</span></span>
+                                                        <span className='text-xs hidden md:block font-medium'>Delivery: <span className='font-medium'>{deliveryDate}</span></span>
                                                     }
 
                                                     {products.length > 1 && <span className='text-xs absolute left-0 top-0 bg-red-500 px-3 py-2 font-medium text-white'>{products.length - 1}+</span>}
@@ -185,7 +195,7 @@ function account() {
                                                     </div>
                                                     <Link href={`/order/${id}`} className='p-2 text-xs mt-2 rounded w-fit uppercase text-white font-medium bg-red-500 hover:bg-red-400'>View Order</Link>
                                                 </div>
-                                                <span className='absolute right-2 top-0 text-sm font-medium text-red-500'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
+                                                <span className='absolute left-0 bg-red-500 py-1 px-2 top-0 text-sm font-medium text-white'>{paymentStatus ? 'PAID' : 'UNPAID'}</span>
                                             </div>
                                         </div>
                                     )
