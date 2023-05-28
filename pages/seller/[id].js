@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar'
 import ErrorComponent from '@/components/ErrorComponent'
 import Card from '@/components/Card';
+import { addToCart } from '@/Functions/addToCart';
+import { getRequest } from '@/Functions/Requests';
 const CryptoJS = require('crypto-js')
 
 export default function product() {
@@ -11,6 +13,10 @@ export default function product() {
     const [data, setData] = useState();
     const [loading, setLoading] = useState(true)
     const [getError, setGetError] = useState(false)
+    const [status, setStatus] = useState('')
+    const [cartData, setCartData] = useState([])
+
+
 
     useEffect(() => {
         const getProduct = async () => {
@@ -60,6 +66,51 @@ export default function product() {
         getProduct();
     }, [router.isReady])
 
+    const handleAddToCart = async (item) => {
+        try {
+            setStatus('Adding...')
+            setTimeout(() => {
+                setStatus('')
+            }, 5000)
+            const response = await addToCart(item);
+            if (response.message && response.message.includes('Error')) {
+                setGetError(true)
+                setTimeout(() => {
+                    setGetError(false)
+                }, 3000)
+            }
+            else {
+                if (response.message && response.message === 'Unauthorized') {
+                    setStatus("Please Login.")
+                    router.push(Logout())
+                    setTimeout(() => {
+                        setStatus('')
+                    }, 5000)
+                }
+                else {
+                    setStatus(response.message)
+                    setTimeout(() => {
+                        setStatus('')
+                    }, 5000)
+                    getCart();
+                }
+
+            }
+        } catch (error) {
+            console.log(error)
+            setGetError(true)
+            setTimeout(() => {
+                setGetError(false)
+            }, 3000)
+        }
+        return;
+    }
+
+    const getCart = async () => {
+        const response = await getRequest('/api/findAllCart')
+        setCartData(response || [])
+    }
+
 
     return (
         <>
@@ -71,7 +122,10 @@ export default function product() {
             </Head>
 
             <main className='w-100 flex flex-col'>
-                <Navbar />
+                <Navbar cartData={cartData} />
+                {status && <div className="p-4 fixed right-1 font-medium top-1 z-50 w-10/12 md:w-3/12 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                    {status}
+                </div>}
                 {getError && <ErrorComponent />}
                 <div className='w-full flex flex-col gap-2 px-2 md:px-10 pb-10 mt-20 md:mt-20'>
                     {!loading
@@ -90,7 +144,7 @@ export default function product() {
                                     {data && data.user && data.user.products && data.user.products.length > 0 ?
                                         data.user.products.map((e, i) => {
                                             return (
-                                                <Card data={e} key={i} />
+                                                <Card handleAddToCart={handleAddToCart} data={e} key={i} />
                                             )
                                         })
                                         :
@@ -102,11 +156,11 @@ export default function product() {
                         <div className='w-full animate-pulse grid gap-6 grid-cols-1 md:grid-cols-12'>
                             <div className='md:col-span-3 gap-1 p-2 md:p-4 bg-slate-200 h-52 rounded shadow-lg w-full flex flex-col justify-start items-start'>
                             </div>
-                            <div className='md:col-span-3 gap-1 p-2 md:p-4 bg-slate-200 h-52 rounded shadow-lg w-full flex flex-col justify-start items-start'>
+                            <div className='md:col-span-3 gap-1 p-2 md:p-4 bg-slate-200 h-72 rounded shadow-lg w-full flex flex-col justify-start items-start'>
                             </div>
-                            <div className='md:col-span-3 gap-1 p-2 md:p-4 bg-slate-200 h-52 rounded shadow-lg w-full flex flex-col justify-start items-start'>
+                            <div className='md:col-span-3 gap-1 p-2 md:p-4 bg-slate-200 h-72 rounded shadow-lg w-full flex flex-col justify-start items-start'>
                             </div>
-                            <div className='md:col-span-3 gap-1 p-2 md:p-4 bg-slate-200 h-52 rounded shadow-lg w-full flex flex-col justify-start items-start'>
+                            <div className='md:col-span-3 gap-1 p-2 md:p-4 bg-slate-200 h-72 rounded shadow-lg w-full flex flex-col justify-start items-start'>
                             </div>
                         </div>
                     }

@@ -175,7 +175,7 @@ export default function product() {
                                 </div>
                             </div>
                             <div className='md:col-span-3 relative gap-1 order-3 md:order-4 w-full flex flex-col justify-start items-start'>
-                                <div className='md:sticky top-16 gap-1 p-2 md:p-4 rounded shadow-lg w-full flex flex-col h-fit justify-start items-start'>
+                                <div className='md:sticky top-20 gap-1 p-2 md:p-4 rounded shadow-lg w-full flex flex-col h-fit justify-start items-start'>
                                     <div className='w-full flex gap-1 justify-start items-start font-medium'>
                                         <span className='text-xs'>MRP : &#x20b9;</span>
                                         <span className='text-lg'>{data.price}</span>
