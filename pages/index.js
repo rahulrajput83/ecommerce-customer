@@ -163,7 +163,7 @@ export default function Home() {
             })}
           </Carousel>
 
-          <div className='w-full grid gap-4 grid-cols-1 md:grid-cols-5'>
+          <div className='w-full mt-10 grid gap-4 grid-cols-1 md:grid-cols-5'>
             <div className='md:col-span-1 w-full flex flex-col relative'>
               <div className=' gap-2 font-medium md:sticky top-20 flex flex-col'>
                 <div className='w-full flex justify-between gap-6 items-center'>
