@@ -39,7 +39,7 @@ export const postRequest = async (path, data) => {
         }
         return response.data;
     } catch (error) {
-        return { message: 'Error, please try again', error: error }
+        return { message: error.response.data.message || 'Error, please try again', error: error }
     }
 }
  
